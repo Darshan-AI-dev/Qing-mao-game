@@ -174,11 +174,19 @@ function radialStyle(index: number, total: number): string {
  */
 export function attachToasts(): void {
   const node = byId('toast');
-  const quest = byId('quest');
   let timer = 0;
 
   const place = (): void => {
-    const below = quest.getBoundingClientRect().bottom;
+    // Everything above the toast, not only the quest panel. The region name is centred
+    // in the header and at desktop width on WebKit it hangs three pixels lower than the
+    // quest card beside it, which is enough to sit under the toast.
+    let below = 0;
+    for (const id of ['quest', 'regionName']) {
+      const el = document.getElementById(id);
+      if (!el || el.hidden || getComputedStyle(el).display === 'none') continue;
+      const box = el.getBoundingClientRect();
+      if (box.height > 0) below = Math.max(below, box.bottom);
+    }
     node.style.top = `${Math.round(below + 8)}px`;
   };
 

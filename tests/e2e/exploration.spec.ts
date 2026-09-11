@@ -30,6 +30,39 @@ async function currentArea(page: Page): Promise<string> {
   return page.evaluate(() => window.qingMao.debug.currentArea());
 }
 
+/**
+ * Holds a key until the player has actually walked `paces`, and returns where they
+ * started and finished.
+ *
+ * Not "hold it for 400 milliseconds". Movement is `speed * dt` with `dt` clamped at
+ * 50ms so a stall cannot teleport anyone, which means distance covered depends on how
+ * many frames ran — and headless WebKit throttles requestAnimationFrame hard enough
+ * that 350ms of wall clock bought exactly one frame, 0.35 paces, on every one of these
+ * tests. What they are actually asserting is the *direction* of travel; waiting for
+ * movement rather than for the clock measures that on any frame rate.
+ */
+async function walk(page: Page, key: string, paces = 1): Promise<{
+  before: { x: number; z: number };
+  after: { x: number; z: number };
+}> {
+  const before = await page.evaluate(() => window.qingMao.debug.playerPosition());
+  await page.keyboard.down(key);
+  try {
+    await page.waitForFunction(
+      ([start, distance]) => {
+        const now = window.qingMao.debug.playerPosition();
+        return Math.hypot(now.x - start.x, now.z - start.z) >= distance;
+      },
+      [before, paces] as const,
+      { timeout: 20_000 }
+    );
+  } finally {
+    await page.keyboard.up(key);
+  }
+  const after = await page.evaluate(() => window.qingMao.debug.playerPosition());
+  return { before, after };
+}
+
 test('control returns to the player after the opening scene', async ({ page }) => {
   await openGame(page);
   await skipToControl(page);
@@ -40,14 +73,9 @@ test('the player can walk around between beats', async ({ page }) => {
   await openGame(page);
   await skipToControl(page);
 
-  const before = await page.evaluate(() => window.qingMao.debug.playerPosition());
   // No click first: the canvas sits under the HUD, so Playwright would wait forever
   // for it to be clickable. Key events go to the window regardless.
-  await page.keyboard.down('KeyW');
-  await page.waitForTimeout(1200);
-  await page.keyboard.up('KeyW');
-  const after = await page.evaluate(() => window.qingMao.debug.playerPosition());
-
+  const { before, after } = await walk(page, 'KeyW', 1.2);
   const moved = Math.hypot(after.x - before.x, after.z - before.z);
   expect(moved, `player moved ${moved.toFixed(2)} paces`).toBeGreaterThan(1);
 });
@@ -140,17 +168,11 @@ test('forward walks away from the camera, not toward it', async ({ page }) => {
   // The handedness of the movement basis is covered exhaustively at 24 camera angles
   // by tests/unit/movement.test.mts. This one only has to prove it is wired up — the
   // chapter 3 room is a bedroom, so a long walk in any direction hits a wall.
-  const before = await page.evaluate(() => ({
-    player: window.qingMao.debug.playerPosition(),
-    camera: window.qingMao.debug.cameraPosition()
-  }));
-  await page.keyboard.down('KeyW');
-  await page.waitForTimeout(400);
-  await page.keyboard.up('KeyW');
-  const after = await page.evaluate(() => window.qingMao.debug.playerPosition());
+  const camera = await page.evaluate(() => window.qingMao.debug.cameraPosition());
+  const { before, after } = await walk(page, 'KeyW', 1);
 
-  const distBefore = Math.hypot(before.player.x - before.camera.x, before.player.z - before.camera.z);
-  const distAfter = Math.hypot(after.x - before.camera.x, after.z - before.camera.z);
+  const distBefore = Math.hypot(before.x - camera.x, before.z - camera.z);
+  const distAfter = Math.hypot(after.x - camera.x, after.z - camera.z);
   expect(distAfter, 'forward moved the player toward the camera').toBeGreaterThan(distBefore + 0.5);
 });
 
@@ -180,14 +202,8 @@ test('the character faces the way he is walking', async ({ page }) => {
   expect(geometry.faceZ, 'the face is not on the front of the model').toBeGreaterThan(0);
   expect(geometry.backZ, 'the hair is not on the back of the model').toBeLessThan(0);
 
-  const before = await page.evaluate(() => window.qingMao.debug.playerPosition());
-  await page.keyboard.down('KeyW');
-  await page.waitForTimeout(450);
-  await page.keyboard.up('KeyW');
-  const [after, facing] = await Promise.all([
-    page.evaluate(() => window.qingMao.debug.playerPosition()),
-    page.evaluate(() => window.qingMao.debug.facingProbe('fang-yuan'))
-  ]);
+  const { before, after } = await walk(page, 'KeyW', 1);
+  const facing = await page.evaluate(() => window.qingMao.debug.facingProbe('fang-yuan'));
 
   const travelled = { x: after.x - before.x, z: after.z - before.z };
   const length = Math.hypot(travelled.x, travelled.z);
@@ -290,19 +306,13 @@ test('pushing right moves the player to the camera\'s right', async ({ page }) =
   // — exactly mirrored — and the unit test checked it with the same wrong expression, so
   // a stick that felt wrong in the hand passed a check at 24 camera angles.
   for (const [key, sign] of [['ArrowRight', 1], ['ArrowLeft', -1]] as const) {
-    const before = await page.evaluate(() => ({
-      player: window.qingMao.debug.playerPosition(),
-      basis: window.qingMao.debug.cameraBasis()
-    }));
-    await page.keyboard.down(key);
-    await page.waitForTimeout(350);
-    await page.keyboard.up(key);
-    const after = await page.evaluate(() => window.qingMao.debug.playerPosition());
+    const basis = await page.evaluate(() => window.qingMao.debug.cameraBasis());
+    const { before, after } = await walk(page, key, 1);
 
-    const moved = { x: after.x - before.player.x, z: after.z - before.player.z };
+    const moved = { x: after.x - before.x, z: after.z - before.z };
     const distance = Math.hypot(moved.x, moved.z);
     expect(distance, `${key} did not move the player`).toBeGreaterThan(0.5);
-    const along = (moved.x * before.basis.right.x + moved.z * before.basis.right.z) / distance;
+    const along = (moved.x * basis.right.x + moved.z * basis.right.z) / distance;
     expect(along * sign, `${key} moved the player the wrong way across the screen`)
       .toBeGreaterThan(0.9);
   }

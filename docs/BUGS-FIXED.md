@@ -127,6 +127,19 @@ it — is new, and everything below it found on its first run.
 | **The aperture awakening played behind the text box.** The scene is framed on Fang Yuan's chest at the centre of the screen, and on a phone the dialogue panel — at its tallest, because that scene also shows an illustration — was 461 of 932 pixels directly over it | Four things, and it needed all four. The camera drops its aim point by half the panel's measured height, so the subject rises clear of it, re-measured every frame because the panel grows when a line has a thought or an illustration under it. With the HUD standing down, the panel drops to the bottom edge instead of floating twelve rem up to clear a stick that is not there. The bar depth has one definition (`--bar`) that the header and the panel both respect, so the nav is no longer under the top bar nor Skip scene under the bottom one. Illustrations are capped by frame height as well as column width |
 | The play sweep now fails a run where the dialogue panel covers more than 55% of the screen, or where the panel or the nav is under a letterbox bar | |
 
+### Found once CI could actually be read
+
+Sharding CI by engine brought the browser matrix from three hours to thirteen minutes,
+and the first run that anyone waited for answered the standing question: the camera fix
+worked — `the camera stays inside the walls of a small room` passes on WebKit at every
+viewport now — and it turned up three more things.
+
+| Issue | Fix |
+| --- | --- |
+| **The quest strip showed the previous beat's title and objective** after control had already come back for the next one. The HUD was only drawn by the render loop, so on any device where frames are slow the panel lagged behind the game | The HUD repaints when the beat changes, not on the next frame — the same shape as the camera fix. WebKit throttles `requestAnimationFrame` hard enough in CI to make this visible; a slow phone would show it too |
+| The toast measured the quest panel to place itself, but not the region name. At desktop width on WebKit the region name hangs three pixels lower than the card beside it, and the toast landed on it | The toast clears everything above it, taking the lowest bottom edge of the two |
+| **Four movement tests asserted a distance after holding a key for 350ms.** Movement is `speed * dt` with `dt` clamped at 50ms so a stall cannot teleport anyone, so distance depends on how many frames ran — and under a throttled `requestAnimationFrame` 350ms bought exactly one frame, 0.35 paces, every time. The clamp is right; the assumption was not | The tests hold the key until the player has walked a pace, then measure. What they are really asserting is the direction of travel, and that is now checked at any frame rate |
+
 ### A note on the frustum-culling test
 
 Making the prologue an enclosed hall broke it, and the break was informative. Every

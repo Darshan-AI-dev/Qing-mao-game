@@ -182,6 +182,11 @@ class Game implements TimelineHost {
     this.calendar.setWeather(beat.weather);
     this.placeObjective(beat);
     if (beat.recollection) this.memory.offer(beat.id);
+    // Repaint before the toast, not on the next frame. The HUD is otherwise only drawn
+    // by the render loop, so on a device where frames are slow — or under a throttled
+    // requestAnimationFrame — the quest strip went on showing the previous beat's title
+    // and objective after control had already come back for the next one.
+    this.renderHud();
     bus.emit('toast', { text: `${beat.title} — go to the marker.` });
   }
 
@@ -195,6 +200,7 @@ class Game implements TimelineHost {
     if (act) bus.emit('act.enter', { act: act.id, name: act.name });
     if (beat.area !== this.currentArea) this.enterArea(beat.area);
     this.calendar.setWeather(beat.weather);
+    this.renderHud();
     await this.playScene(beat.id);
     this.completeBeat(beat);
     this.inScene = false;
