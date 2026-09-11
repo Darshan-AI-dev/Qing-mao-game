@@ -35,12 +35,13 @@ jobs:
             echo "A PDF reached the build output." >&2
             exit 1
           fi
-      # enablement: true turns Pages on the first time this runs, so the deploy does
-      # not depend on someone flipping a repository setting by hand. The repository is
-      # public, so this exposes nothing that was not already readable.
+      # One-time manual step before this can succeed:
+      #   Settings -> Pages -> Build and deployment -> Source: "GitHub Actions"
+      # `enablement: true` cannot do it for you. The workflow's token is allowed to
+      # deploy to Pages but not to create the Pages site, so asking it to create one
+      # fails with "Resource not accessible by integration". Leaving enablement off
+      # gives the clearer "please verify that the repository has Pages enabled" error.
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

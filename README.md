@@ -88,6 +88,34 @@ The content lint fails the build if any chapter is uncovered, a flag is read but
 set, a beat is unreachable, a canonical outcome depends on an optional flag, a string
 key is missing, a dialogue line exceeds the cap, or an art reference does not resolve.
 
+## Playing on a phone
+
+The hosted build is the intended way in. It is a Progressive Web App, so it installs
+to a phone's home screen and works offline after the first load.
+
+**One-time setup for this repository**, which only someone with admin access can do:
+
+1. **Settings → Pages → Build and deployment → Source: "GitHub Actions"**.
+2. Re-run the **Deploy to GitHub Pages** workflow (Actions → the failed run → *Re-run
+   all jobs*), or just push once more.
+
+The workflow cannot do step 1 itself: its token may deploy to Pages but not create the
+Pages site, so it fails with *"Resource not accessible by integration"* until Pages is
+switched on by hand. After that every push deploys automatically.
+
+The site then lives at `https://<owner>.github.io/<repo>/` — for this repository,
+<https://darshan-ai-dev.github.io/Qing-mao-game/>.
+
+**No GitHub needed**: to play on a phone on the same Wi-Fi right now, run
+`npm run dev -- --host` and open the `http://192.168.x.x:5173` address it prints.
+
+**Once it loads, add it to your Home Screen.** On iOS: Share → Add to Home Screen.
+Safari clears a site's saved data after seven days without a visit, which would lose a
+long save; a home-screen app is exempt. The game detects the risk and shows the steps.
+
+Play in landscape. On a recent phone, set **Options → Graphics → Quality → High** — the
+first-launch benchmark picks a starting point, not a ceiling.
+
 ## Requirements
 
 WebGL2 and `<dialog>`. That is current Chrome, Edge, Firefox, and Safari 15 and later.
