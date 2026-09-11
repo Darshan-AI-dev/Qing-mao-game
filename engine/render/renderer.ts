@@ -48,6 +48,8 @@ export class Renderer {
   private sun: DirectionalLight;
   private ambient: AmbientLight;
   private lanterns: PointLight[] = [];
+  /** Follows the player through dark areas. See `setCarriedLight`. */
+  private carried: PointLight | null = null;
   private lastFrame = performance.now();
   private fps = 60;
   private chunksVisible = 0;
@@ -59,7 +61,10 @@ export class Renderer {
     this.renderer = new WebGLRenderer({ canvas, context, antialias: tier !== 'low' });
     this.renderer.setClearColor(new Color(0x184048));
     this.renderer.toneMapping = ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.05;
+    // ACES pulls the midtones down hard, and this palette lives in the midtones: at
+    // 1.05 the outdoor ground came back at about a fifth of its own brightness and a
+    // forest floor was indistinguishable from the fog behind it.
+    this.renderer.toneMappingExposure = 1.32;
     this.quality = new AdaptiveQuality(tier, renderScale);
 
     const budget = BUDGETS[tier];
@@ -108,6 +113,38 @@ export class Renderer {
     this.chunks = [];
     for (const lantern of this.lanterns) this.scene.remove(lantern);
     this.lanterns = [];
+    // The carried light belongs to the player, not to the area, so it survives.
+  }
+
+  /**
+   * The light the player carries underground.
+   *
+   * The design calls for caves that are genuinely dark with the player carrying the
+   * light. Only the first half of that was built, so the inheritance, the stone forest
+   * and the blood lake rendered as black voids you could not navigate.
+   */
+  setCarriedLight(on: boolean): void {
+    if (on && !this.carried) {
+      // Reach matters more than brightness here: at a 30-unit range with a 1.25 decay
+      // the lit circle was about four paces wide, which is a torch in a black box
+      // rather than a cave. Wider and slower, so the walls and the floor between them
+      // are readable while the far end of the chamber still is not.
+      this.carried = new PointLight(0xffc98a, 44, 52, 1.1);
+      this.carried.castShadow = false;
+      this.scene.add(this.carried);
+    } else if (!on && this.carried) {
+      this.scene.remove(this.carried);
+      this.carried.dispose();
+      this.carried = null;
+    }
+  }
+
+  moveCarriedLight(x: number, y: number, z: number): void {
+    this.carried?.position.set(x, y, z);
+  }
+
+  get hasCarriedLight(): boolean {
+    return !!this.carried;
   }
 
   /** A soft overhead fill for an interior, on top of its lanterns. */
@@ -135,6 +172,8 @@ export class Renderer {
     fogColor: number;
     fogNear: number;
     fogFar: number;
+    /** What is behind everything. Defaults to the fog colour. */
+    skyColor?: number;
   }): void {
     const { timeOfDay, underground, indoor, fogColor, fogNear, fogFar } = options;
     if (indoor && !underground) {
@@ -148,11 +187,13 @@ export class Renderer {
       this.sun.color.setHex(0xffe6c4);
       this.ambient.intensity = 0.42;
     } else if (underground) {
-      this.hemi.intensity = 0.1;
+      this.hemi.intensity = 0.17;
       this.hemi.color.setHex(0x2a3440);
       this.hemi.groundColor.setHex(0x10161a);
       this.sun.intensity = 0;
-      this.ambient.intensity = 0.05;
+      // Enough to silhouette the stone against the fog, and no more: underground is
+      // meant to be dark, but a shape you cannot see at all is not atmosphere.
+      this.ambient.intensity = 0.09;
     } else {
       // Dawn and dusk warm and dim; noon is flat and bright.
       const noon = 1 - Math.abs(timeOfDay - 0.5) * 2;
@@ -167,7 +208,9 @@ export class Renderer {
       this.scene.fog.color.setHex(fogColor);
       this.scene.fog.near = fogNear;
       this.scene.fog.far = fogFar;
-      this.renderer.setClearColor(new Color(fogColor));
+      // Distance fades to the fog colour; the empty sky above it is its own. Clearing
+      // to the fog colour made every outdoor area's `sky` field dead data.
+      this.renderer.setClearColor(new Color(options.skyColor ?? fogColor));
     }
   }
 

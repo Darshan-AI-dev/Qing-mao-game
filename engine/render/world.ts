@@ -10,10 +10,11 @@
  * lint cross-checks it against the canon bible's `ceiling` flag.
  */
 import {
-  BoxGeometry, Color, ConeGeometry, CylinderGeometry, DoubleSide,
+  BoxGeometry, CircleGeometry, Color, ConeGeometry, CylinderGeometry, DoubleSide,
   Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial,
   PlaneGeometry, Quaternion, RingGeometry, Vector3, type BufferGeometry, type Material
 } from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { Rng } from '../core/rng';
 
 export interface Blocker {
@@ -35,7 +36,10 @@ export type PropKind =
   | 'bamboo' | 'rock' | 'tree' | 'villager' | 'lantern' | 'pillar' | 'crate' | 'orchid'
   // Interior furniture. The chapter 3 room is described down to the window latch and
   // the stones by the bed, so those have to exist as objects, not as narration.
-  | 'bed' | 'table' | 'stool' | 'chest' | 'shelf' | 'window';
+  | 'bed' | 'table' | 'stool' | 'chest' | 'shelf' | 'window'
+  // Area-archetype props, so a hall, a market and a forge are not the same empty box.
+  | 'pew' | 'dais' | 'stall' | 'awning' | 'furnace' | 'brazier' | 'desk'
+  | 'snowdrift' | 'pine' | 'icespike' | 'terrace' | 'reed' | 'raft' | 'banner';
 
 export interface AreaDescription {
   id: string;
@@ -50,10 +54,17 @@ export interface AreaDescription {
   timeOfDay: number;
   props: { kind: PropKind; places: PropPlacement[] }[];
   buildings?: { x: number; z: number; w: number; d: number; h: number; stilts?: boolean; floors?: number }[];
-  paths?: { from: [number, number]; to: [number, number]; width?: number }[];
+  /** A trodden way. `color` for ground a dirt track would be wrong on, such as snow. */
+  paths?: { from: [number, number]; to: [number, number]; width?: number; color?: number }[];
   water?: { x: number; z: number; w: number; d: number; color: number }[];
   /** Ceilings can be raised locally, e.g. the stone forest's vault. */
   ceilingHeight?: number;
+  /**
+   * Shell colours for an enclosed area. Three halls built from the same boards are
+   * three pictures of the same hall; the Bai clan's is meant to read as somewhere
+   * else the moment you walk in, so the shell has to be able to change with it.
+   */
+  interior?: { floor?: number; wall?: number; ceiling?: number };
   /** Hand-placed interior details: blankets, window mullions, a bag of stones. */
   dressing?: InteriorDressing[];
   blockers?: Blocker[];
@@ -71,7 +82,7 @@ const CHUNK_SIZE = 48;
 const mat = (hex: number) => new MeshLambertMaterial({ color: new Color(hex) });
 
 const PALETTE = {
-  grass: 0x314f43, path: 0x6f6b50, wood: 0x49331f, roof: 0x27494a, wall: 0x8f8d64,
+  grass: 0x4f6c4e, path: 0x7d7758, wood: 0x49331f, roof: 0x27494a, wall: 0x8f8d64,
   rock: 0x3e5457, bamboo: 0x38744c, leaf: 0x265f45, stone: 0x4a5458, water: 0x2f6f86,
   cloth: 0xa6a383, orchid: 0xbcc8ee, ceiling: 0x1b2326, gold: 0xf0b047,
   // A room is not a cave. Interiors get bamboo and boards rather than wet rock.
@@ -85,7 +96,10 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
     case 'rock': return { geometry: new ConeGeometry(1.9, 3.4, 6), material: mat(PALETTE.rock), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
     case 'tree': return { geometry: new ConeGeometry(3.1, 7.2, 7), material: mat(PALETTE.leaf), blocker: { x: 0, z: 0, w: 1, d: 1 } };
     case 'villager': return { geometry: new ConeGeometry(0.52, 1.9, 7), material: mat(PALETTE.cloth) };
-    case 'lantern': return { geometry: new CylinderGeometry(0.16, 0.16, 3.4, 6), material: mat(PALETTE.wood) };
+    // A post with a paper lamp on it. The post alone was a bare brown stick that read
+    // as a pole planted in the floor, and in the Gu room one stood directly behind the
+    // player and looked like part of him.
+    case 'lantern': return { geometry: lanternGeometry(), material: mat(PALETTE.cloth), blocker: { x: 0, z: 0, w: 0.2, d: 0.2 } };
     case 'pillar': return { geometry: new CylinderGeometry(1.5, 2.1, 22, 7), material: mat(PALETTE.stone), blocker: { x: 0, z: 0, w: 1.8, d: 1.8 } };
     case 'crate': return { geometry: new BoxGeometry(1.2, 1, 1.2), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 0.7, d: 0.7 } };
     case 'orchid': return { geometry: new ConeGeometry(0.22, 0.6, 5), material: mat(PALETTE.orchid) };
@@ -96,6 +110,24 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
     case 'shelf': return { geometry: new BoxGeometry(1.8, 0.07, 0.42), material: mat(PALETTE.wood) };
     // A pale panel standing in for daylight through an opening, with its frame.
     case 'window': return { geometry: new BoxGeometry(1.7, 1.5, 0.12), material: new MeshLambertMaterial({ color: new Color(0x9fc6d2), emissive: new Color(0x32505c) }) };
+    // --- halls and rooms
+    case 'pew': return { geometry: new BoxGeometry(3.6, 0.36, 0.7), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 1.8, d: 0.4 } };
+    case 'dais': return { geometry: new BoxGeometry(7, 0.5, 4), material: mat(0x5a4a30), blocker: { x: 0, z: 0, w: 3.4, d: 2 } };
+    case 'desk': return { geometry: new BoxGeometry(1.9, 0.12, 0.7), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 1, d: 0.4 } };
+    case 'banner': return { geometry: new BoxGeometry(1.1, 3.2, 0.08), material: mat(0x6d3630) };
+    case 'furnace': return { geometry: new CylinderGeometry(1.25, 1.5, 2.6, 8), material: mat(0x3a2b22), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
+    case 'brazier': return { geometry: new CylinderGeometry(0.5, 0.34, 0.7, 8), material: new MeshLambertMaterial({ color: new Color(0x6b3a22), emissive: new Color(0x4a2008) }) };
+    // --- market
+    case 'stall': return { geometry: new BoxGeometry(2.6, 1.05, 1.5), material: mat(0x6a5230), blocker: { x: 0, z: 0, w: 1.4, d: 0.9 } };
+    case 'awning': return { geometry: new BoxGeometry(3.2, 0.1, 2.2), material: mat(0x8a4a3a) };
+    // --- winter
+    case 'snowdrift': return { geometry: new ConeGeometry(2.6, 1.1, 7), material: mat(0xdde9ee) };
+    case 'icespike': return { geometry: new ConeGeometry(1.1, 6.5, 5), material: new MeshLambertMaterial({ color: new Color(0xa9cfdb) }), blocker: { x: 0, z: 0, w: 0.9, d: 0.9 } };
+    case 'pine': return { geometry: new ConeGeometry(2.3, 6.5, 7), material: mat(0x1f3a30), blocker: { x: 0, z: 0, w: 0.9, d: 0.9 } };
+    // --- cultivation and water
+    case 'terrace': return { geometry: new BoxGeometry(11, 0.5, 3.4), material: mat(0x4a5a34), blocker: { x: 0, z: 0, w: 5.5, d: 1.7 } };
+    case 'reed': return { geometry: new CylinderGeometry(0.05, 0.07, 2.4, 4), material: mat(0x6d7a3e) };
+    case 'raft': return { geometry: new BoxGeometry(4.2, 0.24, 6.4), material: mat(0x5a4326), blocker: { x: 0, z: 0, w: 2.1, d: 3.2 } };
   }
 }
 
@@ -120,16 +152,62 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   // same wet grey stone. `dark` is what separates them.
   const cave = description.enclosed && (description.dark ?? false);
   const room = description.enclosed && !cave;
-  const floorColour = cave ? PALETTE.stone : room ? PALETTE.roomFloor : PALETTE.grass;
-  const shellColour = cave ? PALETTE.ceiling : PALETTE.roomWall;
+  // Outdoor floors used the one grass colour for every area in the game, so `ground`
+  // — the field each area sets to say what it is standing on — did nothing at all. The
+  // glacier, the river silt and the arena dust were all the same dark green, and only
+  // the fog colour made them look different from one another.
+  const floorColour = description.interior?.floor
+    ?? (cave ? PALETTE.stone : room ? PALETTE.roomFloor : description.ground ?? PALETTE.grass);
+  const shellColour = description.interior?.wall ?? (cave ? PALETTE.ceiling : PALETTE.roomWall);
+  const ceilingColour = description.interior?.ceiling
+    ?? (cave ? PALETTE.ceiling : PALETTE.roomCeiling);
   const ground = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(floorColour));
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = castShadow;
   shell.add(ground);
 
+  // --- ground variation
+  //
+  // One flat plane in one flat colour is not ground, it is a background. At the play
+  // camera the hunter's rest, the boar trail and the wolf forest were each a single
+  // untextured green field with a few stalks on it and no horizon to speak of. A
+  // scatter of wide, soft patches in neighbouring tones breaks that up for one extra
+  // draw call, and costs nothing on a phone.
+  if (!description.enclosed) {
+    const patchRng = new Rng(hash(`${description.id}:ground`));
+    const count = 26;
+    // White material: an InstancedMesh multiplies the material colour by the per-
+    // instance colour, so tinting both meant every patch came out as the ground colour
+    // squared — twenty-six near-black discs laid over the floor.
+    const patches = new InstancedMesh(new CircleGeometry(1, 10), mat(0xffffff), count);
+    patches.receiveShadow = castShadow;
+    const base = new Color(floorColour);
+    const matrix = new Matrix4();
+    const tint = new Color();
+    for (let i = 0; i < count; i++) {
+      const radius = 6 + patchRng.next() * 16;
+      matrix.makeRotationX(-Math.PI / 2);
+      matrix.scale(new Vector3(radius, radius, radius));
+      matrix.setPosition(
+        (patchRng.next() - 0.5) * description.size.x * 0.92,
+        0.015,
+        (patchRng.next() - 0.5) * description.size.z * 0.92
+      );
+      patches.setMatrixAt(i, matrix);
+      // Neighbouring tones, never a different colour: this is meant to read as ground
+      // that is not perfectly even, not as a pattern painted on it.
+      tint.copy(base).offsetHSL((patchRng.next() - 0.5) * 0.04, (patchRng.next() - 0.5) * 0.1, (patchRng.next() - 0.5) * 0.14);
+      patches.setColorAt(i, tint);
+    }
+    patches.instanceMatrix.needsUpdate = true;
+    if (patches.instanceColor) patches.instanceColor.needsUpdate = true;
+    patches.frustumCulled = false;
+    shell.add(patches);
+  }
+
   if (description.enclosed) {
     const height = description.ceilingHeight ?? 14;
-    const ceiling = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(cave ? PALETTE.ceiling : PALETTE.roomCeiling));
+    const ceiling = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(ceilingColour));
     ceiling.rotation.x = Math.PI / 2;
     ceiling.position.y = height;
     shell.add(ceiling);
@@ -150,7 +228,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     const [x1, z1] = path.from;
     const [x2, z2] = path.to;
     const length = Math.hypot(x2 - x1, z2 - z1);
-    const strip = new Mesh(new PlaneGeometry(path.width ?? 4, length), mat(PALETTE.path));
+    const strip = new Mesh(new PlaneGeometry(path.width ?? 4, length), mat(path.color ?? PALETTE.path));
     strip.rotation.x = -Math.PI / 2;
     strip.rotation.z = -Math.atan2(x2 - x1, z2 - z1);
     strip.position.set((x1 + x2) / 2, 0.03, (z1 + z2) / 2);
@@ -285,13 +363,26 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   return { group: root, chunks, blockers, lanterns };
 }
 
+/** Post plus paper lamp, merged so the pair is still one instanced draw call. */
+function lanternGeometry(): BufferGeometry {
+  const post = new CylinderGeometry(0.1, 0.13, 3.4, 6);
+  post.translate(0, -1.7, 0);
+  const lamp = new CylinderGeometry(0.42, 0.36, 0.95, 8);
+  lamp.translate(0, 0.55, 0);
+  const cap = new CylinderGeometry(0.5, 0.12, 0.3, 8);
+  cap.translate(0, 1.18, 0);
+  return mergeGeometries([post, lamp, cap], false) ?? post;
+}
+
 function heightOffset(kind: PropKind): number {
   switch (kind) {
     case 'bamboo': return 4.5;
     case 'rock': return 1.7;
     case 'tree': return 3.6;
     case 'villager': return 0.95;
-    case 'lantern': return 1.7;
+    // The lamp sits at the top of its post, so the geometry is built around the lamp
+    // and the offset is the post's full height rather than half of it.
+    case 'lantern': return 3.1;
     case 'pillar': return 11;
     case 'crate': return 0.5;
     case 'orchid': return 0.3;
@@ -301,6 +392,20 @@ function heightOffset(kind: PropKind): number {
     case 'chest': return 0.31;
     case 'shelf': return 1.55;
     case 'window': return 1.85;
+    case 'pew': return 0.18;
+    case 'dais': return 0.25;
+    case 'desk': return 0.66;
+    case 'banner': return 3.4;
+    case 'furnace': return 1.3;
+    case 'brazier': return 0.35;
+    case 'stall': return 0.52;
+    case 'awning': return 2.3;
+    case 'snowdrift': return 0.55;
+    case 'icespike': return 3.25;
+    case 'pine': return 3.25;
+    case 'terrace': return 0.25;
+    case 'reed': return 1.2;
+    case 'raft': return 0.12;
   }
 }
 

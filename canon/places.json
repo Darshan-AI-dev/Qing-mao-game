@@ -1,44 +1,437 @@
 {
   "note": "Areas the game builds, keyed by ID. `tier` is the quality tier at which the area's heaviest features turn on. `ceiling: true` means the area is enclosed and must render a roof (see the §11 bug about the stone forest under open sky).",
   "regions": [
-    { "id": "qing-mao-mountain", "name": "Qing Mao Mountain", "chapters": [1, 200], "weather": "seasonal", "note": "One coherent mountain. Every village-scale area below is a chunk of it rather than a separate level." }
+    {
+      "id": "qing-mao-mountain",
+      "name": "Qing Mao Mountain",
+      "chapters": [
+        1,
+        200
+      ],
+      "weather": "seasonal",
+      "note": "One coherent mountain. Every village-scale area below is a chunk of it rather than a separate level."
+    }
   ],
   "areas": [
-    { "id": "mountain.village", "name": "Bamboo village", "region": "qing-mao-mountain", "chapters": [1, 200], "outdoor": true, "ceiling": false, "note": "Pale-green two-storey bamboo and wood houses on wooden stakes over uneven ground." },
-    { "id": "mountain.hostel-room", "name": "Fang Yuan's room", "region": "qing-mao-mountain", "chapters": [1, 200], "outdoor": false, "ceiling": true, "note": "Where he wakes. Rain on the roof, an open window, a thin blanket. The first thing the player sees after the prologue." },
-    { "id": "mountain.uncle-house", "name": "Fang Qiu's house", "region": "qing-mao-mountain", "chapters": [9, 115], "outdoor": false, "ceiling": true },
-    { "id": "mountain.awakening-river", "name": "Underground awakening river", "region": "qing-mao-mountain", "chapters": [4, 6], "outdoor": false, "ceiling": true, "note": "A clear, faintly blue river; moon orchids with jade stems and pearl-bright centres on the far bank." },
-    { "id": "mountain.academy", "name": "Gu Yue Academy", "region": "qing-mao-mountain", "chapters": [7, 38], "outdoor": true, "ceiling": false },
-    { "id": "mountain.academy-gate", "name": "Academy gate", "region": "qing-mao-mountain", "chapters": [25, 38], "outdoor": true, "ceiling": false, "note": "Where the after-class toll happens, several days running." },
-    { "id": "mountain.academy-classroom", "name": "Academy classroom", "region": "qing-mao-mountain", "chapters": [7, 38], "outdoor": false, "ceiling": true, "note": "Carries the aftermath of the extortion arc through whispers and changed seating." },
-    { "id": "mountain.gu-room", "name": "Gu room", "region": "qing-mao-mountain", "chapters": [7, 63], "outdoor": false, "ceiling": true },
-    { "id": "mountain.training-yard", "name": "Training courtyard", "region": "qing-mao-mountain", "chapters": [22, 24], "outdoor": true, "ceiling": false },
-    { "id": "mountain.tavern", "name": "Green Bamboo Wine", "region": "qing-mao-mountain", "chapters": [8, 150], "outdoor": false, "ceiling": true, "floors": 2, "note": "Two floors. Becomes the property-management loop after chapter 102." },
-    { "id": "mountain.bamboo-path", "name": "Bamboo path", "region": "qing-mao-mountain", "chapters": [13, 49], "outdoor": true, "ceiling": false, "note": "Night version is the Jia Jin Sheng stealth stage." },
-    { "id": "mountain.bamboo-grove", "name": "Bamboo grove", "region": "qing-mao-mountain", "chapters": [13, 14], "outdoor": true, "ceiling": false },
-    { "id": "mountain.flower-wine-cave", "name": "Flower Wine cave", "region": "qing-mao-mountain", "chapters": [14, 60], "outdoor": false, "ceiling": true, "dark": true, "note": "Genuinely dark. The player carries the light." },
-    { "id": "mountain.caravan-market", "name": "Caravan market", "region": "qing-mao-mountain", "chapters": [39, 43], "outdoor": true, "ceiling": false },
-    { "id": "mountain.clan-hall", "name": "Clan council pavilion", "region": "qing-mao-mountain", "chapters": [51, 193], "outdoor": false, "ceiling": true },
-    { "id": "mountain.affairs-hall", "name": "Internal affairs hall", "region": "qing-mao-mountain", "chapters": [97, 115], "outdoor": false, "ceiling": true },
-    { "id": "mountain.medicine-hall", "name": "Medicine hall", "region": "qing-mao-mountain", "chapters": [117, 170], "outdoor": false, "ceiling": true },
-    { "id": "mountain.forge", "name": "Gu refinement room", "region": "qing-mao-mountain", "chapters": [99, 157], "outdoor": false, "ceiling": true },
-    { "id": "mountain.earth-treasury", "name": "Earth Treasury chamber", "region": "qing-mao-mountain", "chapters": [60, 64], "outdoor": false, "ceiling": true, "dark": true },
-    { "id": "mountain.inheritance-passage", "name": "Inheritance passage", "region": "qing-mao-mountain", "chapters": [79], "outdoor": false, "ceiling": true, "dark": true, "note": "The sloping passage and the round boulder." },
-    { "id": "mountain.stone-forest", "name": "Underground stone forest", "region": "qing-mao-mountain", "chapters": [79, 100], "outdoor": false, "ceiling": true, "dark": true, "note": "Has a ceiling and real darkness. The old build rendered it under open sky; that is fixed and the lint checks it." },
-    { "id": "mountain.hunter-rest", "name": "Hunter's rest", "region": "qing-mao-mountain", "chapters": [65, 69], "outdoor": true, "ceiling": false },
-    { "id": "mountain.boar-trail", "name": "Wild boar trail", "region": "qing-mao-mountain", "chapters": [70, 73], "outdoor": true, "ceiling": false },
-    { "id": "mountain.wang-hideout", "name": "Wang Da's hideout", "region": "qing-mao-mountain", "chapters": [74, 77], "outdoor": true, "ceiling": false },
-    { "id": "mountain.arena", "name": "Year-end arena", "region": "qing-mao-mountain", "chapters": [82, 87], "outdoor": true, "ceiling": false },
-    { "id": "mountain.winter-grounds", "name": "Winter gathering grounds", "region": "qing-mao-mountain", "chapters": [88, 90], "outdoor": true, "ceiling": false, "weather": "snow" },
-    { "id": "mountain.jiang-he-refuge", "name": "Jiang He's refuge", "region": "qing-mao-mountain", "chapters": [91, 92], "outdoor": false, "ceiling": true },
-    { "id": "mountain.beast-crossing", "name": "Winter beast crossing", "region": "qing-mao-mountain", "chapters": [93, 96], "outdoor": true, "ceiling": false, "weather": "snow" },
-    { "id": "mountain.leaf-terraces", "name": "Vitality leaf terraces", "region": "qing-mao-mountain", "chapters": [117, 150], "outdoor": true, "ceiling": false },
-    { "id": "mountain.deep-inheritance", "name": "Deep inheritance", "region": "qing-mao-mountain", "chapters": [182, 185], "outdoor": false, "ceiling": true, "dark": true },
-    { "id": "mountain.wolf-forest", "name": "Wolf-tide forest", "region": "qing-mao-mountain", "chapters": [139, 145], "outdoor": true, "ceiling": false },
-    { "id": "mountain.blood-lake", "name": "Blood-lake depths", "region": "qing-mao-mountain", "chapters": [186, 198], "outdoor": false, "ceiling": true, "dark": true, "note": "Staged big enough that the founder and Lord Sky Crane read as powers, not as two more duel opponents." },
-    { "id": "mountain.glacier", "name": "Qing Mao glacier", "region": "qing-mao-mountain", "chapters": [193, 198], "outdoor": true, "ceiling": false, "weather": "snow" },
-    { "id": "mountain.yellow-dragon-river", "name": "Yellow Dragon River", "region": "qing-mao-mountain", "chapters": [199, 200], "outdoor": true, "ceiling": false, "note": "The raft. The last playable space in the game and the hand-off to the sequel." },
-    { "id": "bai.hall", "name": "Bai clan hall", "region": "neighbouring-territory", "chapters": [116, 138], "outdoor": false, "ceiling": true, "note": "Viewpoint interlude." },
-    { "id": "prologue.last-stand", "name": "The last stand of the first life", "region": "elsewhere", "chapters": [1, 3], "outdoor": true, "ceiling": false, "note": "Played at full power against hopeless odds. It is also the combat tutorial, so the drop to Rank one afterward has something to be a drop from." }
+    {
+      "id": "mountain.village",
+      "name": "Bamboo village",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        1,
+        200
+      ],
+      "outdoor": true,
+      "ceiling": false,
+      "note": "Pale-green two-storey bamboo and wood houses on wooden stakes over uneven ground."
+    },
+    {
+      "id": "mountain.hostel-room",
+      "name": "Fang Yuan's room",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        1,
+        200
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "note": "Where he wakes. Rain on the roof, an open window, a thin blanket. The first thing the player sees after the prologue."
+    },
+    {
+      "id": "mountain.uncle-house",
+      "name": "Fang Qiu's house",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        9,
+        115
+      ],
+      "outdoor": false,
+      "ceiling": true
+    },
+    {
+      "id": "mountain.awakening-river",
+      "name": "Underground awakening river",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        4,
+        6
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "note": "A clear, faintly blue river; moon orchids with jade stems and pearl-bright centres on the far bank."
+    },
+    {
+      "id": "mountain.academy",
+      "name": "Gu Yue Academy",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        7,
+        38
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.academy-gate",
+      "name": "Academy gate",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        25,
+        38
+      ],
+      "outdoor": true,
+      "ceiling": false,
+      "note": "Where the after-class toll happens, several days running."
+    },
+    {
+      "id": "mountain.academy-classroom",
+      "name": "Academy classroom",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        7,
+        38
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "note": "Carries the aftermath of the extortion arc through whispers and changed seating."
+    },
+    {
+      "id": "mountain.gu-room",
+      "name": "Gu room",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        7,
+        63
+      ],
+      "outdoor": false,
+      "ceiling": true
+    },
+    {
+      "id": "mountain.training-yard",
+      "name": "Training courtyard",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        22,
+        24
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.tavern",
+      "name": "Green Bamboo Wine",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        8,
+        150
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "floors": 2,
+      "note": "Two floors. Becomes the property-management loop after chapter 102."
+    },
+    {
+      "id": "mountain.bamboo-path",
+      "name": "Bamboo path",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        13,
+        49
+      ],
+      "outdoor": true,
+      "ceiling": false,
+      "note": "Night version is the Jia Jin Sheng stealth stage."
+    },
+    {
+      "id": "mountain.bamboo-grove",
+      "name": "Bamboo grove",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        13,
+        14
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.flower-wine-cave",
+      "name": "Flower Wine cave",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        14,
+        60
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "dark": true,
+      "note": "Genuinely dark. The player carries the light."
+    },
+    {
+      "id": "mountain.caravan-market",
+      "name": "Caravan market",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        39,
+        43
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.clan-hall",
+      "name": "Clan council pavilion",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        51,
+        193
+      ],
+      "outdoor": false,
+      "ceiling": true
+    },
+    {
+      "id": "mountain.affairs-hall",
+      "name": "Internal affairs hall",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        97,
+        115
+      ],
+      "outdoor": false,
+      "ceiling": true
+    },
+    {
+      "id": "mountain.medicine-hall",
+      "name": "Medicine hall",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        117,
+        170
+      ],
+      "outdoor": false,
+      "ceiling": true
+    },
+    {
+      "id": "mountain.forge",
+      "name": "Gu refinement room",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        99,
+        157
+      ],
+      "outdoor": false,
+      "ceiling": true
+    },
+    {
+      "id": "mountain.earth-treasury",
+      "name": "Earth Treasury chamber",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        60,
+        64
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "dark": true
+    },
+    {
+      "id": "mountain.inheritance-passage",
+      "name": "Inheritance passage",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        79
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "dark": true,
+      "note": "The sloping passage and the round boulder."
+    },
+    {
+      "id": "mountain.stone-forest",
+      "name": "Underground stone forest",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        79,
+        100
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "dark": true,
+      "note": "Has a ceiling and real darkness. The old build rendered it under open sky; that is fixed and the lint checks it."
+    },
+    {
+      "id": "mountain.hunter-rest",
+      "name": "Hunter's rest",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        65,
+        69
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.boar-trail",
+      "name": "Wild boar trail",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        70,
+        73
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.wang-hideout",
+      "name": "Wang Da's hideout",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        74,
+        77
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.arena",
+      "name": "Year-end arena",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        82,
+        87
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.winter-grounds",
+      "name": "Winter gathering grounds",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        88,
+        90
+      ],
+      "outdoor": true,
+      "ceiling": false,
+      "weather": "snow"
+    },
+    {
+      "id": "mountain.jiang-he-refuge",
+      "name": "Jiang He's refuge",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        91,
+        92
+      ],
+      "outdoor": false,
+      "ceiling": true
+    },
+    {
+      "id": "mountain.beast-crossing",
+      "name": "Winter beast crossing",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        93,
+        96
+      ],
+      "outdoor": true,
+      "ceiling": false,
+      "weather": "snow"
+    },
+    {
+      "id": "mountain.leaf-terraces",
+      "name": "Vitality leaf terraces",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        117,
+        150
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.deep-inheritance",
+      "name": "Deep inheritance",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        182,
+        185
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "dark": true
+    },
+    {
+      "id": "mountain.wolf-forest",
+      "name": "Wolf-tide forest",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        139,
+        145
+      ],
+      "outdoor": true,
+      "ceiling": false
+    },
+    {
+      "id": "mountain.blood-lake",
+      "name": "Blood-lake depths",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        186,
+        198
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "dark": true,
+      "note": "Staged big enough that the founder and Lord Sky Crane read as powers, not as two more duel opponents."
+    },
+    {
+      "id": "mountain.glacier",
+      "name": "Qing Mao glacier",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        193,
+        198
+      ],
+      "outdoor": true,
+      "ceiling": false,
+      "weather": "snow"
+    },
+    {
+      "id": "mountain.yellow-dragon-river",
+      "name": "Yellow Dragon River",
+      "region": "qing-mao-mountain",
+      "chapters": [
+        199,
+        200
+      ],
+      "outdoor": true,
+      "ceiling": false,
+      "note": "The raft. The last playable space in the game and the hand-off to the sequel."
+    },
+    {
+      "id": "bai.hall",
+      "name": "Bai clan hall",
+      "region": "neighbouring-territory",
+      "chapters": [
+        116,
+        138
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "note": "Viewpoint interlude."
+    },
+    {
+      "id": "prologue.last-stand",
+      "name": "The last stand of the first life",
+      "region": "elsewhere",
+      "chapters": [
+        1,
+        3
+      ],
+      "outdoor": false,
+      "ceiling": true,
+      "note": "A hall he is cornered in, lit by what is still burning in it.",
+      "dark": true
+    }
   ]
 }

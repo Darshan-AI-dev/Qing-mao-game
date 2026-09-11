@@ -248,3 +248,35 @@ test('auto-advance moves through lines with no input', async ({ page }) => {
   const after = await page.evaluate(() => window.qingMao.debug.lineCount());
   expect(after, 'auto-advance delivered no further lines').toBeGreaterThan(before);
 });
+
+test('every area can be walked from its spawn point to the objective', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+  // The underground river spawned the player nose-first into a boulder: the marker was
+  // twenty-four paces away with a rock in between, and pushing straight forward simply
+  // stopped. It took a sweep that walks the way a player walks to notice.
+  //
+  // The guarantee is reachability, not a clear straight lane. A forest is not supposed
+  // to have a clear lane; a beat you cannot reach is a game you cannot finish.
+  const stranded = await page.evaluate(() =>
+    window.qingMao.debug
+      .areaIds()
+      .map((id) => ({ id, ...window.qingMao.debug.spawnClearance(id) }))
+      .filter((area) => !area.reachable)
+      .map((area) => area.id)
+  );
+  expect(stranded).toEqual([]);
+});
+
+test('the quest panel shows the objective, not the beat sheet design note', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+  const questText = (await page.locator('#questText').textContent())?.trim() ?? '';
+  const beat = await page.evaluate(() => window.qingMao.debug.currentBeatFacts());
+  expect(beat).not.toBeNull();
+  // The design note is the Reader's Lens annotation. It was printed here for everyone,
+  // so players read "Weak on purpose" and "Also the combat tutorial" as their objective.
+  expect(questText).toBe(beat!.objective);
+  expect(questText).not.toBe(beat!.designNote);
+  expect(questText.length).toBeGreaterThan(10);
+});

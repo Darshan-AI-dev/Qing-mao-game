@@ -35,6 +35,15 @@ export interface Beat {
   day: number;
   weather: string;
   legacyStep: number;
+  /**
+   * What the player is being asked to do next, in their own words.
+   *
+   * The quest panel used to print `designNote` here, so everyone playing the game read
+   * the beat sheet's authoring notes — "Weak on purpose", "Also the combat tutorial" —
+   * as their objective. The design note is the Reader's Lens annotation and belongs
+   * behind that opt-in; this is the line for everyone else.
+   */
+  objective: string | null;
   designNote: string | null;
 }
 

@@ -33,6 +33,7 @@
       "day": 0,
       "weather": "storm",
       "legacyStep": 0,
+      "objective": "Hold them off for as long as five hundred years can buy.",
       "designNote": "Full power, hopeless odds. Also the combat tutorial, so the drop to Rank one in the next beat has something to be a drop from."
     },
     {
@@ -67,6 +68,7 @@
       "day": 1,
       "weather": "rain",
       "legacyStep": 0,
+      "objective": "Get up, and find out how far back you have come.",
       "designNote": "First inner-voice line, first Recollection, movement tutorial. Weak on purpose."
     },
     {
@@ -105,6 +107,7 @@
       "day": 11,
       "weather": "mist",
       "legacyStep": 1,
+      "objective": "Go down to the river and take the awakening with the rest of them.",
       "designNote": "Crowd reactions staged in the round. His inner reading of the verdict runs over the elder's lines."
     },
     {
@@ -142,6 +145,7 @@
       "day": 14,
       "weather": "clear",
       "legacyStep": 1,
+      "objective": "Collect your first Gu from the Gu room.",
       "designNote": "First upkeep explained here: Moonlight Gu eats moon orchid petals. The stone ledger opens."
     },
     {
@@ -179,6 +183,7 @@
       "day": 18,
       "weather": "rain",
       "legacyStep": 2,
+      "objective": "Sit through supper at Fang Qiu's house.",
       "designNote": "The brothers begin to diverge and the asset dispute is seeded. Restores an arc the old build skipped."
     },
     {
@@ -214,6 +219,7 @@
       "day": 22,
       "weather": "mist",
       "legacyStep": 2,
+      "objective": "Find the grove where the Liquor worm's jar is buried.",
       "designNote": "Several nights of searching, not one visit. The Recollection points at an opportunity, never a waypoint."
     },
     {
@@ -253,6 +259,7 @@
       "day": 31,
       "weather": "clear",
       "legacyStep": 3,
+      "objective": "Go into the Flower Wine cave and take what you came for.",
       "designNote": "Genuinely dark; the player carries the light. The Cicada's pressure is a set piece with a fixed outcome."
     },
     {
@@ -286,6 +293,7 @@
       "day": 36,
       "weather": "clear",
       "legacyStep": 3,
+      "objective": "Cultivate through the first weeks and count what it costs.",
       "designNote": "The Liquor worm stops refining Rank two essence. Recorded, not played."
     },
     {
@@ -320,6 +328,7 @@
       "day": 40,
       "weather": "clear",
       "legacyStep": 4,
+      "objective": "Train the Moonblade on the yard until it goes where you send it.",
       "designNote": "Three nonliving practice targets. Every strike shows its essence cost."
     },
     {
@@ -358,6 +367,7 @@
       "day": 44,
       "weather": "clear",
       "legacyStep": 5,
+      "objective": "Wait at the academy gate for whoever is collecting.",
       "designNote": "Recurs over several in-game days. The player chooses the rate and how visible it is."
     },
     {
@@ -399,6 +409,7 @@
       "day": 52,
       "weather": "rain",
       "legacyStep": 5,
+      "objective": "Answer the elder's questions in the classroom.",
       "designNote": "The academy elder is the first adult who is a real obstacle. The Mo family escalates behind him."
     },
     {
@@ -437,6 +448,7 @@
       "day": 60,
       "weather": "mist",
       "legacyStep": 6,
+      "objective": "Meet the man sent down the bamboo path to settle it.",
       "designNote": "The choice is on screen; the blow is cut away from. Aftermath runs through guards, classroom whispers and changed NPC remarks."
     },
     {
@@ -476,6 +488,7 @@
       "day": 68,
       "weather": "clear",
       "legacyStep": 6,
+      "objective": "Hold your composure through the negotiation.",
       "designNote": "No combat. What the player left behind sets how much he has to concede."
     },
     {
@@ -511,6 +524,7 @@
       "day": 72,
       "weather": "clear",
       "legacyStep": 7,
+      "objective": "Get to the caravan market before the shell is opened.",
       "designNote": "Stone gambling as a real mini-game with real losses. Its point is the next beat."
     },
     {
@@ -546,6 +560,7 @@
       "day": 78,
       "weather": "clear",
       "legacyStep": 7,
+      "objective": "Sell the fossil to someone who wants to believe it.",
       "designNote": "The fossil is the cover story. Its real value is as evidence at the inquiry."
     },
     {
@@ -585,6 +600,7 @@
       "day": 84,
       "weather": "mist",
       "legacyStep": 8,
+      "objective": "Walk the bamboo path home, and mind what is behind you.",
       "designNote": "Notice the tail, choose where to lead him, then the cleanup. Every piece left behind is recorded for chapter 51."
     },
     {
@@ -618,6 +634,7 @@
       "day": 92,
       "weather": "rain",
       "legacyStep": 8,
+      "objective": "Push through to the middle stage in your own room.",
       "designNote": "A staged ritual, not a quest-complete pop-up. Act I closes on an autosave and a title card."
     }
   ]

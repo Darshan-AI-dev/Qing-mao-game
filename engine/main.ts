@@ -7,7 +7,7 @@
  * sequel. Swapping the content import is the whole of what game 2 has to do here.
  */
 import { Vector3, type Object3D } from 'three';
-import { areasById, charactersById, mustLandForChapter, actForChapter } from '../canon/index';
+import { areasById, charactersById, actForChapter } from '../canon/index';
 import { graph, illustrationsById, loadScript, t } from '../content/qingmao/index';
 import { AREAS, areaDescription } from '../content/qingmao/world/areas';
 import { bus } from './core/bus';
@@ -75,6 +75,7 @@ class Game implements TimelineHost {
   private cameraPitch = 0.42;
   private cameraDistance = 16;
   private freeCamera = false;
+  private cameraDistanceOverride: number | null = null;
   private inScene = false;
   private skipRequested = false;
   private lastTick = performance.now();
@@ -342,20 +343,157 @@ class Game implements TimelineHost {
       indoor: lit,
       fogColor: lit ? 0x2c3a3f : description.fog.color,
       fogNear: lit ? span * 1.1 : description.fog.near,
-      fogFar: lit ? span * 2.6 : description.fog.far
+      fogFar: lit ? span * 2.6 : description.fog.far,
+      // Indoors there is no sky to see; the walls are the horizon.
+      skyColor: enclosed ? undefined : description.sky
     });
     if (enclosed && !dark) {
       // One overhead fill, hung just under the ceiling.
       this.renderer.addFill(0, (description.ceilingHeight ?? 6) - 1.1, 0, 1.25);
     }
+    // Underground, the player carries the light — which is the whole texture of the
+    // cave and the stone forest, and was the missing half of "genuinely dark".
+    this.renderer.setCarriedLight(enclosed && dark);
 
     const player = this.spawn('fang-yuan');
     // Spawn within sight of what the beat stages at the area's origin. The previous
     // build's chapter-101 preset dropped the player 192 paces from their objective.
-    const spawnZ = Math.min(description.size.z / 2 - 6, MAX_SPAWN_DISTANCE);
-    this.player = { x: 0, z: spawnZ, facing: Math.PI };
-    player.setPosition(0, 0, spawnZ);
+    const spawn = this.chooseSpawn(Math.min(description.size.z / 2 - 6, MAX_SPAWN_DISTANCE));
+    const towardsObjective = Math.atan2(-spawn.x, -spawn.z);
+    this.player = { x: spawn.x, z: spawn.z, facing: towardsObjective };
+    player.setPosition(spawn.x, 0, spawn.z);
+    player.setFacing(towardsObjective);
+    // Put the camera behind the player, looking the way he is.
+    //
+    // The orbit puts the camera at `player - (sin yaw, cos yaw) * distance`, and the
+    // yaw was left wherever the last area had it — so a beat routinely opened with the
+    // camera standing between the player and the objective, looking back up the road he
+    // had just come down. Walking to the marker meant walking into the lens, which is
+    // the other half of "the character is walking backward".
+    this.cameraYaw = towardsObjective;
     byId('regionName').textContent = canon?.name ?? areaId;
+  }
+
+  /**
+   * A standing place with a clear walk to the objective.
+   *
+   * Spawning at a fixed point on the +z axis put the player face-first into a boulder
+   * at the underground river: the approach was blocked, and a play sweep that walks the
+   * way a player walks simply never arrived. Rather than move the scenery, look for an
+   * angle whose line to the origin is open, and step in if none of them is.
+   */
+  private chooseSpawn(radius: number): { x: number; z: number } {
+    // The lane to the objective must be clear, and so must the stretch behind the
+    // player, because that is where the camera stands. A lamp post four paces back
+    // fills the whole frame, which is how three areas opened on a giant lantern.
+    const camera = this.effectiveCameraDistance();
+    const clear = (x: number, z: number): boolean => {
+      if (!this.laneIsClear(x, z)) return false;
+      const distance = Math.hypot(x, z);
+      if (distance < 0.001) return true;
+      const steps = Math.ceil(camera);
+      for (let i = 1; i <= steps; i++) {
+        const out = 1 + (i / steps) * (camera / distance);
+        if (this.blocked(x * out, z * out)) return false;
+      }
+      return true;
+    };
+    const walkable = clear;
+    // Never further out than asked for: a small room's spawn radius is already most of
+    // the way to its wall, and pushing past it put the player inside one.
+    for (let ring = 0; ring < 5; ring++) {
+      const distance = radius - ring * Math.max(1, radius / 6);
+      if (distance < 3) break;
+      // Straight back first, then alternating to either side in fifteen-degree steps,
+      // so the usual case keeps the framing the scenes were laid out for.
+      for (let i = 0; i < 24; i++) {
+        const angle = (i % 2 === 0 ? 1 : -1) * Math.ceil(i / 2) * (Math.PI / 12);
+        const x = Math.sin(angle) * distance;
+        const z = Math.cos(angle) * distance;
+        if (!this.blocked(x, z) && walkable(x, z)) return { x, z };
+      }
+    }
+    // No clear lane anywhere — a dense forest, usually. Settle for somewhere the walk
+    // can get out of, rather than dropping the player into the one spot it cannot.
+    for (let ring = 0; ring < 5; ring++) {
+      const distance = radius - ring * Math.max(1, radius / 6);
+      if (distance < 3) break;
+      for (let i = 0; i < 24; i++) {
+        const angle = (i % 2 === 0 ? 1 : -1) * Math.ceil(i / 2) * (Math.PI / 12);
+        const x = Math.sin(angle) * distance;
+        const z = Math.cos(angle) * distance;
+        if (!this.blocked(x, z) && this.objectiveReachable(x, z)) return { x, z };
+      }
+    }
+    return { x: 0, z: radius };
+  }
+
+  /** Is the straight line from here to the objective free of scenery? */
+  private laneIsClear(x: number, z: number): boolean {
+    const steps = Math.ceil(Math.hypot(x, z));
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      if (this.blocked(x * (1 - t), z * (1 - t))) return false;
+    }
+    return true;
+  }
+
+  /**
+   * Can the objective be walked to from here, steering around what is in the way?
+   *
+   * A clear straight lane is the nicer spawn and is what `chooseSpawn` looks for first,
+   * but a forest is not supposed to have one: the wolf forest, the hunter's rest and
+   * the academy all have scenery across every straight line out of the area's edge, and
+   * a player simply walks around it. This is the guarantee that actually matters — that
+   * the beat can be reached at all — and it is what the spawn test asserts.
+   */
+  private objectiveReachable(startX: number, startZ: number): boolean {
+    let x = startX;
+    let z = startZ;
+    for (let step = 0; step < 900; step++) {
+      const distance = Math.hypot(x, z);
+      if (distance <= OBJECTIVE_RANGE * 0.8) return true;
+      const towards = Math.atan2(-x, -z);
+      let moved = false;
+      for (let turn = 0; turn < 9 && !moved; turn++) {
+        const angle = towards + (turn % 2 === 0 ? 1 : -1) * Math.ceil(turn / 2) * (Math.PI / 9);
+        const nextX = x + Math.sin(angle) * 0.9;
+        const nextZ = z + Math.cos(angle) * 0.9;
+        if (this.blocked(nextX, nextZ)) continue;
+        x = nextX;
+        z = nextZ;
+        moved = true;
+      }
+      if (!moved) return false;
+    }
+    return false;
+  }
+
+  /**
+   * Where this area spawns the player, and whether they can walk from there to the
+   * objective without going around anything. A false here is a player standing in a
+   * boulder, which is how the underground river used to open.
+   */
+  spawnClearance(areaId: string): { x: number; z: number; lane: boolean; reachable: boolean } {
+    this.visitArea(areaId);
+    return {
+      x: this.player.x,
+      z: this.player.z,
+      lane: this.laneIsClear(this.player.x, this.player.z),
+      reachable: this.objectiveReachable(this.player.x, this.player.z)
+    };
+  }
+
+  /** The beat the HUD is currently describing, for tests that check what it prints. */
+  currentBeatFacts(): { id: string; title: string; objective: string; designNote: string } | null {
+    const beat = this.currentBeat();
+    if (!beat) return null;
+    return {
+      id: beat.id,
+      title: beat.title,
+      objective: beat.objective ?? '',
+      designNote: beat.designNote ?? ''
+    };
   }
 
   private unlockedAreas(): { id: string; name: string }[] {
@@ -391,9 +529,41 @@ class Game implements TimelineHost {
     return actor;
   }
 
+  /** Removes an actor from the world. Fang Yuan stays: he is the player. */
+  despawn(id: string): void {
+    if (id === 'fang-yuan') return;
+    const actor = this.actors.get(id);
+    if (!actor) return;
+    this.renderer.scene.remove(actor.root);
+    actor.dispose();
+    this.actors.delete(id);
+  }
+
+  /**
+   * Pushes a scripted camera back out of whoever is standing in front of it.
+   *
+   * A shot framed on two people a few paces apart can put a third actor between the
+   * lens and the subject; at a pace and a half they fill the frame as an unreadable
+   * shape. Backing the camera off along its own view direction keeps the framing the
+   * scene asked for and gets the body out of it.
+   */
+  private clearOfActors(position: Vector3, look: Vector3): Vector3 {
+    const MIN = 2.6;
+    const back = position.clone().sub(look);
+    if (back.lengthSq() < 1e-6) return position;
+    back.normalize();
+    let push = 0;
+    for (const actor of this.actors.values()) {
+      const gap = Math.hypot(actor.position.x - position.x, actor.position.z - position.z);
+      if (gap < MIN) push = Math.max(push, MIN - gap);
+    }
+    return push > 0 ? position.clone().addScaledVector(back, push) : position;
+  }
+
   camera = {
-    to: (position: Vector3, look: Vector3, seconds: number): Promise<void> =>
+    to: (target: Vector3, look: Vector3, seconds: number): Promise<void> =>
       new Promise((resolve) => {
+        const position = this.clearOfActors(target, look);
         const from = this.renderer.camera.position.clone();
         const start = performance.now();
         const step = (now: number) => {
@@ -407,7 +577,7 @@ class Game implements TimelineHost {
         requestAnimationFrame(step);
       }),
     cut: (position: Vector3, look: Vector3): void => {
-      this.renderer.camera.position.copy(position);
+      this.renderer.camera.position.copy(this.clearOfActors(position, look));
       this.renderer.camera.lookAt(look);
     }
   };
@@ -510,6 +680,7 @@ class Game implements TimelineHost {
     this.updateCamera(frame, dt);
 
     for (const actor of this.actors.values()) actor.update(dt, now);
+    if (this.renderer.hasCarriedLight) this.renderer.moveCarriedLight(this.player.x, 2.4, this.player.z);
     if (this.objective) {
       // Fades out as you arrive, so it never sits on top of the scene it points at.
       const distance = this.distanceToObjective() ?? Infinity;
@@ -626,7 +797,9 @@ class Game implements TimelineHost {
       this.cameraDistance = Math.max(4, this.cameraDistance - frame.look.dy * dt);
       return;
     }
-    const eye = orbitCamera(this.player, this.cameraYaw, this.cameraPitch, this.effectiveCameraDistance());
+    const eye = this.insideTheWalls(
+      orbitCamera(this.player, this.cameraYaw, this.cameraPitch, this.effectiveCameraDistance())
+    );
     this.renderer.camera.position.set(eye.x, eye.y, eye.z);
     this.renderer.camera.lookAt(new Vector3(this.player.x, 2, this.player.z));
   }
@@ -638,7 +811,32 @@ class Game implements TimelineHost {
    * an 18-by-20 bedroom, which renders as the room seen from outside. Interiors get a
    * distance proportional to their smaller half-extent.
    */
+  /**
+   * Keeps the orbit camera inside an enclosed area.
+   *
+   * The distance clamp assumes the player is at the area's origin, and stops being
+   * enough the moment they are not: standing four paces back in an eighteen-by-twenty
+   * room put the camera through the far wall, and the chapter 3 room rendered as a
+   * brown plane with none of the bed, window or stones the text describes on it.
+   */
+  private insideTheWalls(eye: { x: number; y: number; z: number }): { x: number; y: number; z: number } {
+    const description = areaDescription(this.currentArea);
+    if (!description.enclosed) return eye;
+    const margin = 1.2;
+    const limitX = description.size.x / 2 - margin;
+    const limitZ = description.size.z / 2 - margin;
+    const height = (description.ceilingHeight ?? 6) - 0.6;
+    return {
+      x: Math.max(-limitX, Math.min(limitX, eye.x)),
+      y: Math.min(height, eye.y),
+      z: Math.max(-limitZ, Math.min(limitZ, eye.z))
+    };
+  }
+
   private effectiveCameraDistance(): number {
+    // An explicit inspection distance (the visual sweep's establishing shot) is not
+    // clamped: the clamp exists to keep the play camera out of the walls.
+    if (this.cameraDistanceOverride !== null) return this.cameraDistanceOverride;
     const description = areaDescription(this.currentArea);
     if (!description.enclosed) return this.cameraDistance;
     const halfExtent = Math.min(description.size.x, description.size.z) / 2;
@@ -652,9 +850,9 @@ class Game implements TimelineHost {
   }
 
   private renderHud(): void {
+    // The exploration HUD stands down during a scene; see `body.scene` in style.css.
+    document.body.classList.toggle('scene', this.inScene);
     const beat = this.currentBeat();
-    const chapter = beat?.chapters[0] ?? 1;
-    const moment = mustLandForChapter(chapter);
     const flags = this.flags();
     const abilities = this.combat.availableAbilities(flags);
     this.hud.render(
@@ -667,8 +865,10 @@ class Game implements TimelineHost {
         vitalityMax: this.save.vitalityMax,
         stones: this.economy.stones,
         questTitle: beat?.title ?? 'Qing Mao',
-        questTask: beat?.designNote ?? '',
-        chapterLabel: beat ? `Chapter ${beat.chapters[0]}${beat.chapters[1] > beat.chapters[0] ? `–${beat.chapters[1]}` : ''}${moment ? ' · a moment that has to land' : ''}` : '',
+        // The player's objective, not the beat sheet's authoring note. The note is the
+        // Reader's Lens annotation and stays behind that opt-in.
+        questTask: beat?.objective ?? '',
+        chapterLabel: beat ? `Chapter ${beat.chapters[0]}${beat.chapters[1] > beat.chapters[0] ? `–${beat.chapters[1]}` : ''}` : '',
         calendarLabel: this.calendar.label(),
         distance: this.distanceToObjective(),
         context: this.contextAction(),
@@ -908,6 +1108,91 @@ class Game implements TimelineHost {
     };
   }
 
+  /**
+   * Walks into an area without playing its scene. Used by the visual sweep to
+   * photograph every area in the game, which is how the dark interiors and the
+   * oversized objective marker were found.
+   */
+  visitArea(areaId: string): boolean {
+    if (!AREAS.has(areaId)) return false;
+    this.inScene = false;
+    this.enterArea(areaId);
+    return true;
+  }
+
+  /**
+   * Walks to the objective marker and starts the beat waiting there.
+   *
+   * The play sweep uses this to get from one scene to the next the way a player does.
+   * It really walks — in the same steps, through the same blockers — rather than
+   * teleporting, so an objective walled off behind its own scenery shows up here as a
+   * walk that does not arrive, instead of as a beat that silently never triggers.
+   */
+  walkToObjective(): boolean {
+    if (!this.awaiting || this.inScene) return false;
+    for (let step = 0; step < 600; step++) {
+      const distance = Math.hypot(this.player.x, this.player.z);
+      if (distance <= OBJECTIVE_RANGE * 0.8) {
+        const beat = this.awaiting;
+        if (!this.memory.viewed(beat.id)) this.memory.recogniseForesight(beat.id);
+        void this.enterBeat(beat);
+        return true;
+      }
+      const towards = Math.atan2(-this.player.x, -this.player.z);
+      // Straight at it first, then progressively wider, alternating left and right:
+      // the same thing a player does when something is in the way.
+      let moved = false;
+      for (let turn = 0; turn < 9 && !moved; turn++) {
+        const angle = towards + (turn % 2 === 0 ? 1 : -1) * Math.ceil(turn / 2) * (Math.PI / 9);
+        const nextX = this.player.x + Math.sin(angle) * 0.9;
+        const nextZ = this.player.z + Math.cos(angle) * 0.9;
+        if (this.blocked(nextX, nextZ)) continue;
+        this.player.x = nextX;
+        this.player.z = nextZ;
+        this.player.facing = angle;
+        moved = true;
+      }
+      if (!moved) return false;
+      const actor = this.actors.get('fang-yuan');
+      actor?.setPosition(this.player.x, 0, this.player.z);
+      actor?.setFacing(this.player.facing);
+    }
+    return false;
+  }
+
+  /** Jumps to a beat and offers it, without replaying everything before it. */
+  jumpToBeat(beatId: string): boolean {
+    const beat = graph.get(beatId);
+    if (!beat) return false;
+    const complete = new Set<string>();
+    for (const candidate of graph.beats) {
+      if (graph.indexOf(candidate.id) < graph.indexOf(beatId)) complete.add(candidate.id);
+    }
+    this.save.completed = [...complete];
+    this.save.calendar.day = beat.day;
+    this.inScene = false;
+    this.offerBeat(beat);
+    return true;
+  }
+
+  areaIds(): string[] {
+    return [...AREAS.keys()];
+  }
+
+  /**
+   * Overrides the orbit distance. The visual sweep uses it for an establishing shot:
+   * at the play distance you see about a thirty-unit circle, which is not enough to
+   * tell whether a hundred-unit area is actually laid out or just has a path in it.
+   */
+  setCameraDistance(distance: number): void {
+    this.cameraDistance = Math.max(4, distance);
+  }
+
+  /** Sweep-only: fixes the orbit distance and bypasses the interior clamp. */
+  setInspectionDistance(distance: number | null): void {
+    this.cameraDistanceOverride = distance === null ? null : Math.max(4, distance);
+  }
+
   /** Where the model's face points, and which way it is turned. */
   facingProbe(id: string): { faceZ: number; backZ: number; rotationY: number; forward: { x: number; z: number } } {
     const probe = this.actors.get(id)?.facingProbe() ?? { faceZ: 0, backZ: 0, rotationY: 0 };
@@ -1025,6 +1310,14 @@ async function boot(): Promise<void> {
       characterLook: (id: string) => game.characterLook(id),
       facingProbe: (id: string) => game.facingProbe(id),
       toast: (text: string) => bus.emit('toast', { text }),
+      visitArea: (areaId: string) => game.visitArea(areaId),
+      jumpToBeat: (beatId: string) => game.jumpToBeat(beatId),
+      walkToObjective: () => game.walkToObjective(),
+      spawnClearance: (areaId: string) => game.spawnClearance(areaId),
+      currentBeatFacts: () => game.currentBeatFacts(),
+      areaIds: () => game.areaIds(),
+      setCameraDistance: (d: number) => game.setCameraDistance(d),
+      setInspectionDistance: (d: number | null) => game.setInspectionDistance(d),
       moveDebug: () => game.moveDebug(),
       sceneStateAfterSkip: () => game.sceneStateAfterSkip()
     },

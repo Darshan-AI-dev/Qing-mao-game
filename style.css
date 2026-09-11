@@ -78,6 +78,22 @@ html, body {
 #letterbox span:first-child { top: 0; }
 #letterbox span:last-child { bottom: 0; }
 #letterbox.on span { height: 9vh; }
+/*
+ * A cutscene is a cutscene.
+ *
+ * The exploration HUD used to stay up underneath the letterbox, so the vitals panel sat
+ * half-swallowed by the bottom bar, the joystick hung over a scene nobody can walk
+ * through, and the quest strip was overlapped by any scene that showed an illustration.
+ * It steps out of the frame instead — by opacity rather than display, so the layout is
+ * still there to be measured and the panels-do-not-overlap test still sees it.
+ */
+body.scene footer,
+body.scene #joystick,
+body.scene #quest {
+  opacity: 0;
+  pointer-events: none;
+}
+footer, #joystick, #quest { transition: opacity 0.35s ease; }
 
 #telegraphLayer { position: fixed; inset: 0; pointer-events: none; z-index: 20; display: grid; place-items: center; }
 .telegraph { width: min(40vmin, 320px); height: min(40vmin, 320px); color: var(--warn); opacity: 0.9; animation: telegraph var(--telegraph-seconds, 1s) ease-out forwards; }

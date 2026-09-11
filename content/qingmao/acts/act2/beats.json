@@ -42,6 +42,7 @@
       "day": 104,
       "weather": "clear",
       "legacyStep": 11,
+      "objective": "Attend the inquiry at the clan council pavilion.",
       "designNote": "Exposure payoff one. A clean trail is a calm conversation; a messy one costs lies, stones and favours. He is never caught."
     },
     {
@@ -76,6 +77,7 @@
       "day": 118,
       "weather": "clear",
       "legacyStep": 12,
+      "objective": "Read the image wall to the end of what it records.",
       "designNote": "The Photo-audio Gu is exhausted; the wall becomes ordinary stone. Knowing where to look is what is left."
     },
     {
@@ -110,6 +112,7 @@
       "day": 122,
       "weather": "clear",
       "legacyStep": 12,
+      "objective": "Take the Little Light Gu from the Gu room.",
       "designNote": null
     },
     {
@@ -144,6 +147,7 @@
       "day": 124,
       "weather": "clear",
       "legacyStep": 12,
+      "objective": "Go down to the Earth Treasury and take the seed of strength.",
       "designNote": "Each advantage the inheritance hands over answers the obstacle after it."
     },
     {
@@ -182,6 +186,7 @@
       "day": 130,
       "weather": "rain",
       "legacyStep": 14,
+      "objective": "Trade at the hunter's rest for what is carved in the bamboo.",
       "designNote": "Restores the actual acquisition the old docs replaced with an abandoned camp. Coercion staged, violence cut away from."
     },
     {
@@ -216,6 +221,7 @@
       "day": 138,
       "weather": "clear",
       "legacyStep": 15,
+      "objective": "Work the boar trail until the strength stays.",
       "designNote": "Hunting route from the map. Feeding White Boar Gu is also the cheapest diet in the game, which is the lesson."
     },
     {
@@ -251,6 +257,7 @@
       "day": 146,
       "weather": "mist",
       "legacyStep": 17,
+      "objective": "Find Wang Da's hideout and see what the red circles mean.",
       "designNote": "A portrait, a cooking fire, concealed markings. He avoids the fight by knowing the mountain better."
     },
     {
@@ -286,6 +293,7 @@
       "day": 152,
       "weather": "clear",
       "legacyStep": 17,
+      "objective": "Put your name on the roster at the internal affairs hall.",
       "designNote": "Seeds the winter group so chapters 93-96 cost something."
     },
     {
@@ -320,6 +328,7 @@
       "day": 159,
       "weather": "clear",
       "legacyStep": 17,
+      "objective": "Get past the boulder in the inheritance passage.",
       "designNote": "White Boar Gu stops granting strength here. The boulder is the wall that proves it was enough."
     },
     {
@@ -353,6 +362,7 @@
       "day": 164,
       "weather": "clear",
       "legacyStep": 18,
+      "objective": "Cross the stone forest without being seen from above.",
       "designNote": "Ceiling, darkness, carried light. The jade-eye monkeys conceal themselves and their stone bodies come apart."
     },
     {
@@ -388,6 +398,7 @@
       "day": 172,
       "weather": "clear",
       "legacyStep": 19,
+      "objective": "Prepare at the academy for the year-end examination.",
       "designNote": "The player is shown what to read during the duel. Readers get the dramatic irony for free."
     },
     {
@@ -425,6 +436,7 @@
       "day": 180,
       "weather": "clear",
       "legacyStep": 20,
+      "objective": "Fight Fang Zheng in the arena.",
       "designNote": "Multi-phase. Each phase is a defence to read, not a vitality bar to out-damage."
     },
     {
@@ -460,6 +472,7 @@
       "day": 278,
       "weather": "snow",
       "legacyStep": 21,
+      "objective": "Take the winter mission at the gathering grounds.",
       "designNote": "Clan obligations start competing with cultivation time. The calendar does the arguing."
     },
     {
@@ -498,6 +511,7 @@
       "day": 288,
       "weather": "snow",
       "legacyStep": 21,
+      "objective": "Reach rank two where nobody is counting: Jiang He's refuge.",
       "designNote": "A breakthrough ritual performed in secret. The secrecy is itself an exposure risk from here on."
     },
     {
@@ -534,6 +548,7 @@
       "day": 298,
       "weather": "snow",
       "legacyStep": 23,
+      "objective": "Take the boar king at the winter crossing.",
       "designNote": "The group losses are played, not summarised. Survival inside the carcass is the sequence, and it is cut away from at the right moment."
     },
     {
@@ -570,6 +585,7 @@
       "day": 306,
       "weather": "snow",
       "legacyStep": 23,
+      "objective": "File the application, and answer the inquiry into the loss.",
       "designNote": "The family-asset mission opens here and is not settled until chapter 115."
     },
     {
@@ -605,6 +621,7 @@
       "day": 312,
       "weather": "snow",
       "legacyStep": 24,
+      "objective": "Refine the White Jade Gu at the forge.",
       "designNote": "Canonical refinement: it cannot fail outright. Without the tusk it costs more days and more stones."
     }
   ]

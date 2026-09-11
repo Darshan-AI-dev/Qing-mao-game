@@ -25,11 +25,12 @@ have a beat and are tagged.
 | Stable IDs with migration | Done | `engine/core/beats.ts`; v1–v4 saves migrate and the original is kept |
 | TypeScript and a static build | Done | strict TS, Vite, act-pack code splitting, PWA plus an offline ZIP |
 | Event bus | Done | `engine/core/bus.ts`, ~45 typed events, `onAny()` for a sound pack |
-| Timeline runner | Done | `engine/scene/timeline.ts`, 16 commands, skippable and replayable |
+| Timeline runner | Done | `engine/scene/timeline.ts`, 17 commands, skippable and replayable |
 | Quality tiers | Done | `engine/render/quality.ts`, benchmark on first launch, manual override, adaptive render scale |
 | IndexedDB saves | Done | `engine/save/store.ts` with a localStorage fallback, `persist()`, three slots plus autosave |
 | New touch, gamepad and HUD | Done | `engine/input/input.ts`, `engine/ui/hud.ts`; contextual HUD, radial Gu wheel, full remapping |
 | Playwright matrix | Done | 3 engines × 5 viewports, plus the performance budget in the same pass |
+| Looking at the game | Done | `npm run sweep` photographs all 36 areas twice and prints mean and spread; `npm run sweep:play` plays the opening chapters and fails on a fade, letterbox or panel left over a scene. See `docs/ARCHITECTURE.md` |
 
 ## Phase 2 · Vertical slice, chapters 1–19 — done for the slice
 

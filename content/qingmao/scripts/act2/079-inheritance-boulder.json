@@ -66,7 +66,7 @@
     {
       "op": "line",
       "actor": "narrator",
-      "text": "White Boar Gu stops granting strength here. The boulder is the wall that proves it was enough.",
+      "text": "The boulder fills the passage end to end. There is no way past it that is not through it.",
       "kind": "narration",
       "sfx": null
     },

@@ -93,3 +93,55 @@ writes it to site storage. The `canon` block is identical for every player, and
 `validateLegacy()` overwrites whatever a hand-edited file claims — a first-game choice
 can never change what the sequel treats as canon. The `player` block only changes
 texture. `defaultLegacy()` is what game 2 uses when there is no file at all.
+
+## Looking at the game
+
+Data-level tests said the world was fine while it was rendering a black room, an
+objective marker the size of the floor, and a character walking backwards. None of
+those are visible in an assertion; all of them are obvious in a screenshot.
+
+```bash
+npm run sweep            # every area, desktop framing
+npm run sweep:phone      # every area, 430 x 932
+npm run sweep:play       # play the opening chapters and photograph every step
+npm run sweep:play:phone # the same, at 430 x 932
+```
+
+`tools/visual-sweep.mjs` walks into all 36 areas and photographs each twice — once at
+the play camera distance and once from far enough back to judge the layout — then
+`tools/contact-sheet.py` builds two contact sheets and prints a luminance table. The
+sweep runs and stops its own preview server, so it never leaves one behind for the
+Playwright suite to collide with.
+
+What the numbers are for:
+
+- **Luminance under ~12** means the area is not navigable. This is how the unlit caves
+  were found: they were black voids because the carried light had never been built.
+- **A high mean with a low spread** means a bright frame with nothing in it. Brightness
+  on its own says nothing — a snowfield is meant to be bright, and a flat ceiling of 155
+  flagged the snow areas while their drifts, tents and fires were perfectly legible. The
+  spread is what separates snow from paper.
+- **Identical draw-call and triangle counts across many areas** mean they are the same
+  generated layout wearing different names. Twenty-four of the thirty-six areas were
+  once exactly that, including a glacier that was a green forest; a second sweep, run
+  to check the first one's fixes, found eight more still sharing three layouts.
+
+Run it after any change to lighting, world building or the area archetypes, and look
+at the sheets. It takes about two minutes.
+
+`tools/play-sweep.mjs` covers what the area sweep structurally cannot. It starts at the
+title screen and plays: it presses Continue, takes the first option at every choice, and
+walks to the objective marker between scenes, photographing the frame each time anything
+on screen changes. Presentation bugs only exist while a scene is running, so this is the
+sweep that can see them, and it fails the run rather than only reporting:
+
+- a fade still opaque once control is back — the black screen after the chapter 2 choice
+  was exactly this, and it survived a regression test that skipped the scene instead of
+  playing it, because skipping never runs the `fade` command;
+- a letterbox still down while exploring;
+- a choice button below the bottom of the screen, which is a phone-shaped bug;
+- the Reader's Lens open on top of the dialogue it is meant to annotate.
+
+`walkToObjective()` on the debug surface really walks, in the same steps and through the
+same blockers as the player. An objective walled off behind its own scenery therefore
+shows up as a walk that does not arrive, rather than as a beat that silently never fires.

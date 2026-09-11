@@ -71,6 +71,51 @@ argument for having it.
 | The header wrapped onto two rows below about 1000 px, pushing Pause onto its own line | The header no longer wraps; the strapline and key hints drop out before the nav has to |
 | **On a phone the toast printed on top of the quest strip, and the joystick sat on the vitals panel and the Recall button** | The phone layout stacks header → quest strip → toast deliberately, and the stick owns the bottom-left corner with the footer inset past it. A new test asserts that **no two HUD panels overlap at any viewport** — the previous test only checked one specific pair |
 
+### Found by the first full visual sweep
+
+Photographing all 36 areas turned these up at once. None were visible to any assertion.
+
+| Issue | Fix |
+| --- | --- |
+| **Twenty-four of the thirty-six areas were the same two pictures**: a tan path between green cones, or an empty dark box. Identical draw-call and triangle counts gave it away before the images did | The area generator now has fifteen archetypes — hall, classroom, forge, market, lodging, cave, stone forest, blood lake, forest, snowfield, glacier, terraces, river, arena, camp — each building the place it actually is |
+| **The glacier and the winter grounds were green forests** with tan paths | Snow archetypes: white ground, drifts, pines or ice spikes, cold fog |
+| **The caves were unplayable black voids** (luminance 26). The design calls for darkness with the player carrying the light; only the darkness had been built | `Renderer.setCarriedLight()` gives the player a light underground, and it survives area rebuilds because it belongs to the player rather than the area |
+| Interiors were 38×34 halls with a single column, at a camera distance that showed a corner of the floor | Rooms are room-sized, with colonnades, benches and a dais in halls, ranks of desks in the classroom, a furnace and benches in the forge |
+| **The Yellow Dragon River was invisible** — its water colour was within a few points of its own bank, so the area read as one flat tan plane | Dark ochre water against pale silt banks, with reeds and pines set back on both sides |
+| The prologue — the first thing anyone sees — was an unlit purple murk | A broken colonnade lit by braziers, with the eight of them at the edge of the light |
+| The year-end duel arena had its crowd at radius 40 in a 132-unit area, so the spectators were dots on the horizon | A 96-unit arena with two rows of benches and spectators close enough to be a crowd |
+| The establishing shot was being throttled by the interior camera clamp, so interiors could not be inspected at all | An explicit inspection distance bypasses the clamp; the clamp still governs the play camera |
+
+### Found by the second sweep, and by the first play sweep
+
+The second area sweep was run to check the first one's fixes and found eight areas still
+sharing three layouts. The play sweep — which plays the game rather than photographing
+it — is new, and everything below it found on its first run.
+
+| Issue | Fix |
+| --- | --- |
+| **The quest panel printed the beat sheet's authoring notes as the player's objective.** Everyone playing read "Weak on purpose", "Also the combat tutorial, so the drop to Rank one has something to be a drop from" as their instruction for what to do next | Beats now carry an `objective` — one player-facing line each, for all 68 — and the design note stays where it belongs, behind the Reader's Lens opt-in. The content lint fails a beat with no objective, and fails one that reuses its design note |
+| **The underground river could not be finished.** The spawn point was a fixed spot on the +z axis, which at chapter 4 put the player's face into a boulder twenty-four paces from the marker; walking straight forward stopped dead | The spawn is chosen, not fixed: candidate angles are tested for a clear line to the objective, widening and then stepping in until one is walkable. A test asserts that all 36 areas spawn with a clear lane |
+| Three halls — the clan council pavilion, the internal affairs hall and the Bai clan hall — were the same room with the same benches | Four hall archetypes. The council seats its elders facing inward around an empty floor because that floor is where the accused stands; internal affairs is a counter, clerks' desks and ledger shelves; the medicine hall has sorting tables, racks and cots; the Bai hall is pale stone and a long cold approach, so another clan's hall reads as somewhere else |
+| The Earth Treasury, the inheritance passage and the deep inheritance were one dark chamber three times | A vault of stone coffers, a narrow sloping passage with the canonical round boulder in it, and a deep stalagmite cavern |
+| The winter gathering grounds and the winter beast crossing were the same snowfield | The grounds are occupied — tents, fires, stores, people. The crossing is a frozen channel with dead pines and a long sightline, because seeing what is coming is the point of it |
+| The academy gate, the hunter's rest and Wang Da's hideout were one campsite; the boar trail and the wolf forest were one bamboo field | A walled approach with a queue at the gate; a rest stop with racks and a fire; a bowl of rock with one gap in the rim; a churned winding trail with wallows; and old closed-in forest with high canopy and short fog |
+| The caves were navigable but the carried light reached about four paces, which is a torch in a black box | Wider and slower falloff, and a little more underground ambient — enough to silhouette stone against the fog, not enough to stop it being dark |
+| **Fifty-four scenes narrated their own production notes to the player.** In the game's own narrator voice: "He is provisioning for departure thirty chapters before he leaves. Readers should notice", "The room has to feel too large", "Nothing here is a fight the player can win" | Every one rewritten as narration from inside the scene. The lint now fails a line that repeats its Reader's Lens note, and fails a line that talks *about* the game — readers, players, chapters, staging, spawn points |
+| The Gu room elder was still standing in the tavern in the next chapter of the same scene, shoulder to shoulder with the keeper | Scenes have an `exit` command, and the lint fails an actor still on stage when a later chapter of the same scene stages a different cast |
+| **`AreaDescription.ground` was dead data.** Every outdoor area in the game used one shared green, so the glacier, the river silt, the arena dust and the forest floor were the same colour and only the fog told them apart. `sky` was dead too | Both are used. The floor is the area's own ground; the clear colour behind everything is the area's own sky |
+| **The outdoor ground was almost invisible.** ACES tone mapping at 1.05 returned a forest floor at about a fifth of its own brightness, so the hunter's rest, the boar trail and the wolf forest each read as a flat void with a few stalks floating in it | Exposure to 1.32, the outdoor ground colours lifted, and a scatter of wide soft patches in neighbouring tones — one extra draw call — so ground reads as ground and not as background |
+| The prologue was open to the sky, so "eight of them have the doorway surrounded" and "a room with one exit" played over what looked like a forest at night. Thirty boulders were scattered over the hall floor, hiding the eight behind them | It is an enclosed hall now, in worked dark stone, with the rubble pushed to the walls and the eight standing close enough to the light to be people |
+| Lanterns were bare brown sticks. In the Gu room one stood directly behind the player and read as part of him | A post with a paper lamp and a cap on it, merged into one geometry so the pair is still a single instanced draw |
+| The Gu room — where the clan keeps every Gu it owns — was ten crates in a ring | Walls of shelved cases, a keeper's counter, the orchid trays the Moonlight Gu are fed from |
+| A scripted camera could be placed inside an actor, who then filled the frame as an unreadable shape | Scripted cameras back off along their own view direction until they are clear of everyone |
+| The exploration HUD stayed up during cutscenes: the vitals panel sat half-swallowed by the letterbox bar, the joystick hung over a scene nobody can walk through, and any scene with an illustration overlapped the quest strip | The HUD stands down for the length of a scene, by opacity rather than display, so the panels-do-not-overlap test can still measure it |
+| The play sweep's own first two findings were false: it read the letterbox's opacity, which is always 1, and caught fades mid-transition | The check reads the height of the letterbox bars, and lets both overlays settle before judging. Worth recording: a check that cries wolf is worse than no check |
+| **Every beat opened with the camera between the player and his objective**, looking back up the road he had just come down, so walking to the marker meant walking into the lens. This is the other half of "the character is walking backward" | A beat now sets the camera yaw to the direction of the objective, so the player is seen from behind with the place he is going to in front of him |
+| The interior camera clamp assumed the player stood at the area's origin. Four paces off it, the camera went through the far wall, and the chapter 3 room rendered as a brown plane with none of the bed, window or stones on it | The orbit position itself is clamped inside the walls and under the ceiling |
+| Three areas opened on a giant lamp post filling the frame, and the Earth Treasury had one standing on the objective marker | Lamp posts are solid, the spawn search keeps the stretch behind the player clear because that is where the camera stands, and nothing is placed on an area's origin |
+| The luminance check's washed-out ceiling flagged the snow areas while their drifts, tents and fires were perfectly legible | Brightness alone says nothing. The flag is now a high mean *with* a low spread: a bright frame with nothing in it |
+
 ### A note on the regression test for the black screen
 
 The first version of the test skipped the prologue to reach the end, and passed even

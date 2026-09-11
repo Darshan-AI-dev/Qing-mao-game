@@ -22,6 +22,14 @@ import type { Actor, AnimationName } from '../render/actors';
 export type SceneCommand =
   | { op: 'move'; actor: string; to: [number, number]; seconds?: number; run?: boolean }
   | { op: 'place'; actor: string; at: [number, number]; facing?: number }
+  /**
+   * Takes an actor off the stage.
+   *
+   * Scenes that cover more than one chapter re-stage between them, and whoever was in
+   * the first shot used to stay standing through the second: the Gu room elder was
+   * still in frame in the tavern, shoulder to shoulder with the keeper.
+   */
+  | { op: 'exit'; actor: string }
   | { op: 'face'; actor: string; target: string }
   | { op: 'gesture'; actor: string; gesture: AnimationName }
   | { op: 'camera'; to: [number, number, number]; look: [number, number, number]; seconds?: number }
@@ -55,6 +63,7 @@ export interface SceneScript {
 export interface TimelineHost {
   actor(id: string): Actor | undefined;
   spawn(id: string, variant?: string | null): Actor;
+  despawn(id: string): void;
   camera: { to(position: Vector3, look: Vector3, seconds: number): Promise<void>; cut(position: Vector3, look: Vector3): void };
   showLine(actor: string, text: string, kind: 'spoken' | 'thought' | 'narration'): Promise<void>;
   askChoice(id: string, prompt: string, options: { id: string; label: string }[]): Promise<string>;
@@ -110,6 +119,10 @@ export class Timeline {
         actor.setPosition(command.at[0], 0, command.at[1]);
         if (command.facing !== undefined) actor.setFacing(command.facing);
         actor.play('idle');
+        return;
+      }
+      case 'exit': {
+        this.host.despawn(command.actor);
         return;
       }
       case 'move': {

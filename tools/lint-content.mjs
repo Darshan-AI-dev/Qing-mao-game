@@ -242,12 +242,76 @@ for (const entry of art.illustrations) {
   if (!entry.alt) fail('art', `${entry.id} has no alt text`);
 }
 
+// ------------------------------- 8. the production notes are not read out to the player
+//
+// Fifty-four scaffold scenes narrated their own Reader's Lens note, so the game told
+// players in its own narrator's voice that a room "has to feel too large" and that
+// "readers should notice" the provisioning. A note is an annotation behind an opt-in;
+// a line is the game talking to whoever is playing it.
+const NOTE_TELLS = [
+  /\breaders?\b/i, /\bplayers? (?:is|are|can|gets?|should|chooses?)\b/i,
+  /\bspawn point\b/i, /\bmini-?game\b/i, /\bcut away from\b/i, /\bstaged\b/i,
+  /\bchapters? \d+\b/i, /\bmodel (?:ships|swaps)\b/i, /\bthe sequel\b/i
+];
+for (const script of scripts) {
+  const note = (script.data.lens ?? {}).adaptation ?? '';
+  for (const command of script.data.commands ?? []) {
+    if (command.op !== 'line') continue;
+    if (note && command.text.trim() === note.trim()) {
+      fail('voice', `${script.path}: a line is the Reader's Lens note read out loud`);
+      continue;
+    }
+    const tell = NOTE_TELLS.find((pattern) => pattern.test(command.text));
+    if (tell) fail('voice', `${script.path}: a line talks about the game rather than in it — "${command.text.slice(0, 60)}"`);
+  }
+}
+
+// ------------------------------------- 9. nobody is left standing in the next shot
+//
+// A scene that covers more than one chapter re-stages between them. Whoever was placed
+// for an earlier shot stays in the world unless the script says otherwise, so the Gu
+// room elder went on standing in the tavern next to the keeper. An actor still on stage
+// when a later segment stages a different cast has to be given an `exit`.
+for (const script of scripts) {
+  const segments = [];
+  for (const command of script.data.commands ?? []) {
+    if (command.op === 'title' && segments.length && segments.at(-1).length) segments.push([]);
+    if (!segments.length) segments.push([]);
+    segments.at(-1).push(command);
+  }
+  const standing = new Set();
+  for (const [index, segment] of segments.entries()) {
+    const staged = new Set(segment.filter((c) => c.op === 'place').map((c) => c.actor));
+    // Only exits before the segment's first line count: one after the dialogue has
+    // played has already let the wrong person stand through the shot.
+    const firstLine = segment.findIndex((c) => c.op === 'line');
+    const before = firstLine === -1 ? segment : segment.slice(0, firstLine);
+    for (const command of before) if (command.op === 'exit') standing.delete(command.actor);
+    if (index && staged.size) {
+      for (const actor of standing) {
+        if (actor === 'fang-yuan' || staged.has(actor)) continue;
+        fail('staging', `${script.path}: ${actor} is still on stage when chapter ${segment.find((c) => c.op === 'title')?.chapter} stages ${[...staged].join(', ')}`);
+      }
+    }
+    for (const actor of staged) standing.add(actor);
+    for (const command of segment) if (command.op === 'exit') standing.delete(command.actor);
+  }
+}
+
 // ----------------------------------------- areas, ceilings, cast and must-lands
 for (const beat of beats) {
   const place = placeById.get(beat.area);
   if (!place) fail('areas', `${beat.id} is set in unknown area "${beat.area}"`);
   for (const member of beat.cast) {
     if (!characters.has(member)) fail('cast', `${beat.id} casts unknown character "${member}"`);
+  }
+  // The quest panel printed `designNote` for a while, so every player read the beat
+  // sheet's authoring notes as their objective. Two rules keep that from coming back:
+  // every beat owes the player a line, and it is not the note.
+  if (!beat.objective || !beat.objective.trim()) {
+    fail('objectives', `${beat.id} has no player-facing objective`);
+  } else if (beat.objective.trim() === (beat.designNote ?? '').trim()) {
+    fail('objectives', `${beat.id} uses its design note as the objective`);
   }
 }
 // An underground area that is not enclosed is the stone-forest bug; catch it in data.

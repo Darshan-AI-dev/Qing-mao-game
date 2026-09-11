@@ -24,7 +24,7 @@ achievable at this scope. Three properties matter more than any individual asset
 
 | Role | Value | Used for |
 | --- | --- | --- |
-| Ground green | `#314f43` | Village and forest floor |
+| Ground green | `#4f6c4e` | Village and forest floor |
 | Spear bamboo | `#38744c` | Qing Mao's signature bamboo |
 | Roof teal | `#27494a` | Roofs, awnings, clan buildings |
 | Wall straw | `#8f8d64` | Bamboo and daub walls |
@@ -36,6 +36,18 @@ achievable at this scope. Three properties matter more than any individual asset
 
 The jade/gold pair carries almost all UI meaning. Blood is reserved: if it appears,
 something has gone wrong for the player.
+
+Every area sets its own `ground` and `sky`; the values above are the fallbacks and the
+sense the rest of the palette is tuned against. Two things they are tuned against in
+particular:
+
+- **ACES tone mapping at exposure 1.32.** ACES pulls the midtones down, and this whole
+  palette lives in the midtones. At the original 1.05 a forest floor came back at about
+  a fifth of its own brightness and was indistinguishable from the fog behind it. Pick
+  ground colours a good deal lighter than the value you want on screen.
+- **Ground is never one flat colour.** `buildArea` scatters soft patches in neighbouring
+  tones across every outdoor floor. One untextured plane in one tone is a background,
+  not ground: it has no horizon and nothing to judge distance or speed against.
 
 ## Characters
 

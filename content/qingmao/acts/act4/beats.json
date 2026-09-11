@@ -40,6 +40,7 @@
       "day": 80,
       "weather": "rain",
       "legacyStep": 45,
+      "objective": "Pay what rank three costs.",
       "designNote": "The choice is on screen; the act is off screen; the breakthrough is a full ritual. Three pieces of evidence enter the world."
     },
     {
@@ -76,6 +77,7 @@
       "day": 84,
       "weather": "clear",
       "legacyStep": 47,
+      "objective": "Face the elder and the faction standing behind him.",
       "designNote": "Yao Ji begins appearing in the village between beats from here on."
     },
     {
@@ -110,6 +112,7 @@
       "day": 88,
       "weather": "clear",
       "legacyStep": 47,
+      "objective": "Refine the tools you will need for leaving.",
       "designNote": "Sky Canopy replaces White Jade. The upkeep jump is the point of the promotion."
     },
     {
@@ -143,6 +146,7 @@
       "day": 94,
       "weather": "clear",
       "legacyStep": 48,
+      "objective": "Refine a moon that is not bound to the orchids.",
       "designNote": "Chosen because its diet does not chain him to clan supplies after he leaves."
     },
     {
@@ -177,6 +181,7 @@
       "day": 100,
       "weather": "rain",
       "legacyStep": 50,
+      "objective": "Place the order at the medicine hall.",
       "designNote": null
     },
     {
@@ -217,6 +222,7 @@
       "day": 110,
       "weather": "mist",
       "legacyStep": 52,
+      "objective": "Keep asking the same question around the village.",
       "designNote": "Yao Ji asks everyone. Cleanup here is the last chance before Tie Ruo Nan arrives."
     },
     {
@@ -250,6 +256,7 @@
       "day": 120,
       "weather": "clear",
       "legacyStep": 54,
+      "objective": "Refine something that works at close range.",
       "designNote": null
     },
     {
@@ -285,6 +292,7 @@
       "day": 128,
       "weather": "clear",
       "legacyStep": 56,
+      "objective": "Buy supplies for a road you have not named.",
       "designNote": "He is provisioning for departure thirty chapters before he leaves. Readers should notice."
     },
     {
@@ -326,6 +334,7 @@
       "day": 136,
       "weather": "clear",
       "legacyStep": 59,
+      "objective": "Meet the investigator who expects to be lied to.",
       "designNote": "Exposure payoff two. She opens on whatever the player actually left, all the way back to chapter 44."
     },
     {
@@ -366,6 +375,7 @@
       "day": 144,
       "weather": "rain",
       "legacyStep": 61,
+      "objective": "Stay ahead of the investigator working the trail.",
       "designNote": "She visits the places. A clean trail is calm and cheap; a messy one costs lies, bribes and days."
     },
     {
@@ -404,6 +414,7 @@
       "day": 152,
       "weather": "clear",
       "legacyStep": 64,
+      "objective": "Let the wrong theory settle.",
       "designNote": "As in canon he is never caught. It should read as a near miss the player earned, not as a gift."
     },
     {
@@ -440,6 +451,7 @@
       "day": 160,
       "weather": "clear",
       "legacyStep": 66,
+      "objective": "Go down under the clan to the deep inheritance.",
       "designNote": "The room has to feel too large. Nothing here is a fight the player can win."
     },
     {
@@ -476,6 +488,7 @@
       "day": 168,
       "weather": "clear",
       "legacyStep": 69,
+      "objective": "Find out what advancement costs at the blood lake.",
       "designNote": "Stone Aperture Gu is expended. Rank three peak, and the chance of anything beyond it spent."
     },
     {
@@ -513,6 +526,7 @@
       "day": 176,
       "weather": "storm",
       "legacyStep": 72,
+      "objective": "Two powers over one mountain. Choose.",
       "designNote": "Staged so both read as out of the player's league. Fang Zheng is carried off, alive."
     },
     {
@@ -548,6 +562,7 @@
       "day": 179,
       "weather": "storm",
       "legacyStep": 74,
+      "objective": "Decide about the curtain.",
       "designNote": "The decision is on screen. Mass death is staged through aftermath and reaction, never as a scoring mechanic."
     },
     {
@@ -582,6 +597,7 @@
       "day": 181,
       "weather": "snow",
       "legacyStep": 75,
+      "objective": "Spring, then autumn. Get to the glacier.",
       "designNote": "The one rewind, fixed. A cinematic sequence with a fixed outcome, not a combat arena."
     },
     {
@@ -618,6 +634,7 @@
       "day": 183,
       "weather": "snow",
       "legacyStep": 75,
+      "objective": "See what the yin does to her.",
       "designNote": "Bai's model swaps to the restored variant here. The Yang Gu stays with Fang Yuan; that is the sequel's lever."
     },
     {
@@ -655,6 +672,7 @@
       "day": 184,
       "weather": "mist",
       "legacyStep": 76,
+      "objective": "Take the raft down the Yellow Dragon River.",
       "designNote": "Rank one again, no healing Gu, the Southern Border ahead. Offers the Legacy export and the Unfinished business page."
     }
   ]

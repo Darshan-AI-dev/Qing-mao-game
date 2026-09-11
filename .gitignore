@@ -6,3 +6,10 @@ test-results/
 Qing-Mao-Rebirth-offline.zip
 *.local
 .DS_Store
+
+# Visual sweep output: regenerate with npm run sweep / npm run sweep:play.
+sweep/
+sweep-play/
+sweep-play-phone/
+sheet-play.png
+sheet-wide.png

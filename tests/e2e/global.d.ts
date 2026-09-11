@@ -29,6 +29,14 @@ declare global {
         characterLook(id: string): { length: string; style: string; colour: number[]; meshes: number };
         facingProbe(id: string): { faceZ: number; backZ: number; rotationY: number; forward: { x: number; z: number } };
         toast(text: string): void;
+        visitArea(areaId: string): boolean;
+        jumpToBeat(beatId: string): boolean;
+        walkToObjective(): boolean;
+        spawnClearance(areaId: string): { x: number; z: number; lane: boolean; reachable: boolean };
+        currentBeatFacts(): { id: string; title: string; objective: string; designNote: string } | null;
+        areaIds(): string[];
+        setCameraDistance(distance: number): void;
+        setInspectionDistance(distance: number | null): void;
         sceneStateAfterSkip(): { flagsApplied: number; evidence: number };
       };
       legacy: {

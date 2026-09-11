@@ -37,6 +37,7 @@
       "day": 320,
       "weather": "clear",
       "legacyStep": 26,
+      "objective": "Petition the internal affairs hall for what the ledger says is yours.",
       "designNote": "The squeeze starts on paper. Spawn point sits beside the hall, not a hundred and ninety paces away."
     },
     {
@@ -74,6 +75,7 @@
       "day": 328,
       "weather": "rain",
       "legacyStep": 27,
+      "objective": "Find the villagers who remember the arrangement.",
       "designNote": "Pressure, payment or patience. All three reach the same settlement at different prices."
     },
     {
@@ -111,6 +113,7 @@
       "day": 338,
       "weather": "clear",
       "legacyStep": 29,
+      "objective": "Put the claim to the council.",
       "designNote": null
     },
     {
@@ -147,6 +150,7 @@
       "day": 348,
       "weather": "clear",
       "legacyStep": 30,
+      "objective": "Take the settlement and the property with it.",
       "designNote": "Unlocks the tavern and property loop. Fang Zheng is in the room and says the wrong thing."
     },
     {
@@ -180,6 +184,7 @@
       "day": 352,
       "weather": "clear",
       "legacyStep": 30,
+      "objective": "Watch the Bai clan keep its own accounts.",
       "designNote": "Viewpoint interlude. Bai's one-arm model ships here and stays until chapter 199."
     },
     {
@@ -215,6 +220,7 @@
       "day": 356,
       "weather": "rain",
       "legacyStep": 31,
+      "objective": "Harvest the nine-leaf and find a buyer for it.",
       "designNote": "The most reliable income in the game, and the only healing. Both facts matter at chapter 200."
     },
     {
@@ -248,6 +254,7 @@
       "day": 4,
       "weather": "clear",
       "legacyStep": 32,
+      "objective": "Attempt the Moonglow refinement.",
       "designNote": "The scripted first failure stays. It costs days and stones, never the Gu."
     },
     {
@@ -281,6 +288,7 @@
       "day": 14,
       "weather": "clear",
       "legacyStep": 34,
+      "objective": "Refine Moonglow, properly this time.",
       "designNote": null
     },
     {
@@ -318,6 +326,7 @@
       "day": 20,
       "weather": "clear",
       "legacyStep": 35,
+      "objective": "Take the tavern in hand: staff, stock and troublemakers.",
       "designNote": "Two floors, a wage bill and Man Shi. Feeds the economy and the codex, never filler."
     },
     {
@@ -352,6 +361,7 @@
       "day": 28,
       "weather": "clear",
       "legacyStep": 36,
+      "objective": "Refine the Four Flavours Gu.",
       "designNote": "Needs a second Liquor worm. The upkeep after this is meant to hurt."
     },
     {
@@ -387,6 +397,7 @@
       "day": 38,
       "weather": "rain",
       "legacyStep": 38,
+      "objective": "Buy the scales and the ear in the soil at the medicine hall.",
       "designNote": null
     },
     {
@@ -423,6 +434,7 @@
       "day": 48,
       "weather": "mist",
       "legacyStep": 39,
+      "objective": "Hear out the warnings before the tide comes.",
       "designNote": "Weather turns with the calendar. Qing Shu is established here so chapter 145 costs something."
     },
     {
@@ -460,6 +472,7 @@
       "day": 56,
       "weather": "storm",
       "legacyStep": 41,
+      "objective": "Go into the forest while the wolf tide is running.",
       "designNote": "Sub-types and pack behaviour. Concealment is the intended answer; fighting is the expensive one."
     },
     {
@@ -495,6 +508,7 @@
       "day": 62,
       "weather": "storm",
       "legacyStep": 42,
+      "objective": "Hold the position, for as long as it holds.",
       "designNote": "The observer framing is the scene. The player can leave at any moment and the game never asks them to stay."
     },
     {
@@ -528,6 +542,7 @@
       "day": 70,
       "weather": "mist",
       "legacyStep": 44,
+      "objective": "Take the tally of what the tide left.",
       "designNote": null
     },
     {
@@ -562,6 +577,7 @@
       "day": 76,
       "weather": "rain",
       "legacyStep": 44,
+      "objective": "Deal with the one who recognises you.",
       "designNote": "Act III ends on the encounter, not on what follows. Give her enough lines to be a person first."
     }
   ]
