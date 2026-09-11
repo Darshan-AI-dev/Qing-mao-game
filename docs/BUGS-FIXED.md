@@ -119,6 +119,14 @@ it — is new, and everything below it found on its first run.
 | Fang Yuan's robe was an open-ended cylinder, so it had no bottom and its inner wall was back-face culled. From a low camera you looked through the front of the robe at the lit inside of its back, and he read as a pale lampshade | Closed, and a little less flared |
 | The luminance check's washed-out ceiling flagged the snow areas while their drifts, tents and fires were perfectly legible | Brightness alone says nothing. The flag is now a high mean *with* a low spread: a bright frame with nothing in it |
 
+### Reported from play: the stick, and scenes behind the text
+
+| Issue | Fix |
+| --- | --- |
+| **Left and right on the joystick were mirrored at every camera angle.** The movement basis used `cross(up, forward)` where screen-right is `cross(forward, up)` — exactly the negative of it. Forward was correct, which is why it read as "left and right is off" rather than as reversed controls | The basis is fixed, and the convention is now pinned on the textbook camera: looking down −Z with up +Y, screen-right is +X. **The unit test asserted the same wrong cross product**, which is how a mirrored stick passed a check at 24 camera angles. It now computes the cross product rather than writing it out by hand, and a browser test measures the strafe against the right vector read out of the camera's own world matrix — something that cannot agree with a mistake of mine. Both verified to fail on the old basis |
+| **The aperture awakening played behind the text box.** The scene is framed on Fang Yuan's chest at the centre of the screen, and on a phone the dialogue panel — at its tallest, because that scene also shows an illustration — was 461 of 932 pixels directly over it | Four things, and it needed all four. The camera drops its aim point by half the panel's measured height, so the subject rises clear of it, re-measured every frame because the panel grows when a line has a thought or an illustration under it. With the HUD standing down, the panel drops to the bottom edge instead of floating twelve rem up to clear a stick that is not there. The bar depth has one definition (`--bar`) that the header and the panel both respect, so the nav is no longer under the top bar nor Skip scene under the bottom one. Illustrations are capped by frame height as well as column width |
+| The play sweep now fails a run where the dialogue panel covers more than 55% of the screen, or where the panel or the nav is under a letterbox bar | |
+
 ### A note on the frustum-culling test
 
 Making the prologue an enclosed hall broke it, and the break was informative. Every

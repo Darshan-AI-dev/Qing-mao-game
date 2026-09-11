@@ -87,7 +87,8 @@ const inspect = () =>
         [
           ['quest', document.getElementById('quest')],
           ['vitals', document.querySelector('.vitals')],
-          ['dialogue', document.getElementById('dialoguePanel')]
+          ['dialogue', document.getElementById('dialoguePanel')],
+          ['nav', document.querySelector('header nav')]
         ].map(([name, el]) => {
           const visible = el && !el.hidden && getComputedStyle(el).opacity !== '0';
           const r = visible ? el.getBoundingClientRect() : null;
@@ -151,6 +152,21 @@ for (let step = 0; step < steps; step++) {
     if (state.boxes.vitals && state.letterbox > 1
         && state.boxes.vitals.bottom > state.viewport.h - state.letterbox) {
       problems.push(`${name}: the vitals panel runs under the bottom letterbox bar`);
+    }
+    if (state.boxes.dialogue && state.letterbox > 1
+        && state.boxes.dialogue.bottom > state.viewport.h - state.letterbox + 1) {
+      problems.push(`${name}: the dialogue panel runs under the bottom letterbox bar`);
+    }
+    if (state.boxes.nav && state.letterbox > 1 && state.boxes.nav.top < state.letterbox - 1) {
+      problems.push(`${name}: the nav runs under the top letterbox bar`);
+    }
+    // Half the screen is the most the text may take: a scene the player cannot see is
+    // not a scene. The aperture awakening played entirely behind the panel on a phone.
+    if (state.boxes.dialogue) {
+      const share = (state.boxes.dialogue.bottom - state.boxes.dialogue.top) / state.viewport.h;
+      if (share > 0.55) {
+        problems.push(`${name}: the dialogue panel covers ${Math.round(share * 100)}% of the screen`);
+      }
     }
     // Between scenes nothing may be left covering the world. Both overlays animate
     // out over about half a second, so let them settle before judging: a fade caught

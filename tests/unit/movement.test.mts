@@ -10,6 +10,12 @@
 import { MOVE_DEADZONE, orbitCamera, worldMove } from '../../engine/core/movement.ts';
 
 let failures = 0;
+const UP: [number, number, number] = [0, 1, 0];
+const cross3 = (a: number[], b: number[]): [number, number, number] => [
+  a[1]! * b[2]! - a[2]! * b[1]!,
+  a[2]! * b[0]! - a[0]! * b[2]!,
+  a[0]! * b[1]! - a[1]! * b[0]!
+];
 const check = (label: string, condition: boolean, detail = '') => {
   if (!condition) {
     failures++;
@@ -25,8 +31,11 @@ for (let deg = 0; deg < 360; deg += 15) {
   // "Into the screen" is the flattened direction from the camera to the player.
   const length = Math.hypot(player.x - camera.x, player.z - camera.z);
   const into = { x: (player.x - camera.x) / length, z: (player.z - camera.z) / length };
-  // Screen-right is cross(up, forward) for a Y-up camera.
-  const right = { x: into.z, z: -into.x };
+  // Screen-right is cross(forward, up). Computed, not written out by hand: the hand-
+  // written version had the operands the other way round, which is the negative of it,
+  // so this test asserted a mirrored stick and passed at all 24 yaws while the controls
+  // felt wrong to play. The anchor case below pins which one is right.
+  const right = { x: cross3([into.x, 0, into.z], UP)[0], z: cross3([into.x, 0, into.z], UP)[2] };
 
   const forward = worldMove({ x: 0, z: -1 }, yaw);
   const strafe = worldMove({ x: 1, z: 0 }, yaw);
@@ -40,6 +49,11 @@ for (let deg = 0; deg < 360; deg += 15) {
   check(`yaw ${deg}: back is the opposite of forward`,
     Math.abs(worldMove({ x: 0, z: 1 }, yaw).dx + forward.dx) < 1e-9);
 }
+
+// The anchor. A camera looking down -Z with up +Y has screen-right at +X; this is the
+// one fact the whole basis rests on, so assert it rather than trusting the derivation.
+check('screen-right is cross(forward, up)', cross3([0, 0, -1], UP)[0] === 1,
+  `got ${cross3([0, 0, -1], UP).join(', ')}`);
 
 // Deadzone and response curve.
 check('a tiny nudge is ignored', worldMove({ x: 0.05, z: 0.05 }, 0).facing === null);

@@ -77,7 +77,15 @@ html, body {
 #letterbox span { position: absolute; left: 0; right: 0; height: 0; background: #000; transition: height 0.45s ease; }
 #letterbox span:first-child { top: 0; }
 #letterbox span:last-child { bottom: 0; }
-#letterbox.on span { height: 9vh; }
+/*
+ * One source of truth for the bar depth.
+ *
+ * The bars are drawn over everything, so anything that has to stay readable during a
+ * scene has to know how deep they are. Hard-coding 9vh in the bar and nowhere else put
+ * the header under the top bar and the Skip scene button under the bottom one.
+ */
+:root { --bar: 9vh; }
+#letterbox.on span { height: var(--bar); }
 /*
  * A cutscene is a cutscene.
  *
@@ -94,6 +102,20 @@ body.scene #quest {
   pointer-events: none;
 }
 footer, #joystick, #quest { transition: opacity 0.35s ease; }
+/*
+ * With the HUD down, the dialogue panel drops to the bottom edge.
+ *
+ * It normally floats clear of the vitals panel and the stick, which during a scene are
+ * not there — so on a phone it was hovering twelve rem up with nothing underneath it,
+ * costing the world about a hundred and fifty pixels at the top of the frame. That is
+ * the band the scene is playing in.
+ */
+body.scene #dialoguePanel { bottom: calc(var(--safe-bottom) + var(--bar) + 0.4rem); }
+#dialoguePanel { transition: bottom 0.35s ease; }
+/* The nav has to stay reachable during a scene — Pause and the Journal both — so it
+   moves down past the top bar rather than hiding underneath it. */
+body.scene header { transform: translateY(var(--bar)); }
+header { transition: transform 0.45s ease; }
 
 #telegraphLayer { position: fixed; inset: 0; pointer-events: none; z-index: 20; display: grid; place-items: center; }
 .telegraph { width: min(40vmin, 320px); height: min(40vmin, 320px); color: var(--warn); opacity: 0.9; animation: telegraph var(--telegraph-seconds, 1s) ease-out forwards; }
@@ -225,7 +247,18 @@ kbd { font-family: var(--ui-font); font-size: 0.65rem; opacity: 0.65; border: 1p
   padding: 0.85rem 1rem;
 }
 #sceneArt { margin: 0 0 0.6rem; }
-#sceneArt img { width: 100%; max-width: 100%; height: auto; border-radius: var(--radius); display: block; }
+/*
+ * The illustration is capped by frame height, not only by column width.
+ *
+ * At 430 x 932 a full-width illustration made the dialogue panel 461px tall — half the
+ * screen — and the aperture awakening, which is the scene the chapter is about, played
+ * entirely behind it. `object-fit: cover` keeps the crop rather than letterboxing the
+ * art inside its own box.
+ */
+#sceneArt img {
+  width: 100%; max-width: 100%; height: auto; max-height: 30vh; object-fit: cover;
+  border-radius: var(--radius); display: block;
+}
 #sceneArt figcaption { font-family: var(--ui-font); font-size: 0.68rem; color: var(--ink-faint); margin-top: 0.25rem; }
 #dialogueSpeaker { display: block; font-family: var(--ui-font); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
 #dialogueText { margin: 0.3rem 0 0; font-size: 1rem; min-height: 1.5em; }
@@ -454,6 +487,10 @@ textarea { min-height: 6rem; resize: vertical; }
   .action .label { font-size: 0.64rem; }
   .context { min-width: 84px; min-height: 52px; }
   #dialoguePanel { bottom: calc(var(--safe-bottom) + 12rem); left: 0.6rem; right: 0.6rem; transform: none; width: auto; }
+  /* Nine vh top and bottom is a lot of a phone screen to give to black bars when the
+     panel already has half of what is left. */
+  :root { --bar: 5vh; }
+  #sceneArt img { max-height: 24vh; }
   #guWheel { right: 30vw; bottom: 34vh; }
   .chapterRow { grid-template-columns: 2.2rem 4.2rem 1fr; }
 }

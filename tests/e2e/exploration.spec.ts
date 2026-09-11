@@ -280,3 +280,30 @@ test('the quest panel shows the objective, not the beat sheet design note', asyn
   expect(questText).not.toBe(beat!.designNote);
   expect(questText.length).toBeGreaterThan(10);
 });
+
+test('pushing right moves the player to the camera\'s right', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+
+  // Measured against the camera's own world matrix, not against a cross product written
+  // out by hand. The basis had `cross(up, forward)` where it needed `cross(forward, up)`
+  // — exactly mirrored — and the unit test checked it with the same wrong expression, so
+  // a stick that felt wrong in the hand passed a check at 24 camera angles.
+  for (const [key, sign] of [['ArrowRight', 1], ['ArrowLeft', -1]] as const) {
+    const before = await page.evaluate(() => ({
+      player: window.qingMao.debug.playerPosition(),
+      basis: window.qingMao.debug.cameraBasis()
+    }));
+    await page.keyboard.down(key);
+    await page.waitForTimeout(350);
+    await page.keyboard.up(key);
+    const after = await page.evaluate(() => window.qingMao.debug.playerPosition());
+
+    const moved = { x: after.x - before.player.x, z: after.z - before.player.z };
+    const distance = Math.hypot(moved.x, moved.z);
+    expect(distance, `${key} did not move the player`).toBeGreaterThan(0.5);
+    const along = (moved.x * before.basis.right.x + moved.z * before.basis.right.z) / distance;
+    expect(along * sign, `${key} moved the player the wrong way across the screen`)
+      .toBeGreaterThan(0.9);
+  }
+});

@@ -34,6 +34,7 @@ declare global {
         walkToObjective(): boolean;
         spawnClearance(areaId: string): { x: number; z: number; lane: boolean; reachable: boolean };
         currentBeatFacts(): { id: string; title: string; objective: string; designNote: string } | null;
+        cameraBasis(): { right: { x: number; y: number; z: number }; forward: { x: number; y: number; z: number } };
         areaIds(): string[];
         setCameraDistance(distance: number): void;
         setInspectionDistance(distance: number | null): void;

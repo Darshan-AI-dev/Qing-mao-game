@@ -292,6 +292,8 @@ class Game implements TimelineHost {
     byId('sceneArt').hidden = true;
     byId('lensPanel').hidden = true;
     byId('recollectionPanel').hidden = true;
+    // The scene's shot is finished with; the orbit camera takes over from here.
+    this.sceneAim = null;
   }
 
   private showLensNotes(script: SceneScript): void {
@@ -561,25 +563,38 @@ class Game implements TimelineHost {
     return push > 0 ? position.clone().addScaledVector(back, push) : position;
   }
 
+  /** The shot a scene asked for, before the dialogue panel is taken into account. */
+  private sceneAim: { position: Vector3; look: Vector3 } | null = null;
+
+  /** Points the camera at a scripted look target, lifted clear of the dialogue panel. */
+  private aimScene(position: Vector3, look: Vector3): void {
+    const lifted = look.clone();
+    lifted.y -= this.framingLift(position.distanceTo(look));
+    this.renderer.camera.lookAt(lifted);
+  }
+
   camera = {
     to: (target: Vector3, look: Vector3, seconds: number): Promise<void> =>
       new Promise((resolve) => {
         const position = this.clearOfActors(target, look);
+        this.sceneAim = { position, look: look.clone() };
         const from = this.renderer.camera.position.clone();
         const start = performance.now();
         const step = (now: number) => {
           const time = seconds <= 0 ? 1 : Math.min(1, (now - start) / (seconds * 1000));
           const eased = time * time * (3 - 2 * time);
           this.renderer.camera.position.lerpVectors(from, position, eased);
-          this.renderer.camera.lookAt(look);
+          this.aimScene(this.renderer.camera.position, look);
           if (time < 1) requestAnimationFrame(step);
           else resolve();
         };
         requestAnimationFrame(step);
       }),
     cut: (position: Vector3, look: Vector3): void => {
-      this.renderer.camera.position.copy(this.clearOfActors(position, look));
-      this.renderer.camera.lookAt(look);
+      const clear = this.clearOfActors(position, look);
+      this.sceneAim = { position: clear, look: look.clone() };
+      this.renderer.camera.position.copy(clear);
+      this.aimScene(clear, look);
     }
   };
 
@@ -783,7 +798,12 @@ class Game implements TimelineHost {
   }
 
   private updateCamera(frame: { look: { dx: number; dy: number } }, dt: number): void {
-    if (this.inScene) return;
+    if (this.inScene) {
+      // A scripted camera is set once, but the panel under it changes height as lines
+      // and illustrations come and go, so the shot is re-aimed every frame instead.
+      if (this.sceneAim) this.aimScene(this.sceneAim.position, this.sceneAim.look);
+      return;
+    }
     const settings = this.save.settings;
     // Dragging right turns the view right. The first version subtracted, which orbited
     // the camera the other way and made the controls feel mirrored.
@@ -802,6 +822,36 @@ class Game implements TimelineHost {
   }
 
   /**
+   * How much of the frame the dialogue panel is covering, as a fraction of its height.
+   *
+   * Zero when it is down. Measured rather than assumed: the panel grows when a line has
+   * an inner-voice thought under it, and grows a lot when the scene shows an
+   * illustration, which is exactly when it is most in the way.
+   */
+  private panelShare(): number {
+    const panel = document.getElementById('dialoguePanel');
+    if (!panel || panel.hidden) return 0;
+    const height = panel.getBoundingClientRect().height;
+    if (height <= 0) return 0;
+    return Math.min(0.5, height / Math.max(1, window.innerHeight));
+  }
+
+  /**
+   * How far to drop the aim point so the subject clears the dialogue panel.
+   *
+   * Aiming lower raises what you are looking at. The awakening ceremony is framed on
+   * Fang Yuan's chest at the centre of the screen, and the panel — at its tallest,
+   * because that scene also shows an illustration — sat straight over it, so the one
+   * moment the chapter is about played behind a box of text.
+   */
+  private framingLift(distance: number): number {
+    const share = this.panelShare();
+    if (share <= 0) return 0;
+    const halfHeight = Math.tan((this.renderer.camera.fov * Math.PI) / 360) * distance;
+    return share * halfHeight;
+  }
+
+  /**
    * Puts the orbit camera where the player and the yaw say it should be.
    *
    * Called from the frame loop, and again the moment an area is entered. Waiting for
@@ -814,7 +864,10 @@ class Game implements TimelineHost {
       orbitCamera(this.player, this.cameraYaw, this.cameraPitch, this.effectiveCameraDistance())
     );
     this.renderer.camera.position.set(eye.x, eye.y, eye.z);
-    this.renderer.camera.lookAt(new Vector3(this.player.x, 2, this.player.z));
+    const distance = Math.hypot(eye.x - this.player.x, eye.y - 2, eye.z - this.player.z);
+    this.renderer.camera.lookAt(
+      new Vector3(this.player.x, 2 - this.framingLift(distance), this.player.z)
+    );
   }
 
   /**
@@ -1206,6 +1259,22 @@ class Game implements TimelineHost {
     this.cameraDistanceOverride = distance === null ? null : Math.max(4, distance);
   }
 
+  /**
+   * The camera's own axes, read out of its world matrix rather than re-derived.
+   *
+   * The movement basis had `cross(up, forward)` where it needed `cross(forward, up)`,
+   * so strafing was mirrored at every yaw — and the unit test checked it against the
+   * same hand-written cross product, so it passed. This reads the right vector from the
+   * matrix three.js actually renders with, which cannot agree with a mistake of mine.
+   */
+  cameraBasis(): { right: { x: number; y: number; z: number }; forward: { x: number; y: number; z: number } } {
+    const camera = this.renderer.camera;
+    camera.updateMatrixWorld();
+    const right = new Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize();
+    const forward = new Vector3().setFromMatrixColumn(camera.matrixWorld, 2).negate().normalize();
+    return { right: { ...right }, forward: { ...forward } };
+  }
+
   /** Where the model's face points, and which way it is turned. */
   facingProbe(id: string): { faceZ: number; backZ: number; rotationY: number; forward: { x: number; z: number } } {
     const probe = this.actors.get(id)?.facingProbe() ?? { faceZ: 0, backZ: 0, rotationY: 0 };
@@ -1328,6 +1397,7 @@ async function boot(): Promise<void> {
       walkToObjective: () => game.walkToObjective(),
       spawnClearance: (areaId: string) => game.spawnClearance(areaId),
       currentBeatFacts: () => game.currentBeatFacts(),
+      cameraBasis: () => game.cameraBasis(),
       areaIds: () => game.areaIds(),
       setCameraDistance: (d: number) => game.setCameraDistance(d),
       setInspectionDistance: (d: number | null) => game.setInspectionDistance(d),

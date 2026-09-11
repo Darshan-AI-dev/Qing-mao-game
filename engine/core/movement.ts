@@ -15,7 +15,14 @@
  * back at them, so:
  *
  *   - the direction it looks, flattened, is `(sin yaw, cos yaw)`
- *   - screen-right is `cross(up, forward)` = `(cos yaw, -sin yaw)`
+ *   - screen-right is `cross(forward, up)` = `(-cos yaw, sin yaw)`
+ *
+ * That second line was `cross(up, forward)` for a long time, which is the negative of
+ * it, so strafing was mirrored at every yaw while forward was correct — "left and right
+ * are off". Pin the convention on the textbook camera rather than deriving it by hand:
+ * looking down -Z with up +Y, screen-right is +X, and only `cross(forward, up)` gives
+ * that. The unit test asserted the same wrong cross product, which is how a mirrored
+ * stick passed a check at 24 yaws.
  *
  * Input uses screen conventions, where pushing up is negative — so forward is `-move.z`.
  */
@@ -56,8 +63,8 @@ export function worldMove(move: MoveInput, cameraYaw: number): WorldMove {
   const forward = -nz;
   const strafe = nx;
 
-  const dx = cos * strafe + sin * forward;
-  const dz = -sin * strafe + cos * forward;
+  const dx = -cos * strafe + sin * forward;
+  const dz = sin * strafe + cos * forward;
   return { dx, dz, facing: Math.atan2(dx, dz) };
 }
 
