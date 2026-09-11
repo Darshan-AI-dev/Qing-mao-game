@@ -13,8 +13,15 @@ import { bus } from '../core/bus';
 import { charactersById } from '../../canon/index';
 import { byId, clear, el } from './dom';
 
-const TYPE_MS_PER_CHAR = 18;
-const AUTO_ADVANCE_MS = 1400;
+const TYPE_MS_PER_CHAR = 14;
+/** Auto-advance holds a finished line long enough to read it, not a flat delay. */
+const AUTO_ADVANCE_BASE_MS = 700;
+const AUTO_ADVANCE_MS_PER_CHAR = 22;
+const AUTO_ADVANCE_MAX_MS = 4500;
+
+function autoAdvanceDelay(text: string): number {
+  return Math.min(AUTO_ADVANCE_MAX_MS, AUTO_ADVANCE_BASE_MS + text.length * AUTO_ADVANCE_MS_PER_CHAR);
+}
 
 export interface BacklogLine {
   speaker: string;
@@ -31,7 +38,8 @@ export class Dialogue {
   private choicesNode: HTMLElement;
   private backlogNode: HTMLElement;
   private backlog: BacklogLine[] = [];
-  private typing: { cancel: () => void; finish: () => void } | null = null;
+  private typing: { cancel: () => void; finish: () => void; armAutoAdvance: () => void; isComplete: () => boolean } | null = null;
+  private instant = false;
   public autoAdvance = false;
 
   constructor() {
@@ -98,54 +106,112 @@ export class Dialogue {
     this.typing = null;
   }
 
-  /** Space, click or the context button completes the line, then advances. */
+  /** Space, the context button or a tap completes the line, then advances. */
   advance(): void {
     this.typing?.finish();
+  }
+
+  /** Called when the auto-advance toggle changes, so a waiting line picks it up. */
+  refreshAutoAdvance(): void {
+    if (this.typing?.isComplete()) this.typing.armAutoAdvance();
+  }
+
+  /**
+   * Resolves whatever line is on screen right now.
+   *
+   * Skip needs this: the timeline only checks its abort flag between commands, so
+   * without a way to settle the pending line the whole scene stays stuck on the
+   * typewriter until someone taps Continue.
+   */
+  cancelPending(): void {
+    this.typing?.cancel();
+    this.typing = null;
+  }
+
+  /** Renders every following line instantly. Set while a skip is in progress. */
+  setInstant(instant: boolean): void {
+    this.instant = instant;
   }
 
   private type(node: HTMLElement, text: string): Promise<void> {
     this.typing?.cancel();
     this.continueButton.hidden = false;
     node.textContent = '';
+
+    if (this.instant) {
+      node.textContent = text;
+      return Promise.resolve();
+    }
+
     return new Promise((resolve) => {
-      let index = 0;
+      // Driven by requestAnimationFrame against the clock, not setInterval.
+      // A 14 ms interval is starved badly by the render loop — a 78-character line
+      // measured at 16 seconds instead of one — and the result reads as a game that
+      // has hung. Frame-synced and time-based, the pacing holds at any frame rate.
+      let revealed = 0;
       let done = false;
-      let timer = 0;
+      let raf = 0;
       let autoTimer = 0;
+      const started = performance.now();
 
       const settle = () => {
         if (done) return;
         done = true;
-        window.clearInterval(timer);
+        cancelAnimationFrame(raf);
         window.clearTimeout(autoTimer);
         this.typing = null;
-        this.continueButton.removeEventListener('click', finish);
+        this.panel.removeEventListener('click', onTap);
         resolve();
       };
+
+      const armAutoAdvance = () => {
+        window.clearTimeout(autoTimer);
+        if (this.autoAdvance) autoTimer = window.setTimeout(settle, autoAdvanceDelay(text));
+      };
+
+      const complete = () => {
+        revealed = text.length;
+        node.textContent = text;
+        cancelAnimationFrame(raf);
+      };
+
+      // First tap completes the line; a second advances. Auto-advance takes the
+      // second tap for you, after a pause that scales with how much there is to read.
       const finish = () => {
-        if (index < text.length) {
-          // First press completes the line; the next one advances.
-          index = text.length;
-          node.textContent = text;
-          window.clearInterval(timer);
-          autoTimer = window.setTimeout(settle, this.autoAdvance ? AUTO_ADVANCE_MS : 0);
-          if (!this.autoAdvance) settle();
+        if (revealed < text.length) {
+          complete();
+          if (this.autoAdvance) armAutoAdvance();
+          else settle();
           return;
         }
         settle();
       };
 
-      timer = window.setInterval(() => {
-        index += 1;
-        node.textContent = text.slice(0, index);
-        if (index >= text.length) {
-          window.clearInterval(timer);
-          if (this.autoAdvance) autoTimer = window.setTimeout(settle, AUTO_ADVANCE_MS);
-        }
-      }, TYPE_MS_PER_CHAR);
+      // The whole panel is the tap target, not just the Continue button. On a phone,
+      // tapping the text is the gesture people actually reach for.
+      const onTap = (event: Event) => {
+        const target = event.target as HTMLElement;
+        if (target.closest('#dialogueChoices') || target.closest('.inlineCheck') || target.closest('#dialogueBacklog')) return;
+        finish();
+      };
 
-      this.continueButton.addEventListener('click', finish);
-      this.typing = { cancel: settle, finish };
+      const step = (now: number) => {
+        const shouldShow = Math.min(text.length, Math.floor((now - started) / TYPE_MS_PER_CHAR));
+        if (shouldShow !== revealed) {
+          revealed = shouldShow;
+          node.textContent = text.slice(0, revealed);
+        }
+        if (revealed >= text.length) {
+          armAutoAdvance();
+          return;
+        }
+        raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+
+      this.panel.addEventListener('click', onTap);
+      // Re-arm if the player flips auto-advance on while this line is already waiting.
+      this.typing = { cancel: settle, finish, armAutoAdvance, isComplete: () => revealed >= text.length };
     });
   }
 

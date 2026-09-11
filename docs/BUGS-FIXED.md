@@ -34,3 +34,14 @@ argument for having it.
 | No autosave existed until the first 20-second tick, so a migration result could be lost to an early crash | `start()` writes the autosave immediately |
 | The old save format conflated rank with the Liquor worm's refinement, so a migrated save could read as Rank two when it was not | `engine/save/migrate.ts` rebuilds the aperture from the chapter the legacy step lands on, not from the old essence cap |
 | Inventory was a parallel list that could drift out of step with the story | Gu are derived from the flags the completed beats publish, so the inventory cannot disagree with the chapter you are on |
+
+## Reported by a player
+
+| Issue | Fix |
+| --- | --- |
+| **The player could never move.** `completeBeat()` called `enterBeat(next)` directly, so all 68 beats chained back to back with `inScene` true from the title screen to chapter 200. The game was a slideshow. | Beats are now *offered*: a marker goes into the world, control returns to the player, and the beat starts when they walk to it and press Interact. `tests/e2e/exploration.spec.ts` asserts control returns, that the player actually moves, and that an offered beat is still waiting three seconds later |
+| Skip did nothing until you tapped Continue — `Timeline.abort()` only checks its flag between commands, and the pending typewriter promise never resolved | `Dialogue.cancelPending()` settles the line on screen, and `setInstant()` renders the rest immediately |
+| Skipping a scene silently dropped its `evidence` commands, changing the investigation trail | A skip now still runs the stateful commands (`flag`, `evidence`, `weather`, `timeOfDay`) and resolves choices to their default. Skip is a presentation choice, never a state change |
+| **The typewriter was starved by the render loop.** `setInterval(14ms)` competing with a 60 fps rAF loop measured a 78-character line at **16 seconds** instead of one. This is what made dialogue, skip and auto-advance all feel broken | Rewritten to drive off `requestAnimationFrame` against the clock, so pacing holds at any frame rate |
+| Auto-advance used a flat 1.4 s hold regardless of line length, and turning it on mid-line did nothing | The hold scales with the length of the line, and the toggle re-arms a line that is already waiting |
+| Only the Continue button advanced dialogue, which is not the gesture anyone uses on a phone | Tapping anywhere on the dialogue panel advances |

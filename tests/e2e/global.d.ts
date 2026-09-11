@@ -16,7 +16,15 @@ declare global {
         renderScale: number;
         tier: TierName;
       };
-      debug: { lookStraightUp(): void };
+      debug: {
+        lookStraightUp(): void;
+        isExploring(): boolean;
+        playerPosition(): { x: number; z: number };
+        awaitingBeat(): string | null;
+        objectiveDistance(): number | null;
+        lineCount(): number;
+        sceneStateAfterSkip(): { flagsApplied: number; evidence: number };
+      };
       legacy: {
         build(): LegacyFile;
         fallback(): LegacyFile;

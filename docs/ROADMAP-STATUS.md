@@ -80,6 +80,14 @@ Everything those acts depend on is already built and testable:
 | Localisation beyond English | All UI strings are already in `content/qingmao/strings/en.json`; shipping a second locale is a data change. |
 | KTX2 compressed textures | The loader is vendored and wired; there are no textures to compress until the art pass. |
 
+## How a session actually plays
+
+Beats are offered, not chained. A scene ends, control returns, and the next beat sits
+in the world as a marker you walk to and start with Interact. Between beats you can
+explore the area, cultivate, call up a Recollection, or open the Journal. That is the
+"fixed destination, free route" pillar in mechanical form — and the first build got it
+wrong, chaining every beat into one unbroken slideshow.
+
 ## What a reader would notice is missing today
 
 Being straight about it: the seven slice scenes read like the book. The other 61 do

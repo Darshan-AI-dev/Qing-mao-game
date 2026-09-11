@@ -72,6 +72,9 @@ export interface TimelineHost {
   skipping(): boolean;
 }
 
+/** Commands that change the world rather than present it. A skip still runs these. */
+const STATEFUL_OPS = new Set<SceneCommand['op']>(['flag', 'evidence', 'weather', 'timeOfDay']);
+
 export class Timeline {
   private aborted = false;
 
@@ -85,7 +88,13 @@ export class Timeline {
     this.aborted = false;
     bus.emit('scene.start', { script: script.id, beat: script.beat });
     for (const command of script.commands) {
-      if (this.aborted) break;
+      if (this.aborted) {
+        // Skipping is a presentation choice, never a state change. Run the rest of
+        // the commands that alter the world — flags, evidence, weather, the time of
+        // day — and drop only the staging, the camera work and the lines.
+        if (STATEFUL_OPS.has(command.op)) await this.step(command);
+        continue;
+      }
       await this.step(command);
     }
     if (this.aborted) bus.emit('scene.skipped', { script: script.id });
@@ -145,7 +154,11 @@ export class Timeline {
       }
       case 'choice': {
         bus.emit('scene.choice', { id: command.id, options: command.options.map((o) => o.id) });
-        const chosen = await this.host.askChoice(command.id, command.prompt, command.options);
+        // A skipped scene still has to resolve its choices, or the method it records
+        // and any flag it sets go missing. The first option is the stated default.
+        const chosen = this.aborted
+          ? command.options[0]!.id
+          : await this.host.askChoice(command.id, command.prompt, command.options);
         const option = command.options.find((o) => o.id === chosen) ?? command.options[0]!;
         bus.emit('scene.chose', { id: command.id, option: option.id });
         if (option.sets) this.host.setFlag(option.sets);

@@ -6,9 +6,9 @@
  * supplies the beat graph, the scenes and the areas; `/canon` is shared with the
  * sequel. Swapping the content import is the whole of what game 2 has to do here.
  */
-import { Vector3 } from 'three';
+import { Vector3, type Object3D } from 'three';
 import { areasById, mustLandForChapter, actForChapter } from '../canon/index';
-import { graph, loadScript, t } from '../content/qingmao/index';
+import { graph, illustrationsById, loadScript, t } from '../content/qingmao/index';
 import { AREAS, areaDescription } from '../content/qingmao/world/areas';
 import { bus } from './core/bus';
 import { Rng } from './core/rng';
@@ -16,7 +16,7 @@ import type { Beat } from './core/beats';
 import { Renderer } from './render/renderer';
 import { Weather } from './render/weather';
 import { Actor } from './render/actors';
-import { buildArea, type Blocker } from './render/world';
+import { buildArea, marker, type Blocker } from './render/world';
 import { benchmark, BUDGETS, hasDialogSupport, hasWebGL2, NO_WEBGL2_MESSAGE, type TierName } from './render/quality';
 import { Timeline, type SceneScript, type TimelineHost } from './scene/timeline';
 import { Economy } from './systems/economy';
@@ -42,6 +42,8 @@ import { byId, closeDialog, el, maybe, openDialog } from './ui/dom';
 const AUTOSAVE_MS = 20_000;
 /** No beat may start further than this from what it stages. */
 export const MAX_SPAWN_DISTANCE = 24;
+/** How close you have to be to start the beat waiting for you. */
+const OBJECTIVE_RANGE = 6;
 
 class Game implements TimelineHost {
   save: SaveGameV5;
@@ -77,6 +79,9 @@ class Game implements TimelineHost {
   private lastTick = performance.now();
   private lastAutosave = performance.now();
   private currentArea = '';
+  /** The beat waiting to be started, if the player is between beats. */
+  private awaiting: Beat | null = null;
+  private objective: Object3D | null = null;
   private fadeNode: HTMLElement;
   private letterboxNode: HTMLElement;
 
@@ -146,7 +151,10 @@ class Game implements TimelineHost {
 
     const previously = this.panels.previouslyCard();
     if (previously.length && this.save.completed.length) await this.showPreviously(previously);
-    if (beat) await this.enterBeat(beat);
+    // The prologue starts immediately because it is the opening scene; everything
+    // after it is offered and waits for the player.
+    if (beat && !this.save.completed.length) await this.enterBeat(beat);
+    else if (beat) this.offerBeat(beat);
   }
 
   private currentBeat(): Beat | undefined {
@@ -154,14 +162,35 @@ class Game implements TimelineHost {
     return graph.next(new Set(this.save.completed));
   }
 
+  /**
+   * Puts a beat into the world as something to walk to, and hands control back.
+   *
+   * Beats are never chained automatically. The player explores between them, and a
+   * beat starts when they choose to start it — which is the whole of "fixed
+   * destination, free route". An earlier version ran `enterBeat` straight out of
+   * `completeBeat`, which turned all 68 beats into one unbroken slideshow the player
+   * could not move during.
+   */
+  private offerBeat(beat: Beat): void {
+    this.save.current = beat.id;
+    this.awaiting = beat;
+    if (beat.area !== this.currentArea) this.enterArea(beat.area);
+    this.calendar.setWeather(beat.weather);
+    this.placeObjective(beat);
+    if (beat.recollection) this.memory.offer(beat.id);
+    bus.emit('toast', { text: `${beat.title} — go to the marker.` });
+  }
+
+  /** Starts the beat the player is standing at. */
   private async enterBeat(beat: Beat): Promise<void> {
+    this.awaiting = null;
+    this.clearObjective();
     this.save.current = beat.id;
     bus.emit('beat.enter', { beat: beat.id, chapters: beat.chapters, coverage: beat.coverage });
     const act = actForChapter(beat.chapters[0]);
     if (act) bus.emit('act.enter', { act: act.id, name: act.name });
     if (beat.area !== this.currentArea) this.enterArea(beat.area);
     this.calendar.setWeather(beat.weather);
-    if (beat.recollection) this.memory.offer(beat.id);
     await this.playScene(beat.id);
     this.completeBeat(beat);
   }
@@ -171,10 +200,33 @@ class Game implements TimelineHost {
     for (const flag of beat.sets) this.setFlag(flag);
     bus.emit('beat.complete', { beat: beat.id, chapters: beat.chapters });
     const next = graph.next(new Set(this.save.completed));
-    this.save.current = next?.id ?? null;
     void this.write('auto');
-    if (next) void this.enterBeat(next);
-    else bus.emit('toast', { text: 'Qing Mao is finished. The Journal has the threads.' });
+    // Control returns to the player here. The next beat waits for them.
+    if (next) this.offerBeat(next);
+    else {
+      this.save.current = null;
+      bus.emit('toast', { text: 'Qing Mao is finished. The Journal has the threads.' });
+    }
+  }
+
+  /** A gold disc at the area origin, where every scene stages itself. */
+  private placeObjective(beat: Beat): void {
+    this.clearObjective();
+    const disc = marker(0, 0);
+    disc.name = `objective:${beat.id}`;
+    this.objective = disc;
+    this.renderer.scene.add(disc);
+  }
+
+  private clearObjective(): void {
+    if (!this.objective) return;
+    this.renderer.scene.remove(this.objective);
+    this.objective = null;
+  }
+
+  /** Paces from the player to the beat they have been offered. */
+  private distanceToObjective(): number | null {
+    return this.awaiting ? Math.hypot(this.player.x, this.player.z) : null;
   }
 
   private jumpTo(beatId: string): void {
@@ -197,6 +249,7 @@ class Game implements TimelineHost {
     if (!script) return;
     this.inScene = true;
     this.skipRequested = false;
+    this.dialogue.setInstant(false);
     byId('skipScene').hidden = false;
     this.showLensNotes(script);
     await showChapterTitle(beat.chapters[0], beat.title, actForChapter(beat.chapters[0])?.name ?? '', this.save.settings.reducedMotion);
@@ -377,17 +430,15 @@ class Game implements TimelineHost {
       figure.hidden = true;
       return;
     }
-    import('../content/qingmao/index').then(({ illustrationsById }) => {
-      const art = illustrationsById.get(id);
-      if (!art?.src) {
-        figure.hidden = true;
-        return;
-      }
-      image.src = art.src;
-      image.alt = art.alt;
-      byId('sceneArtCaption').textContent = art.title;
-      figure.hidden = false;
-    });
+    const art = illustrationsById.get(id);
+    if (!art?.src) {
+      figure.hidden = true;
+      return;
+    }
+    image.src = art.src;
+    image.alt = art.alt;
+    byId('sceneArtCaption').textContent = art.title;
+    figure.hidden = false;
   }
 
   recordMethod(choiceId: string, optionId: string): void {
@@ -431,6 +482,17 @@ class Game implements TimelineHost {
     if (pressed.has('recollect')) this.viewRecollection();
     if (this.inScene && (pressed.has('interact') || pressed.has('attack'))) this.dialogue.advance();
     if (this.inScene) return;
+    if (pressed.has('interact') && this.awaiting) {
+      const distance = this.distanceToObjective() ?? Infinity;
+      if (distance <= OBJECTIVE_RANGE) {
+        const beat = this.awaiting;
+        // A reader who acts before calling the memory up gets the recognition.
+        if (!this.memory.viewed(beat.id)) this.memory.recogniseForesight(beat.id);
+        void this.enterBeat(beat);
+        return;
+      }
+      bus.emit('toast', { text: `${Math.round(distance)} paces to go.` });
+    }
     if (pressed.has('cultivate')) {
       const result = this.cultivation.cultivate();
       bus.emit('toast', {
@@ -535,8 +597,8 @@ class Game implements TimelineHost {
         questTask: beat?.designNote ?? '',
         chapterLabel: beat ? `Chapter ${beat.chapters[0]}${beat.chapters[1] > beat.chapters[0] ? `–${beat.chapters[1]}` : ''}${moment ? ' · a moment that has to land' : ''}` : '',
         calendarLabel: this.calendar.label(),
-        distance: null,
-        context: this.inScene ? null : { intent: 'interact', label: t('hud.interact') },
+        distance: this.distanceToObjective(),
+        context: this.contextAction(),
         sluggish: this.save.gu.filter((g) => g.sluggish).map((g) => g.id),
         recollectionAvailable: !!beat && !!this.memory.available(beat.id) && !this.memory.viewed(beat.id)
       },
@@ -545,13 +607,28 @@ class Game implements TimelineHost {
     );
   }
 
+  /** What the one big touch button does right now, given what is in front of you. */
+  private contextAction(): { intent: Intent; label: string } | null {
+    if (this.inScene) return { intent: 'interact', label: 'Continue' };
+    const distance = this.distanceToObjective();
+    if (distance !== null && distance <= OBJECTIVE_RANGE) return { intent: 'interact', label: 'Begin' };
+    if (this.cultivation.essence < this.cultivation.essenceMax * 0.5) {
+      return { intent: 'cultivate', label: t('hud.cultivate') };
+    }
+    return { intent: 'interact', label: t('hud.interact') };
+  }
+
   // -------------------------------------------------------------------- chrome
   private wireChrome(): void {
     byId('pauseButton').addEventListener('click', () => openDialog(byId<HTMLDialogElement>('pause')));
     byId('resume').addEventListener('click', () => closeDialog(byId<HTMLDialogElement>('pause')));
     byId('skipScene').addEventListener('click', () => {
       this.skipRequested = true;
+      // Render anything still to come instantly, then settle the line on screen.
+      // Without the second call the scene sits on the typewriter until someone taps.
+      this.dialogue.setInstant(true);
       this.timeline.abort();
+      this.dialogue.cancelPending();
     });
     byId('recollectButton').addEventListener('click', () => this.viewRecollection());
     byId('dialogueBacklogToggle').addEventListener('click', () => {
@@ -560,6 +637,8 @@ class Game implements TimelineHost {
     });
     byId('autoAdvance').addEventListener('change', (event) => {
       this.dialogue.autoAdvance = (event.target as HTMLInputElement).checked;
+      // Apply it to the line already on screen rather than only to the next one.
+      this.dialogue.refreshAutoAdvance();
     });
     for (const slot of ['slot1', 'slot2', 'slot3'] as const) {
       maybe(`save-${slot}`)?.addEventListener('click', () => void this.write(slot));
@@ -696,6 +775,35 @@ class Game implements TimelineHost {
     this.renderer.render(performance.now());
   }
 
+  /** True when the player has control: not inside a scene. */
+  isExploring(): boolean {
+    return !this.inScene;
+  }
+
+  playerPosition(): { x: number; z: number } {
+    return { x: this.player.x, z: this.player.z };
+  }
+
+  awaitingBeatId(): string | null {
+    return this.awaiting?.id ?? null;
+  }
+
+  objectiveDistance(): number | null {
+    return this.distanceToObjective();
+  }
+
+  lineCount(): number {
+    return this.dialogue.lines.length;
+  }
+
+  /** How much state the completed beats have actually applied. */
+  sceneStateAfterSkip(): { flagsApplied: number; evidence: number } {
+    return {
+      flagsApplied: Object.keys(this.save.beatState['flags'] ?? {}).length,
+      evidence: this.save.exposure.evidence.length
+    };
+  }
+
   /** Renderer counters, read by the performance-budget test and the dev overlay. */
   stats(): ReturnType<Renderer['stats']> {
     return this.renderer.stats();
@@ -769,7 +877,15 @@ async function boot(): Promise<void> {
   // Everything on it is a read or a pure function; nothing here mutates the game.
   (window as Window & { qingMao?: unknown }).qingMao = Object.assign(game, {
     frameStats: () => game.stats(),
-    debug: { lookStraightUp: () => game.lookStraightUp() },
+    debug: {
+      lookStraightUp: () => game.lookStraightUp(),
+      isExploring: () => game.isExploring(),
+      playerPosition: () => game.playerPosition(),
+      awaitingBeat: () => game.awaitingBeatId(),
+      objectiveDistance: () => game.objectiveDistance(),
+      lineCount: () => game.lineCount(),
+      sceneStateAfterSkip: () => game.sceneStateAfterSkip()
+    },
     legacy: { build: () => buildLegacy(game.save), fallback: defaultLegacy, validate: validateLegacy }
   });
 
