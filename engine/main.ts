@@ -109,7 +109,8 @@ class Game implements TimelineHost {
       replay: (beatId) => void this.playScene(beatId),
       travel: (areaId) => this.enterArea(areaId),
       unlockedAreas: () => this.unlockedAreas(),
-      applySettings: () => this.applySettings()
+      applySettings: () => this.settingsFromDom(),
+      settingsToDom: () => this.settingsToDom()
     });
     this.dev = new DevOverlay({
       save,
@@ -123,6 +124,7 @@ class Game implements TimelineHost {
     this.fadeNode = byId('fade');
     this.letterboxNode = byId('letterbox');
     attachToasts();
+    this.settingsToDom();
     this.applySettings();
     this.wireChrome();
 
@@ -134,10 +136,17 @@ class Game implements TimelineHost {
   async start(): Promise<void> {
     const beat = this.currentBeat();
     this.enterArea(beat?.area ?? 'mountain.village');
+    // Write immediately: a migration result or the first minute of play should not
+    // depend on surviving until the first autosave tick.
+    await this.write('auto');
+    // Start the render loop before anything is awaited. The first beat's scene takes
+    // tens of seconds to play; waiting for it left the whole prologue on a black
+    // screen with no frames drawn at all.
+    requestAnimationFrame(() => this.frame());
+
     const previously = this.panels.previouslyCard();
     if (previously.length && this.save.completed.length) await this.showPreviously(previously);
     if (beat) await this.enterBeat(beat);
-    requestAnimationFrame(() => this.frame());
   }
 
   private currentBeat(): Beat | undefined {
@@ -591,6 +600,50 @@ class Game implements TimelineHost {
     });
   }
 
+  /** save -> DOM. Called on boot and whenever the Options dialog is opened. */
+  private settingsToDom(): void {
+    const settings = this.save.settings;
+    setSelect('difficulty', settings.difficulty);
+    setSelect('intensity', settings.intensity);
+    setSelect('approach', settings.approach);
+    setSelect('tier', settings.tier);
+    setSelect('fontChoice', settings.font);
+    setSelect('textSize', String(settings.textSize));
+    setCheck('reducedMotion', settings.reducedMotion);
+    setCheck('manualAim', settings.manualAim);
+    setCheck('aimAssist', settings.aimAssist);
+    setCheck('haptics', settings.haptics);
+    setCheck('holdToGuard', settings.holdToGuard);
+    setCheck('holdToRun', settings.holdToRun);
+    setCheck('refinementFailure', settings.refinementFailure);
+    setCheck('guUpkeep', settings.guUpkeep);
+    setCheck('lensToggle', this.save.reader.lens);
+    setCheck('veteranToggle', this.save.reader.veteran);
+  }
+
+  /** DOM -> save. Only ever called from the Options dialog's Apply button. */
+  private settingsFromDom(): void {
+    const settings = this.save.settings;
+    for (const [id, key] of [
+      ['difficulty', 'difficulty'], ['intensity', 'intensity'],
+      ['approach', 'approach'], ['tier', 'tier'], ['fontChoice', 'font']
+    ] as const) {
+      const node = maybe<HTMLSelectElement>(id);
+      if (node) (settings as unknown as Record<string, unknown>)[key] = node.value;
+    }
+    const textSize = maybe<HTMLSelectElement>('textSize');
+    if (textSize) settings.textSize = Number(textSize.value) as 1 | 2 | 3;
+    for (const id of ['reducedMotion', 'manualAim', 'aimAssist', 'haptics',
+                      'holdToGuard', 'holdToRun', 'refinementFailure', 'guUpkeep'] as const) {
+      const node = maybe<HTMLInputElement>(id);
+      if (node) (settings as unknown as Record<string, unknown>)[id] = node.checked;
+    }
+    this.save.reader.lens = maybe<HTMLInputElement>('lensToggle')?.checked ?? this.save.reader.lens;
+    this.save.reader.veteran = maybe<HTMLInputElement>('veteranToggle')?.checked ?? this.save.reader.veteran;
+    this.applySettings();
+  }
+
+  /** Pushes the current settings into the document and the systems that read them. */
   private applySettings(): void {
     const settings = this.save.settings;
     const root = document.documentElement;
@@ -601,22 +654,7 @@ class Game implements TimelineHost {
     const reduced = settings.reducedMotion || prefers;
     root.dataset.reducedMotion = reduced ? 'true' : 'false';
     this.weather.setReducedMotion(reduced);
-    this.save.reader.lens = (maybe<HTMLInputElement>('lensToggle')?.checked ?? this.save.reader.lens);
-    this.save.reader.veteran = (maybe<HTMLInputElement>('veteranToggle')?.checked ?? this.save.reader.veteran);
     bus.emit('lens.toggle', { on: this.save.reader.lens, veteran: this.save.reader.veteran });
-    for (const [id, key] of [
-      ['difficulty', 'difficulty'], ['intensity', 'intensity'], ['approach', 'approach'], ['tier', 'tier'],
-      ['fontChoice', 'font']
-    ] as const) {
-      const node = maybe<HTMLSelectElement>(id);
-      if (node) (settings as unknown as Record<string, unknown>)[key] = node.value;
-    }
-    const textSize = maybe<HTMLSelectElement>('textSize');
-    if (textSize) settings.textSize = Number(textSize.value) as 1 | 2 | 3;
-    for (const id of ['reducedMotion', 'manualAim', 'aimAssist', 'haptics', 'holdToGuard', 'holdToRun', 'refinementFailure', 'guUpkeep'] as const) {
-      const node = maybe<HTMLInputElement>(id);
-      if (node) (settings as unknown as Record<string, unknown>)[id] = node.checked;
-    }
   }
 
   private async write(slot: store.SlotId): Promise<void> {
@@ -647,6 +685,15 @@ class Game implements TimelineHost {
         resolve();
       }, { once: true });
     });
+  }
+
+  /** Aims the camera at empty sky. Used by the culling test to prove the frustum
+   *  check is doing something, and by the free camera in developer mode. */
+  lookStraightUp(): void {
+    this.freeCamera = true;
+    this.renderer.camera.position.set(this.player.x, 6, this.player.z);
+    this.renderer.camera.lookAt(new Vector3(this.player.x, 400, this.player.z));
+    this.renderer.render(performance.now());
   }
 
   /** Renderer counters, read by the performance-budget test and the dev overlay. */
@@ -722,6 +769,7 @@ async function boot(): Promise<void> {
   // Everything on it is a read or a pure function; nothing here mutates the game.
   (window as Window & { qingMao?: unknown }).qingMao = Object.assign(game, {
     frameStats: () => game.stats(),
+    debug: { lookStraightUp: () => game.lookStraightUp() },
     legacy: { build: () => buildLegacy(game.save), fallback: defaultLegacy, validate: validateLegacy }
   });
 
@@ -748,3 +796,13 @@ async function boot(): Promise<void> {
 }
 
 void boot();
+
+function setSelect(id: string, value: string): void {
+  const node = document.getElementById(id) as HTMLSelectElement | null;
+  if (node) node.value = value;
+}
+
+function setCheck(id: string, value: boolean): void {
+  const node = document.getElementById(id) as HTMLInputElement | null;
+  if (node) node.checked = value;
+}

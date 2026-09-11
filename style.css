@@ -175,8 +175,10 @@ kbd { font-family: var(--ui-font); font-size: 0.65rem; opacity: 0.65; border: 1p
 #regionName {
   position: fixed; z-index: 8;
   top: calc(var(--safe-top) + 0.7rem); left: 50%; transform: translateX(-50%);
+  max-width: min(60vw, 26rem);
   font-family: var(--ui-font); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--ink-faint); pointer-events: none; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 #toast {
   position: fixed; z-index: 12;
@@ -347,6 +349,9 @@ textarea { min-height: 6rem; resize: vertical; }
 .codexView dt { font-size: 0.86rem; color: var(--gold); }
 .codexView dd { margin: 0.15rem 0 0; font-size: 0.82rem; color: var(--ink-dim); }
 
+/* `hidden` has to win over any display rule, or an invisible full-screen panel
+   swallows every click behind it. */
+[hidden] { display: none !important; }
 #unsupported { position: fixed; inset: 0; z-index: 60; display: grid; place-content: center; padding: 2rem; text-align: center; background: var(--ground); }
 
 /* ---------------------------------------------------------------- dev */

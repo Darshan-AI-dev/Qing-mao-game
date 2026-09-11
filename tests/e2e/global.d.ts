@@ -16,6 +16,7 @@ declare global {
         renderScale: number;
         tier: TierName;
       };
+      debug: { lookStraightUp(): void };
       legacy: {
         build(): LegacyFile;
         fallback(): LegacyFile;

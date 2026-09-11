@@ -1,4 +1,23 @@
+import { existsSync, readdirSync } from 'node:fs';
 import { defineConfig, devices } from '@playwright/test';
+
+/**
+ * Some sandboxes ship a Chromium build under PLAYWRIGHT_BROWSERS_PATH that belongs to
+ * an older Playwright revision. When one is present, point at it rather than trying
+ * to download; CI runs `playwright install` and takes the normal path.
+ */
+function preinstalledChromium(): string | undefined {
+  const base = process.env.PLAYWRIGHT_BROWSERS_PATH;
+  if (!base || !existsSync(base)) return undefined;
+  for (const entry of readdirSync(base)) {
+    if (!entry.startsWith('chromium-')) continue;
+    const binary = `${base}/${entry}/chrome-linux/chrome`;
+    if (existsSync(binary)) return binary;
+  }
+  return undefined;
+}
+
+const chromiumBinary = preinstalledChromium();
 
 /**
  * The cross-browser matrix.
@@ -19,7 +38,13 @@ const VIEWPORTS = [
 ];
 
 const ENGINES = [
-  { name: 'chromium', use: devices['Desktop Chrome'] },
+  {
+    name: 'chromium',
+    use: {
+      ...devices['Desktop Chrome'],
+      ...(chromiumBinary ? { launchOptions: { executablePath: chromiumBinary } } : {})
+    }
+  },
   { name: 'firefox', use: devices['Desktop Firefox'] },
   { name: 'webkit', use: devices['Desktop Safari'] }
 ];

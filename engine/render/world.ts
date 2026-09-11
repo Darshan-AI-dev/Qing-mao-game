@@ -84,9 +84,16 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
   }
 }
 
+const UP = new Vector3(0, 1, 0);
+
 export function buildArea(description: AreaDescription, budget: { instanceBudget: number; shadows: string }): BuiltArea {
   const root = new Group();
   root.name = `area:${description.id}`;
+  const shell = new Group();
+  shell.name = `shell:${description.id}`;
+  const buildingGroup = new Group();
+  buildingGroup.name = `buildings:${description.id}`;
+  root.add(shell, buildingGroup);
   const blockers: Blocker[] = [...(description.blockers ?? [])];
   const lanterns: { x: number; y: number; z: number }[] = [];
   const castShadow = budget.shadows !== 'blob';
@@ -96,14 +103,14 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   const ground = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(description.enclosed ? PALETTE.stone : PALETTE.grass));
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = castShadow;
-  root.add(ground);
+  shell.add(ground);
 
   if (description.enclosed) {
     const height = description.ceilingHeight ?? 14;
     const ceiling = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(PALETTE.ceiling));
     ceiling.rotation.x = Math.PI / 2;
     ceiling.position.y = height;
-    root.add(ceiling);
+    shell.add(ceiling);
     // Four walls, so a cave reads as a cave from inside rather than a floor in a void.
     for (const [sx, sz] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
       const wall = new Mesh(
@@ -112,7 +119,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
       );
       wall.position.set((sx * description.size.x) / 2, height / 2, (sz * description.size.z) / 2);
       wall.rotation.y = sx ? -sx * Math.PI / 2 : sz > 0 ? Math.PI : 0;
-      root.add(wall);
+      shell.add(wall);
     }
   }
 
@@ -126,7 +133,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     strip.rotation.z = -Math.atan2(x2 - x1, z2 - z1);
     strip.position.set((x1 + x2) / 2, 0.03, (z1 + z2) / 2);
     strip.receiveShadow = castShadow;
-    root.add(strip);
+    shell.add(strip);
   }
 
   // --- water
@@ -134,43 +141,123 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     const surface = new Mesh(new PlaneGeometry(pool.w, pool.d), mat(pool.color));
     surface.rotation.x = -Math.PI / 2;
     surface.position.set(pool.x, 0.05, pool.z);
-    root.add(surface);
+    shell.add(surface);
   }
 
   // --- buildings: pale-green two-storey bamboo on wooden stakes over uneven ground
   for (const building of description.buildings ?? []) {
-    root.add(buildHouse(building, castShadow));
+    buildingGroup.add(buildHouse(building, castShadow));
     blockers.push({ x: building.x, z: building.z, w: building.w / 2 + 0.7, d: building.d / 2 + 0.7 });
   }
 
-  // --- instanced props
+  // --- instanced props, bucketed into chunks first
+  //
+  // An InstancedMesh sits at the origin however far its instances spread, so the
+  // instances have to be split by position before the mesh is built. Chunking the
+  // finished meshes instead collapses a whole area into one chunk, which then culls
+  // as a single unit and draws nothing.
+  const propChunks = new Map<string, Group>();
+  // Tight per-chunk bounds computed from what actually lands in the chunk. A fixed
+  // radius has to be generous enough for the worst case, which in a small area means
+  // every sphere contains the camera and nothing is ever culled.
+  const propBounds = new Map<string, { minX: number; maxX: number; minZ: number; maxZ: number; maxY: number }>();
+  const cols = Math.max(1, Math.ceil(description.size.x / CHUNK_SIZE));
+  const rows = Math.max(1, Math.ceil(description.size.z / CHUNK_SIZE));
+  const clamp = (value: number, max: number) => Math.min(max - 1, Math.max(0, value));
+  const chunkKey = (x: number, z: number) =>
+    `${clamp(Math.floor((x + description.size.x / 2) / CHUNK_SIZE), cols)}:` +
+    `${clamp(Math.floor((z + description.size.z / 2) / CHUNK_SIZE), rows)}`;
+  const growBounds = (key: string, x: number, z: number, top: number): void => {
+    const bounds = propBounds.get(key);
+    if (!bounds) {
+      propBounds.set(key, { minX: x, maxX: x, minZ: z, maxZ: z, maxY: top });
+      return;
+    }
+    bounds.minX = Math.min(bounds.minX, x);
+    bounds.maxX = Math.max(bounds.maxX, x);
+    bounds.minZ = Math.min(bounds.minZ, z);
+    bounds.maxZ = Math.max(bounds.maxZ, z);
+    bounds.maxY = Math.max(bounds.maxY, top);
+  };
+
+  const chunkGroup = (key: string): Group => {
+    let group = propChunks.get(key);
+    if (!group) {
+      group = new Group();
+      group.name = `chunk:${description.id}:${key}`;
+      propChunks.set(key, group);
+      root.add(group);
+    }
+    return group;
+  };
+
   for (const group of description.props) {
     const places = group.places.slice(0, budget.instanceBudget);
     if (!places.length) continue;
-    const { geometry, material, blocker } = propGeometry(group.kind);
-    const instanced = new InstancedMesh(geometry, material, places.length);
-    instanced.castShadow = castShadow && group.kind !== 'villager';
-    instanced.receiveShadow = castShadow;
-    const matrix = new Matrix4();
-    const quaternion = new Quaternion();
-    const scaleVector = new Vector3();
-    const position = new Vector3();
-    places.forEach((place, i) => {
-      const scale = place.scale ?? 0.85 + rng.next() * 0.4;
-      position.set(place.x, (place.y ?? 0) + heightOffset(group.kind) * scale, place.z);
-      quaternion.setFromAxisAngle(new Vector3(0, 1, 0), place.rotation ?? rng.next() * Math.PI * 2);
-      scaleVector.set(scale, scale, scale);
-      matrix.compose(position, quaternion, scaleVector);
-      instanced.setMatrixAt(i, matrix);
-      if (blocker) blockers.push({ x: place.x, z: place.z, w: blocker.w * scale, d: blocker.d * scale });
-      if (group.kind === 'lantern') lanterns.push({ x: place.x, y: 2.9, z: place.z });
-    });
-    instanced.instanceMatrix.needsUpdate = true;
-    root.add(instanced);
+
+    const buckets = new Map<string, PropPlacement[]>();
+    for (const place of places) {
+      const key = chunkKey(place.x, place.z);
+      const bucket = buckets.get(key);
+      if (bucket) bucket.push(place);
+      else buckets.set(key, [place]);
+    }
+
+    for (const [key, bucket] of buckets) {
+      const { geometry, material, blocker } = propGeometry(group.kind);
+      const instanced = new InstancedMesh(geometry, material, bucket.length);
+      instanced.castShadow = castShadow && group.kind !== 'villager';
+      instanced.receiveShadow = castShadow;
+      const matrix = new Matrix4();
+      const quaternion = new Quaternion();
+      const scaleVector = new Vector3();
+      const position = new Vector3();
+      bucket.forEach((place, i) => {
+        const scale = place.scale ?? 0.85 + rng.next() * 0.4;
+        position.set(place.x, (place.y ?? 0) + heightOffset(group.kind) * scale, place.z);
+        quaternion.setFromAxisAngle(UP, place.rotation ?? rng.next() * Math.PI * 2);
+        scaleVector.set(scale, scale, scale);
+        matrix.compose(position, quaternion, scaleVector);
+        instanced.setMatrixAt(i, matrix);
+        if (blocker) blockers.push({ x: place.x, z: place.z, w: blocker.w * scale, d: blocker.d * scale });
+        if (group.kind === 'lantern') lanterns.push({ x: place.x, y: 2.9, z: place.z });
+        growBounds(key, place.x, place.z, position.y + heightOffset(group.kind) * scale);
+      });
+      instanced.instanceMatrix.needsUpdate = true;
+      // Instances are already in world space, so the mesh must not be culled by its
+      // own (origin) bounds; the chunk's bounding sphere is what does the culling.
+      instanced.frustumCulled = false;
+      instanced.computeBoundingSphere();
+      chunkGroup(key).add(instanced);
+    }
   }
 
-  // --- split into chunks so the frustum test can skip whole blocks of the area
-  const chunks = chunkify(root, description);
+  // --- assemble the chunk list
+  const chunks: { group: Group; centre: Vector3; radius: number }[] = [];
+  const diagonal = Math.hypot(description.size.x, description.size.z) / 2;
+  // The shell is the area itself: ground, ceiling, walls, paths and water. It is
+  // always submitted, because culling the floor you are standing on is never right.
+  chunks.push({ group: shell, centre: new Vector3(0, 0, 0), radius: diagonal + 24 });
+  if (buildingGroup.children.length) {
+    chunks.push({ group: buildingGroup, centre: new Vector3(0, 4, 0), radius: diagonal + 8 });
+  }
+  for (const [key, group] of propChunks) {
+    const bounds = propBounds.get(key);
+    if (!bounds) continue;
+    const centre = new Vector3(
+      (bounds.minX + bounds.maxX) / 2,
+      bounds.maxY / 2,
+      (bounds.minZ + bounds.maxZ) / 2
+    );
+    const radius = Math.hypot(
+      (bounds.maxX - bounds.minX) / 2,
+      bounds.maxY / 2,
+      (bounds.maxZ - bounds.minZ) / 2
+    // A small margin so a chunk does not pop exactly at the screen edge.
+    ) + 4;
+    chunks.push({ group, centre, radius });
+  }
+
   return { group: root, chunks, blockers, lanterns };
 }
 
@@ -214,39 +301,6 @@ function buildHouse(b: { x: number; z: number; w: number; d: number; h: number; 
   roof.castShadow = castShadow;
   house.add(roof);
   return house;
-}
-
-function chunkify(root: Group, description: AreaDescription) {
-  const chunks: { group: Group; centre: Vector3; radius: number }[] = [];
-  const cols = Math.max(1, Math.ceil(description.size.x / CHUNK_SIZE));
-  const rows = Math.max(1, Math.ceil(description.size.z / CHUNK_SIZE));
-  const grid = new Map<string, Group>();
-
-  for (const child of [...root.children]) {
-    const box = new Vector3();
-    child.getWorldPosition(box);
-    const cx = Math.floor((box.x + description.size.x / 2) / CHUNK_SIZE);
-    const cz = Math.floor((box.z + description.size.z / 2) / CHUNK_SIZE);
-    const key = `${Math.min(cols - 1, Math.max(0, cx))}:${Math.min(rows - 1, Math.max(0, cz))}`;
-    let group = grid.get(key);
-    if (!group) {
-      group = new Group();
-      group.name = `chunk:${description.id}:${key}`;
-      grid.set(key, group);
-    }
-    group.add(child);
-  }
-
-  for (const [key, group] of grid) {
-    const [cx, cz] = key.split(':').map(Number) as [number, number];
-    const centre = new Vector3(
-      (cx + 0.5) * CHUNK_SIZE - description.size.x / 2,
-      6,
-      (cz + 0.5) * CHUNK_SIZE - description.size.z / 2
-    );
-    chunks.push({ group, centre, radius: CHUNK_SIZE * 0.95 });
-  }
-  return chunks;
 }
 
 function hash(value: string): number {

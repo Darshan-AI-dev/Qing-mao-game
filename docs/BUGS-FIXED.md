@@ -18,9 +18,19 @@ coming back.
 | 11 | No culling: about 326k vertices and about 120 draw calls every frame | Chunked worlds with per-chunk frustum culling, instancing for repeated props, quality tiers with explicit budgets, adaptive render scale | `tests/e2e/performance.spec.ts` asserts draw calls and triangles against the active tier and that culling is actually removing chunks |
 | 12 | Source PDFs are bundled in the starter ZIP (tools/package.py) | `tools/package.py` excludes `source-reference/` and every `.pdf`, then re-opens the archive and refuses to finish if any slipped through; `tools/build-offline.mjs` applies the same rule | CI asserts no PDF reaches `dist/` or `dist-offline/` |
 
-## Two more found while rebuilding
+## Found while rebuilding
+
+Six of these were caught by the new browser matrix on its first run, which is the
+argument for having it.
 
 | Issue | Fix |
 | --- | --- |
+| The render loop only started **after** the first beat's scene finished, so the entire playable prologue ran over a black screen | `start()` schedules the first frame before it awaits anything (`engine/main.ts`) |
+| `#unsupported` is `hidden`, but a `display: grid` rule overrode it, leaving an invisible full-screen panel that swallowed every click in the game | `[hidden] { display: none !important }` in `style.css` |
+| Opening the game reset a saved difficulty to the Options form's first option, because `applySettings()` pulled DOM values over the loaded save at construction | Split into `settingsToDom()` (save → form, on boot and on open) and `settingsFromDom()` (form → save, only from Apply) |
+| Instanced props were chunked by the mesh's own position, which is the origin however far the instances spread — so a whole area collapsed into one chunk, culled as a unit, and drew nothing | Placements are bucketed into chunks *before* the InstancedMesh is built (`engine/render/world.ts`) |
+| Chunk bounding spheres used a fixed generous radius large enough to contain the camera, so the frustum test never rejected anything | Tight bounds computed from each chunk's actual contents |
+| The frustum was built from a stale `matrixWorldInverse`, which three only refreshes inside `render()` — wrong on the first frame and a frame behind after that | The camera's inverse is recomputed before the frustum is built |
+| No autosave existed until the first 20-second tick, so a migration result could be lost to an early crash | `start()` writes the autosave immediately |
 | The old save format conflated rank with the Liquor worm's refinement, so a migrated save could read as Rank two when it was not | `engine/save/migrate.ts` rebuilds the aperture from the chapter the legacy step lands on, not from the old essence cap |
 | Inventory was a parallel list that could drift out of step with the story | Gu are derived from the flags the completed beats publish, so the inventory cannot disagree with the chapter you are on |

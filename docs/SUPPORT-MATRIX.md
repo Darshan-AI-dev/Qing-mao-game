@@ -37,10 +37,20 @@ a ceiling. Inside a tier the render scale adapts before the tier itself is dropp
 **Techniques now in place:** chunked worlds with per-chunk frustum culling, instancing
 for bamboo/rocks/villagers/pillars/lanterns, act-pack code splitting, and WebP art.
 
-**Measured now:** the first playable moment is about 250 kB gzipped of code and CSS
-against a 10 MB budget, and the art set is 3.1 MB (down from 24.3 MB) after
-`tools/optimise-art.py`. `tests/e2e/performance.spec.ts` asserts the frame budget and
-the first-load budget on every matrix run.
+**Measured now**, from the Playwright run itself (headless Chromium, the prologue
+arena, Low tier):
+
+| | Previous build | Now |
+| --- | --- | --- |
+| Draw calls per frame | ~120 | **24** (budget 150) |
+| Visible geometry | ~326,000 vertices | **1,232 triangles** (budget 250,000) |
+| Culling | none | **5/5 chunks facing the world, 3/5 facing the sky** |
+| Transferred before first play | ~4 MB | **0.97 MB across 6 responses** (budget 10 MB) |
+| Art on disk | 24.33 MB | **3.13 MB** after `tools/optimise-art.py` |
+
+`tests/e2e/performance.spec.ts` asserts all of these on every matrix run, including a
+check that the frame is not empty — an early version of the test passed on a black
+screen, which is how the render loop bug below was found.
 
 ## Storage
 

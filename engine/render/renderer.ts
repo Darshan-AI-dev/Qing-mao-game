@@ -166,7 +166,11 @@ export class Renderer {
     if (rescaled !== null) this.resize();
 
     // Frustum culling per chunk. The previous build drew everything every frame.
+    // `matrixWorldInverse` is only refreshed inside render(), so it has to be brought
+    // up to date here or the frustum lags a frame behind the camera — and is simply
+    // wrong on the first one.
     this.camera.updateMatrixWorld();
+    this.camera.matrixWorldInverse.copy(this.camera.matrixWorld).invert();
     this.frustumMatrix.multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse);
     this.frustum.setFromProjectionMatrix(this.frustumMatrix);
     const maxDistance = this.quality.budget.viewDistance;

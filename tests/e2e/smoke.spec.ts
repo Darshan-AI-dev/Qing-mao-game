@@ -34,11 +34,23 @@ test('the intro copy has no missing words', async ({ page }) => {
   expect(text).not.toMatch(/choices the wolf tide/);
 });
 
-test('there is no download link that 404s', async ({ page }) => {
-  await page.goto('/');
-  await page.locator('#journalButton').click().catch(() => {});
-  const downloads = page.locator('a[download][href$=".zip"]');
-  await expect(downloads).toHaveCount(0);
+test('no link in the game 404s', async ({ page, request }) => {
+  await openGame(page);
+  await page.waitForTimeout(2500);
+  await page.locator('#journalButton').click();
+  await expect(page.locator('#journal')).toBeVisible();
+
+  // The old build offered a resources ZIP that was not there. Any href the game
+  // renders has to actually resolve.
+  const hrefs = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('a[href]'))
+      .map((a) => (a as HTMLAnchorElement).getAttribute('href') ?? '')
+      .filter((href) => href && !href.startsWith('#') && !href.startsWith('blob:') && !href.startsWith('data:')));
+
+  for (const href of hrefs) {
+    const response = await request.get(new URL(href, page.url()).toString());
+    expect(response.status(), `${href} returned ${response.status()}`).toBeLessThan(400);
+  }
 });
 
 test('the game renders and stays inside the frame', async ({ page }) => {

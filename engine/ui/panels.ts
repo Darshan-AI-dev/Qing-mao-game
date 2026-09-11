@@ -13,7 +13,7 @@ import type { BeatGraph, Coverage } from '../core/beats';
 import type { SaveGameV5 } from '../save/schema';
 import type { Economy } from '../systems/economy';
 import type { Upkeep } from '../systems/upkeep';
-import { buildLegacy } from '../save/legacy';
+import { buildLegacy, storeLegacy } from '../save/legacy';
 import { byId, clear, closeDialog, el, openDialog } from './dom';
 
 const COVERAGE_LABEL: Record<Coverage, string> = {
@@ -31,6 +31,7 @@ export interface PanelHost {
   travel(areaId: string): void;
   unlockedAreas(): { id: string; name: string }[];
   applySettings(): void;
+  settingsToDom(): void;
 }
 
 export class Panels {
@@ -254,7 +255,6 @@ export class Panels {
   }
 
   private async exportLegacy(): Promise<void> {
-    const { storeLegacy } = await import('../save/legacy');
     const file = buildLegacy(this.host.save);
     const json = JSON.stringify(file, null, 2);
     await storeLegacy(file);
@@ -287,26 +287,11 @@ export class Panels {
 
   // ---------------------------------------------------------------- settings
   openSettings(): void {
-    const dialog = byId<HTMLDialogElement>('options');
-    const settings = this.host.save.settings;
-    setValue('difficulty', settings.difficulty);
-    setValue('intensity', settings.intensity);
-    setValue('approach', settings.approach);
-    setValue('tier', settings.tier);
-    setValue('textSize', String(settings.textSize));
-    setValue('fontChoice', settings.font);
-    setChecked('reducedMotion', settings.reducedMotion);
-    setChecked('lensToggle', this.host.save.reader.lens);
-    setChecked('veteranToggle', this.host.save.reader.veteran);
-    setChecked('manualAim', settings.manualAim);
-    setChecked('aimAssist', settings.aimAssist);
-    setChecked('haptics', settings.haptics);
-    setChecked('holdToGuard', settings.holdToGuard);
-    setChecked('holdToRun', settings.holdToRun);
-    setChecked('refinementFailure', settings.refinementFailure);
-    setChecked('guUpkeep', settings.guUpkeep);
+    // The form is filled from the save, never the other way round, so opening the
+    // dialog can never overwrite a setting with a control's default value.
+    this.host.settingsToDom();
     this.renderKeymap();
-    openDialog(dialog);
+    openDialog(byId<HTMLDialogElement>('options'));
   }
 
   private renderKeymap(): void {
@@ -370,13 +355,3 @@ export class Panels {
 }
 
 export type JournalTab = 'chapters' | 'ledger' | 'codex' | 'threads' | 'moments';
-
-function setValue(id: string, value: string): void {
-  const node = document.getElementById(id) as HTMLSelectElement | null;
-  if (node) node.value = value;
-}
-
-function setChecked(id: string, value: boolean): void {
-  const node = document.getElementById(id) as HTMLInputElement | null;
-  if (node) node.checked = value;
-}
