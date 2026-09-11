@@ -125,13 +125,10 @@ test('the journal lists all two hundred chapters', async ({ page }) => {
 test('no two HUD panels overlap', async ({ page }) => {
   await openGame(page);
   await page.waitForTimeout(2500);
-  // Make the toast visible, since it is one of the things that was colliding.
-  await page.evaluate(() => {
-    const node = document.getElementById('toast')!;
-    node.textContent = 'A reasonably long toast message, of the kind the game shows.';
-    node.classList.add('on');
-  });
-  await page.waitForTimeout(120);
+  // Raise a toast through the game's own event bus, so it is positioned exactly as it
+  // would be in play rather than by the test poking the DOM.
+  await page.evaluate(() => window.qingMao.debug.toast('A reasonably long toast message, of the kind the game shows.'));
+  await page.waitForTimeout(200);
 
   const overlaps = await page.evaluate(() => {
     const ids = ['header', 'quest', 'toast', 'joystick', 'guWheel'];

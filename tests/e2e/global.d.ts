@@ -28,6 +28,7 @@ declare global {
         areaContents(id: string): { props: string[]; dressing: string[]; enclosed: boolean };
         characterLook(id: string): { length: string; style: string; colour: number[]; meshes: number };
         facingProbe(id: string): { faceZ: number; backZ: number; rotationY: number; forward: { x: number; z: number } };
+        toast(text: string): void;
         sceneStateAfterSkip(): { flagsApplied: number; evidence: number };
       };
       legacy: {

@@ -183,7 +183,8 @@ kbd { font-family: var(--ui-font); font-size: 0.65rem; opacity: 0.65; border: 1p
 }
 #toast {
   position: fixed; z-index: 12;
-  top: calc(var(--safe-top) + 3.4rem); left: 50%; transform: translateX(-50%) translateY(-0.4rem);
+  /* Overridden from script, which measures the quest panel. This is the fallback. */
+  top: calc(var(--safe-top) + 9rem); left: 50%; transform: translateX(-50%) translateY(-0.4rem);
   max-width: min(28rem, calc(100vw - 2rem));
   padding: 0.5rem 0.9rem;
   background: var(--glass); border: 1px solid var(--glass-edge); border-radius: 999px;
@@ -414,8 +415,6 @@ textarea { min-height: 6rem; resize: vertical; }
   #quest p { display: none; }
   .questMeta { grid-column: 2; grid-row: 1 / span 2; flex-direction: column; align-items: flex-end; margin: 0; text-align: right; }
 
-  /* Clear of the quest strip above it. */
-  #toast { top: calc(var(--safe-top) + 8.4rem); }
 
   #lensPanel, #recollectionPanel { left: calc(var(--safe-left) + 0.6rem); right: calc(var(--safe-right) + 0.6rem); width: auto; bottom: calc(var(--safe-bottom) + 14rem); }
 

@@ -1024,6 +1024,7 @@ async function boot(): Promise<void> {
       areaContents: (id: string) => game.areaContents(id),
       characterLook: (id: string) => game.characterLook(id),
       facingProbe: (id: string) => game.facingProbe(id),
+      toast: (text: string) => bus.emit('toast', { text }),
       moveDebug: () => game.moveDebug(),
       sceneStateAfterSkip: () => game.sceneStateAfterSkip()
     },

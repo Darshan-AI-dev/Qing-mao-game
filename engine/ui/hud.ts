@@ -164,14 +164,34 @@ function radialStyle(index: number, total: number): string {
   return `transform: translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius}px)`;
 }
 
-/** The toast used for every short, non-blocking message. */
+/**
+ * The toast used for every short, non-blocking message.
+ *
+ * Its vertical position is measured rather than guessed. The quest panel is a wide
+ * card at desktop and tablet widths and a one-line strip on a phone, so any fixed
+ * offset that clears it at one size lands on top of it at another — which is exactly
+ * what happened at 768 and 1024 px.
+ */
 export function attachToasts(): void {
   const node = byId('toast');
+  const quest = byId('quest');
   let timer = 0;
+
+  const place = (): void => {
+    const below = quest.getBoundingClientRect().bottom;
+    node.style.top = `${Math.round(below + 8)}px`;
+  };
+
   bus.on('toast', ({ text }) => {
     node.textContent = text;
+    // Measure after the text is in, since the quest panel may have reflowed too.
+    place();
     node.classList.add('on');
     window.clearTimeout(timer);
     timer = window.setTimeout(() => node.classList.remove('on'), 2600);
+  });
+
+  window.addEventListener('resize', () => {
+    if (node.classList.contains('on')) place();
   });
 }
