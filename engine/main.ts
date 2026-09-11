@@ -256,7 +256,26 @@ class Game implements TimelineHost {
     await this.timeline.run(script);
     byId('skipScene').hidden = true;
     this.dialogue.hide();
+    this.restorePresentation();
     this.inScene = false;
+  }
+
+  /**
+   * A scene must not leak presentation state into exploration.
+   *
+   * The prologue ends on `fade: black`, and the fade back to clear lives at the top of
+   * the *next* script. That was invisible while beats chained straight into one
+   * another; once control returns to the player between beats, it left them looking at
+   * a black screen with a working game behind it. So the end of every scene restores
+   * the screen regardless of what the script happened to leave set.
+   */
+  private restorePresentation(): void {
+    this.fadeNode.style.transitionDuration = '0.4s';
+    this.fadeNode.classList.remove('on');
+    this.letterbox(false);
+    byId('sceneArt').hidden = true;
+    byId('lensPanel').hidden = true;
+    byId('recollectionPanel').hidden = true;
   }
 
   private showLensNotes(script: SceneScript): void {

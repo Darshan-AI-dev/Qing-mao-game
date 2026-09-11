@@ -90,6 +90,44 @@ test('a skipped scene still records its evidence and flags', async ({ page }) =>
   expect(wired.flagsApplied, 'the opening beat set no flags').toBeGreaterThan(0);
 });
 
+test('the screen is not left black after playing a scene to its end', async ({ page }) => {
+  await openGame(page);
+
+  // This has to *play through*, not skip. A skip never runs the `fade` command at all,
+  // so skipping the prologue hides the very bug this is here to catch: the scene ends
+  // on `fade: black` and the fade back lives at the top of the next script.
+  await page.locator('#autoAdvance').check();
+
+  // Answer the chapter 2 choice when it appears, the way a player would.
+  await page.waitForSelector('#dialogueChoices button', { state: 'visible', timeout: 90_000 });
+  await page.locator('#dialogueChoices button').first().click();
+
+  await page.waitForFunction(() => window.qingMao.debug.isExploring(), null, { timeout: 90_000 });
+  await page.waitForTimeout(1200);
+
+  const presentation = await page.evaluate(() => ({
+    fadeOn: document.getElementById('fade')!.classList.contains('on'),
+    fadeOpacity: Number(getComputedStyle(document.getElementById('fade')!).opacity),
+    letterboxOn: document.getElementById('letterbox')!.classList.contains('on'),
+    sceneArtVisible: !document.getElementById('sceneArt')!.hidden,
+    drawCalls: window.qingMao.frameStats().drawCalls
+  }));
+
+  expect(presentation.fadeOn, 'the screen is still faded to black').toBe(false);
+  expect(presentation.fadeOpacity, 'the fade overlay is still opaque').toBeLessThan(0.1);
+  expect(presentation.letterboxOn, 'letterbox bars are still up').toBe(false);
+  expect(presentation.sceneArtVisible, 'scene art is still covering the view').toBe(false);
+  expect(presentation.drawCalls, 'nothing is being drawn').toBeGreaterThan(0);
+});
+
+test('the world is still being drawn once control returns', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+  // A black screen and a stopped renderer look identical to a player; check both.
+  const stats = await page.evaluate(() => window.qingMao.frameStats());
+  expect(stats.drawCalls, 'nothing is being drawn after the scene').toBeGreaterThan(0);
+});
+
 test('tapping the dialogue panel advances the line', async ({ page }) => {
   await openGame(page);
   await page.waitForSelector('#dialogueText', { state: 'visible', timeout: 20_000 });

@@ -45,3 +45,12 @@ argument for having it.
 | **The typewriter was starved by the render loop.** `setInterval(14ms)` competing with a 60 fps rAF loop measured a 78-character line at **16 seconds** instead of one. This is what made dialogue, skip and auto-advance all feel broken | Rewritten to drive off `requestAnimationFrame` against the clock, so pacing holds at any frame rate |
 | Auto-advance used a flat 1.4 s hold regardless of line length, and turning it on mid-line did nothing | The hold scales with the length of the line, and the toggle re-arms a line that is already waiting |
 | Only the Continue button advanced dialogue, which is not the gesture anyone uses on a phone | Tapping anywhere on the dialogue panel advances |
+| **The screen went black after the chapter 2 choice.** The prologue ends on `fade: black` and the fade back lives at the top of the *next* script — invisible while beats chained, fatal once control returns between them | `playScene()` now calls `restorePresentation()`, which clears the fade, the letterbox, the scene art and the lens panel at the end of every scene, whatever the script left set. A scene must not leak presentation state into exploration |
+
+### A note on the regression test for that last one
+
+The first version of the test skipped the prologue to reach the end, and passed even
+with the fix removed — because a skip does not run `fade` commands at all, so it never
+reproduced the bug. The test now plays the scene through on auto-advance and answers
+the chapter 2 choice the way a player does. Verified in both directions: it fails
+without `restorePresentation()` and passes with it.
