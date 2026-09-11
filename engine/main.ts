@@ -908,6 +908,12 @@ class Game implements TimelineHost {
     };
   }
 
+  /** Where the model's face points, and which way it is turned. */
+  facingProbe(id: string): { faceZ: number; backZ: number; rotationY: number; forward: { x: number; z: number } } {
+    const probe = this.actors.get(id)?.facingProbe() ?? { faceZ: 0, backZ: 0, rotationY: 0 };
+    return { ...probe, forward: { x: Math.sin(probe.rotationY), z: Math.cos(probe.rotationY) } };
+  }
+
   /** Raw input and resolved movement, for diagnosing control problems. */
   moveDebug(): Record<string, unknown> {
     const frame = { move: { ...this.lastMove }, held: this.lastHeld };
@@ -1017,6 +1023,7 @@ async function boot(): Promise<void> {
       cameraPosition: () => game.cameraPosition(),
       areaContents: (id: string) => game.areaContents(id),
       characterLook: (id: string) => game.characterLook(id),
+      facingProbe: (id: string) => game.facingProbe(id),
       moveDebug: () => game.moveDebug(),
       sceneStateAfterSkip: () => game.sceneStateAfterSkip()
     },

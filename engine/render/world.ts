@@ -73,7 +73,9 @@ const mat = (hex: number) => new MeshLambertMaterial({ color: new Color(hex) });
 const PALETTE = {
   grass: 0x314f43, path: 0x6f6b50, wood: 0x49331f, roof: 0x27494a, wall: 0x8f8d64,
   rock: 0x3e5457, bamboo: 0x38744c, leaf: 0x265f45, stone: 0x4a5458, water: 0x2f6f86,
-  cloth: 0xa6a383, orchid: 0xbcc8ee, ceiling: 0x1b2326, gold: 0xf0b047
+  cloth: 0xa6a383, orchid: 0xbcc8ee, ceiling: 0x1b2326, gold: 0xf0b047,
+  // A room is not a cave. Interiors get bamboo and boards rather than wet rock.
+  roomFloor: 0x6b5535, roomWall: 0x7c7a55, roomCeiling: 0x3c3323
 };
 
 function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Material; blocker?: Blocker } {
@@ -113,14 +115,21 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   const rng = new Rng(hash(description.id));
 
   // --- ground and ceiling
-  const ground = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(description.enclosed ? PALETTE.stone : PALETTE.grass));
+  //
+  // An enclosed area is either a cave or a room, and they should not be built from the
+  // same wet grey stone. `dark` is what separates them.
+  const cave = description.enclosed && (description.dark ?? false);
+  const room = description.enclosed && !cave;
+  const floorColour = cave ? PALETTE.stone : room ? PALETTE.roomFloor : PALETTE.grass;
+  const shellColour = cave ? PALETTE.ceiling : PALETTE.roomWall;
+  const ground = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(floorColour));
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = castShadow;
   shell.add(ground);
 
   if (description.enclosed) {
     const height = description.ceilingHeight ?? 14;
-    const ceiling = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(PALETTE.ceiling));
+    const ceiling = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(cave ? PALETTE.ceiling : PALETTE.roomCeiling));
     ceiling.rotation.x = Math.PI / 2;
     ceiling.position.y = height;
     shell.add(ceiling);
@@ -128,7 +137,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     for (const [sx, sz] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
       const wall = new Mesh(
         new PlaneGeometry(sx ? description.size.z : description.size.x, height),
-        mat(PALETTE.ceiling)
+        mat(shellColour)
       );
       wall.position.set((sx * description.size.x) / 2, height / 2, (sz * description.size.z) / 2);
       wall.rotation.y = sx ? -sx * Math.PI / 2 : sz > 0 ? Math.PI : 0;

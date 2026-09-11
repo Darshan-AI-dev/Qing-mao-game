@@ -62,6 +62,15 @@ argument for having it.
 | The region name was centred underneath the nav buttons and clipped | It is a flex item in the header now, so the layout keeps them apart at every width |
 | Control returned a moment before the next beat's area loaded, so the camera framed the previous area | `playScene` no longer clears `inScene`; the caller does, once the next beat is set up |
 
+### Reported after the control fixes
+
+| Issue | Fix |
+| --- | --- |
+| **The character walked backward.** `setFacing(atan2(dx, dz))` points the model's local **+z** along the direction of travel, but the model was built with its face at **−z** and its hair at **+z**. Movement was correct; the model was on backwards | The convention is now stated and enforced: actors face **+z**, every face-side detail is at positive z and every back-side detail at negative, and the walk cycle swings to match. `exploration.spec.ts` checks the geometry *and* that the model's forward vector aligns with the direction of travel — verified to fail without the fix |
+| Interiors were built from cave stone, so a bedroom looked like a wet grotto | `dark` now separates a cave from a room: rooms get bamboo and board colours for floor, walls and ceiling |
+| The header wrapped onto two rows below about 1000 px, pushing Pause onto its own line | The header no longer wraps; the strapline and key hints drop out before the nav has to |
+| **On a phone the toast printed on top of the quest strip, and the joystick sat on the vitals panel and the Recall button** | The phone layout stacks header → quest strip → toast deliberately, and the stick owns the bottom-left corner with the footer inset past it. A new test asserts that **no two HUD panels overlap at any viewport** — the previous test only checked one specific pair |
+
 ### A note on the regression test for the black screen
 
 The first version of the test skipped the prologue to reach the end, and passed even

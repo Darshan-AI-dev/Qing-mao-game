@@ -170,6 +170,33 @@ test('the camera stays inside the walls of a small room', async ({ page }) => {
   expect(Math.abs(view.camera.z), 'camera is outside the room on z').toBeLessThan(10);
 });
 
+test('the character faces the way he is walking', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+
+  // Convention: actors face local +z, because setFacing uses atan2(dx, dz). The first
+  // build put the face at -z, so he walked backward down every path.
+  const geometry = await page.evaluate(() => window.qingMao.debug.facingProbe('fang-yuan'));
+  expect(geometry.faceZ, 'the face is not on the front of the model').toBeGreaterThan(0);
+  expect(geometry.backZ, 'the hair is not on the back of the model').toBeLessThan(0);
+
+  const before = await page.evaluate(() => window.qingMao.debug.playerPosition());
+  await page.keyboard.down('KeyW');
+  await page.waitForTimeout(450);
+  await page.keyboard.up('KeyW');
+  const [after, facing] = await Promise.all([
+    page.evaluate(() => window.qingMao.debug.playerPosition()),
+    page.evaluate(() => window.qingMao.debug.facingProbe('fang-yuan'))
+  ]);
+
+  const travelled = { x: after.x - before.x, z: after.z - before.z };
+  const length = Math.hypot(travelled.x, travelled.z);
+  expect(length, 'the player did not move').toBeGreaterThan(0.5);
+  // The model's forward vector must point along the direction of travel, not against it.
+  const alignment = (travelled.x / length) * facing.forward.x + (travelled.z / length) * facing.forward.z;
+  expect(alignment, `he is walking backward (alignment ${alignment.toFixed(2)})`).toBeGreaterThan(0.9);
+});
+
 test('the chapter 3 room has the bed, window and stones the text describes', async ({ page }) => {
   await openGame(page);
   await skipToControl(page);

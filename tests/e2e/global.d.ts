@@ -27,6 +27,7 @@ declare global {
         cameraPosition(): { x: number; y: number; z: number };
         areaContents(id: string): { props: string[]; dressing: string[]; enclosed: boolean };
         characterLook(id: string): { length: string; style: string; colour: number[]; meshes: number };
+        facingProbe(id: string): { faceZ: number; backZ: number; rotationY: number; forward: { x: number; z: number } };
         sceneStateAfterSkip(): { flagsApplied: number; evidence: number };
       };
       legacy: {

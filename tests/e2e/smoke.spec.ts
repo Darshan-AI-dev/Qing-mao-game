@@ -122,6 +122,52 @@ test('the journal lists all two hundred chapters', async ({ page }) => {
   await expect(page.locator('.coverageSummary')).toContainText('200 of 200 chapters covered');
 });
 
+test('no two HUD panels overlap', async ({ page }) => {
+  await openGame(page);
+  await page.waitForTimeout(2500);
+  // Make the toast visible, since it is one of the things that was colliding.
+  await page.evaluate(() => {
+    const node = document.getElementById('toast')!;
+    node.textContent = 'A reasonably long toast message, of the kind the game shows.';
+    node.classList.add('on');
+  });
+  await page.waitForTimeout(120);
+
+  const overlaps = await page.evaluate(() => {
+    const ids = ['header', 'quest', 'toast', 'joystick', 'guWheel'];
+    const boxes: { id: string; r: DOMRect }[] = [];
+    for (const id of ids) {
+      const node = document.getElementById(id);
+      if (!node || node.hidden || getComputedStyle(node).display === 'none') continue;
+      const r = node.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) boxes.push({ id, r });
+    }
+    for (const name of ['.vitals', '.actionArea']) {
+      const node = document.querySelector(name);
+      if (!node) continue;
+      const r = node.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) boxes.push({ id: name, r });
+    }
+    const hits: string[] = [];
+    for (let i = 0; i < boxes.length; i++) {
+      for (let j = i + 1; j < boxes.length; j++) {
+        const a = boxes[i]!, b = boxes[j]!;
+        // The action area is a child of the footer alongside the vitals; they are laid
+        // out together and are allowed to touch.
+        if (a.id === '.vitals' && b.id === '.actionArea') continue;
+        const gap = 2;
+        const intersects =
+          a.r.left < b.r.right - gap && b.r.left < a.r.right - gap &&
+          a.r.top < b.r.bottom - gap && b.r.top < a.r.bottom - gap;
+        if (intersects) hits.push(`${a.id} overlaps ${b.id}`);
+      }
+    }
+    return hits;
+  });
+
+  expect(overlaps, overlaps.join('; ')).toEqual([]);
+});
+
 test('the region name and the toast do not overlap', async ({ page }) => {
   await openGame(page);
   await page.waitForTimeout(1200);

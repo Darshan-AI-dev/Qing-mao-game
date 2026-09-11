@@ -18,6 +18,16 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { charactersById, type CanonCharacter } from '../../canon/index';
 
+/**
+ * Actors face **+z** in local space.
+ *
+ * `setFacing(Math.atan2(dx, dz))` points the model's local +z along the direction of
+ * travel, so the front of the model has to be +z or the character moon-walks. The
+ * first version built the face at -z and the hair at +z, which is precisely that bug.
+ * Every face-side detail below is at positive z and every back-side detail at negative.
+ */
+export const FACING_AXIS = '+z';
+
 export const ANIMATIONS = [
   'idle', 'walk', 'run',
   'cultivate',
@@ -112,6 +122,20 @@ export class Actor {
     return this.current;
   }
 
+  /**
+   * Local z of the face and of the hair behind it. The face must be in front (+z) and
+   * the hair behind (-z), or `setFacing` will point the model's back down the path.
+   */
+  facingProbe(): { faceZ: number; backZ: number; rotationY: number } {
+    let faceZ = 0;
+    let backZ = 0;
+    this.root.traverse((node) => {
+      if (node.name === 'face') faceZ = node.position.z;
+      if (node.name === 'hair-back') backZ = node.position.z;
+    });
+    return { faceZ, backZ, rotationY: this.root.rotation.y };
+  }
+
   setPosition(x: number, y: number, z: number): void {
     this.root.position.set(x, y, z);
   }
@@ -149,13 +173,13 @@ export class Actor {
       const swing = this.walking ? Math.sin(this.phase) * side * 0.18 : 0;
       const raise = gesturing && side === 1 ? 0.32 : 0;
       arm.position.set(side * 0.34, 1.6 + breath + raise * 0.5, swing - raise * 0.5);
-      arm.rotation.x = -swing * 1.4;
+      arm.rotation.x = swing * 1.4;
       arm.rotation.z = side * (gesturing ? 0.5 : 0.05);
     });
     this.procedural.legs.forEach((leg, i) => {
       const side = i === 0 ? -1 : 1;
       const swing = this.walking ? Math.sin(this.phase) * side * 0.18 : 0;
-      leg.position.set(side * 0.13, 0.05 + Math.max(0, swing * 0.25), -swing * 0.9);
+      leg.position.set(side * 0.13, 0.05 + Math.max(0, swing * 0.25), swing * 0.9);
     });
   }
 
@@ -189,7 +213,7 @@ function buildStandIn(character: CanonCharacter, options: ActorOptions, root: Gr
   chest.position.y = 1.42;
   // Cross-collar, the detail that makes the silhouette read as a robe.
   const collar = new Mesh(new BoxGeometry(0.42 * broad, 0.2, 0.3), trimMat);
-  collar.position.set(0, 1.62, -0.08);
+  collar.position.set(0, 1.62, 0.08);
   collar.rotation.z = 0.24;
   const sash = new Mesh(new BoxGeometry(0.64 * broad, 0.12, 0.4), trimMat);
   sash.position.y = 1.16;
@@ -213,24 +237,26 @@ function buildStandIn(character: CanonCharacter, options: ActorOptions, root: Gr
   head.add(cap);
   // The face is cut out of the cap so it does not read as a helmet.
   const face = new Mesh(new BoxGeometry(0.2, 0.14, 0.06), skinMat);
-  face.position.set(0, 0.01, -0.14);
+  face.name = 'face';
+  face.position.set(0, 0.01, 0.14);
   head.add(face);
 
   if (hairSpec.length === 'long') {
     const fall = new Mesh(new BoxGeometry(0.3, 0.62, 0.14), hairMat);
-    fall.position.set(0, -0.26, 0.14);
+    fall.name = 'hair-back';
+    fall.position.set(0, -0.26, -0.14);
     head.add(fall);
     for (const side of [-1, 1]) {
       const strand = new Mesh(new BoxGeometry(0.08, 0.34, 0.15), hairMat);
-      strand.position.set(side * 0.15, -0.08, 0.02);
+      strand.position.set(side * 0.15, -0.08, -0.02);
       head.add(strand);
     }
     if (hairSpec.style === 'tied') {
       const cord = new Mesh(new BoxGeometry(0.2, 0.05, 0.16), trimMat);
-      cord.position.set(0, -0.02, 0.16);
+      cord.position.set(0, -0.02, -0.16);
       head.add(cord);
       const tail = new Mesh(new BoxGeometry(0.13, 0.5, 0.11), hairMat);
-      tail.position.set(0, -0.6, 0.17);
+      tail.position.set(0, -0.6, -0.17);
       head.add(tail);
     }
     if (hairSpec.style === 'topknot') {
