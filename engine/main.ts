@@ -371,6 +371,7 @@ class Game implements TimelineHost {
     // had just come down. Walking to the marker meant walking into the lens, which is
     // the other half of "the character is walking backward".
     this.cameraYaw = towardsObjective;
+    this.placeCamera();
     byId('regionName').textContent = canon?.name ?? areaId;
   }
 
@@ -797,6 +798,18 @@ class Game implements TimelineHost {
       this.cameraDistance = Math.max(4, this.cameraDistance - frame.look.dy * dt);
       return;
     }
+    this.placeCamera();
+  }
+
+  /**
+   * Puts the orbit camera where the player and the yaw say it should be.
+   *
+   * Called from the frame loop, and again the moment an area is entered. Waiting for
+   * the next frame meant `enterArea` returned with the camera still standing in the
+   * last area — a one-frame flash of somewhere else on a slow device, and on WebKit in
+   * CI a long enough window that the camera tests read the old position and failed.
+   */
+  private placeCamera(): void {
     const eye = this.insideTheWalls(
       orbitCamera(this.player, this.cameraYaw, this.cameraPitch, this.effectiveCameraDistance())
     );
