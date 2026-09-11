@@ -168,12 +168,28 @@ test('no two HUD panels overlap', async ({ page }) => {
 test('the region name and the toast do not overlap', async ({ page }) => {
   await openGame(page);
   await page.waitForTimeout(1200);
-  const boxes = await page.evaluate(() => {
-    const region = document.getElementById('regionName')!.getBoundingClientRect();
-    const toast = document.getElementById('toast')!.getBoundingClientRect();
-    return { region: { top: region.top, bottom: region.bottom }, toast: { top: toast.top, bottom: toast.bottom } };
-  });
-  expect(boxes.toast.top).toBeGreaterThanOrEqual(boxes.region.bottom - 1);
+
+  const boxes = async () =>
+    page.evaluate(() => {
+      const region = document.getElementById('regionName')!.getBoundingClientRect();
+      const toast = document.getElementById('toast')!.getBoundingClientRect();
+      return { region: region.bottom, toast: toast.top };
+    });
+
+  // Two code paths, and this test only ever checked the first one. Before any message
+  // arrives the toast sits wherever the stylesheet put it, and that fallback was three
+  // pixels above the region name on WebKit at desktop width — which is what failed here
+  // for a run and a half while I kept fixing the measuring code instead.
+  const resting = await boxes();
+  expect(resting.toast, 'the resting position overlaps the region name')
+    .toBeGreaterThanOrEqual(resting.region - 1);
+
+  // And again with a message actually on screen, which is the measured path.
+  await page.evaluate(() => window.qingMao.debug.toast('A reasonably long toast message, of the kind the game shows.'));
+  await page.waitForTimeout(300);
+  const showing = await boxes();
+  expect(showing.toast, 'a toast on screen overlaps the region name')
+    .toBeGreaterThanOrEqual(showing.region - 1);
 });
 
 test('reduced motion is honoured', async ({ page }) => {

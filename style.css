@@ -221,8 +221,10 @@ kbd { font-family: var(--ui-font); font-size: 0.65rem; opacity: 0.65; border: 1p
 }
 #toast {
   position: fixed; z-index: 12;
-  /* Overridden from script, which measures the quest panel. This is the fallback. */
-  top: calc(var(--safe-top) + 9rem); left: 50%; transform: translateX(-50%) translateY(-0.4rem);
+  /* Overridden from script, which measures everything above it. This is only the
+     fallback for the frame before that runs, so it errs low: at 9rem it landed three
+     pixels above the region name on WebKit at desktop width. */
+  top: calc(var(--safe-top) + 10.5rem); left: 50%; transform: translateX(-50%) translateY(-0.4rem);
   max-width: min(28rem, calc(100vw - 2rem));
   padding: 0.5rem 0.9rem;
   background: var(--glass); border: 1px solid var(--glass-edge); border-radius: 999px;

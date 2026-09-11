@@ -190,6 +190,21 @@ export function attachToasts(): void {
     node.style.top = `${Math.round(below + 8)}px`;
   };
 
+  // Place it now, and again whenever anything above it changes size.
+  //
+  // `place()` used to run only when a message arrived, so until the first toast the
+  // element sat at its CSS fallback of 9rem — which on WebKit at desktop width is three
+  // pixels above the region name. Measuring on demand also missed the case that matters
+  // in play: the quest panel reflowing while a toast is already on screen.
+  place();
+  if (typeof ResizeObserver !== 'undefined') {
+    const observer = new ResizeObserver(place);
+    for (const id of ['quest', 'regionName']) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    }
+  }
+
   bus.on('toast', ({ text }) => {
     node.textContent = text;
     // Measure after the text is in, since the quest panel may have reflowed too.
