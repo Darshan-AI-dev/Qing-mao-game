@@ -6,7 +6,15 @@
 <title>Qing Mao · Rebirth</title>
 <meta name="description" content="Live the Qing Mao arc of Reverend Insanity, chapters 1 to 200. Every chapter is played, staged, or recorded in Fang Yuan's own ledger.">
 <meta name="theme-color" content="#12282e">
+<link rel="icon" href="icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
+<!-- Installing to the Home Screen is the only reliable way to keep a long save on
+     iOS, because Safari exempts home-screen apps from its seven-day storage eviction. -->
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Qing Mao">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -104,7 +112,7 @@
 
   <p id="tierNote" class="fine"></p>
   <p id="migrationNote" class="fine" hidden></p>
-  <p id="iosStorageWarning" class="fine warn" hidden>On iPhone and iPad, Safari clears a site's saved data after seven days without a visit. Adding this game to your Home&nbsp;Screen exempts it, and is the only reliable way to keep a long save.</p>
+  <p id="iosStorageWarning" class="fine warn" hidden>On iPhone and iPad, Safari clears a site's saved data after seven days without a visit, which would lose a long save. Adding this game to your Home&nbsp;Screen exempts it. In Safari: tap <b>Share</b>, then <b>Add to Home Screen</b>, then open it from there.</p>
 
   <button id="begin" type="button" class="primary">Enter Qing Mao</button>
   <div class="startRow">
