@@ -44,10 +44,23 @@ test('frustum culling removes chunks the camera cannot see', async ({ page }, te
   await page.locator('#begin').click();
   await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
   await page.waitForFunction(() => window.qingMao.frameStats().drawCalls > 0, null, { timeout: 30_000 });
-  await page.waitForTimeout(1500);
+  await page.waitForSelector('#skipScene', { state: 'visible', timeout: 30_000 });
+  await page.locator('#skipScene').click();
+  await page.waitForFunction(() => window.qingMao.debug.isExploring(), null, { timeout: 30_000 });
 
-  // The prologue arena is small enough that every chunk is legitimately on screen,
-  // so point the camera straight up and check the count actually falls. That is the
+  // Measure this somewhere large and open.
+  //
+  // Every chunk carries a bounding sphere big enough to hold its props, and a camera
+  // standing inside one of those spheres always counts as seeing it. The prologue is a
+  // 96-unit hall in four chunks, so the camera is inside all of them at once and
+  // nothing there can ever be culled — this only passed while the prologue was open to
+  // the sky and its far chunks were small enough to fall outside. The bamboo path is
+  // 132 units across in sixteen chunks, and from it the far ones genuinely leave the
+  // frustum when the camera looks away.
+  await page.evaluate(() => window.qingMao.debug.visitArea('mountain.bamboo-path'));
+  await page.waitForTimeout(900);
+
+  // Point the camera straight up and check the count actually falls. That is the
   // behaviour the old build had none of: it drew everything, every frame.
   const before = await page.evaluate(() => window.qingMao.frameStats());
   const after = await page.evaluate(async () => {

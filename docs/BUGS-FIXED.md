@@ -116,6 +116,17 @@ it — is new, and everything below it found on its first run.
 | Three areas opened on a giant lamp post filling the frame, and the Earth Treasury had one standing on the objective marker | Lamp posts are solid, the spawn search keeps the stretch behind the player clear because that is where the camera stands, and nothing is placed on an area's origin |
 | The luminance check's washed-out ceiling flagged the snow areas while their drifts, tents and fires were perfectly legible | Brightness alone says nothing. The flag is now a high mean *with* a low spread: a bright frame with nothing in it |
 
+### A note on the frustum-culling test
+
+Making the prologue an enclosed hall broke it, and the break was informative. Every
+chunk carries a bounding sphere large enough to hold its props, and a camera standing
+inside one of those spheres always counts as seeing it. The prologue is ninety-six units
+across in four chunks, so the camera is inside all four at once and nothing there can
+ever be culled — the test had been passing on the old open-sky prologue, whose far
+chunks happened to fall outside the frustum. It now measures on the bamboo path, which
+is a hundred and thirty-two units across in sixteen chunks. Verified in both directions:
+it fails with culling disabled and passes with it.
+
 ### A note on the regression test for the black screen
 
 The first version of the test skipped the prologue to reach the end, and passed even
