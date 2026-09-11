@@ -30,6 +30,11 @@ jobs:
     name: Browsers (${{ matrix.engine }})
     runs-on: ubuntu-latest
     needs: verify
+    # Chromium finishes in about eighteen minutes and WebKit in fourteen; Firefox has
+    # been seen running past fifty with no sign of ending. The default job timeout is
+    # six hours, which turns a hang into a run nobody reads — the exact failure this
+    # sharding was meant to cure. Forty minutes makes it fail visibly instead.
+    timeout-minutes: 40
     # One runner per engine, in parallel. All three engines in one job ran for three
     # hours, and a three-hour signal is one nobody waits for — which is how two WebKit
     # failures stayed in the branch across several pushes. fail-fast is off so a WebKit
