@@ -142,12 +142,20 @@ sweep that can see them, and it fails the run rather than only reporting:
 - a choice button below the bottom of the screen, which is a phone-shaped bug;
 - the Reader's Lens open on top of the dialogue it is meant to annotate.
 
-CI runs one job per browser engine, in parallel, with two Playwright workers each.
-Before that it was all three engines in one job at Playwright's CI default of a single
-worker: 540 software-rendered WebGL tests, one at a time, for about three hours. Three
-hours is not feedback — it is why two WebKit camera failures sat in the branch across
-several pushes without anyone reading the result. `fail-fast` is off, so a WebKit break
-still reports what Firefox and Chromium did.
+CI runs one job per browser engine *and viewport* — fifteen in parallel, two Playwright
+workers each, twenty-minute timeout. It got there in two steps, and the second step is
+the interesting one.
+
+Before any of it, all three engines ran in one job at Playwright's CI default of a
+single worker: 540 software-rendered WebGL tests, one at a time, for about three hours.
+Three hours is not feedback — it is why two WebKit camera failures sat in the branch
+across several pushes without anyone reading the result.
+
+Splitting by engine fixed Chromium (18 minutes) and WebKit (14). Firefox still needed
+more than forty for its five viewports, which is back in "too slow to read" and would
+have tripped the timeout on every run — the same failure, one engine at a time. Every
+job is one viewport now: 36 tests, a few minutes on Chromium and WebKit, under ten on
+Firefox. `fail-fast` is off, so one red combination still reports the other fourteen.
 
 Note that the workflow sets `cancel-in-progress`, so pushing cancels the run you are
 waiting on. That is the right default; just do not push while you need the answer.
