@@ -54,6 +54,12 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
+  // Playwright defaults to a single worker under CI, which for 540 WebGL tests meant a
+  // three-hour run. Three hours is not feedback: it is why two WebKit camera failures
+  // sat in the branch unnoticed across several pushes. Two workers on a shared runner
+  // is about as far as software-rendered WebGL goes before the frame-budget tests start
+  // timing out on contention rather than on anything real.
+  workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
   use: {
     baseURL: 'http://127.0.0.1:4173',

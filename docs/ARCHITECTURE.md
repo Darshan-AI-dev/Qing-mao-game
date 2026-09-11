@@ -142,6 +142,16 @@ sweep that can see them, and it fails the run rather than only reporting:
 - a choice button below the bottom of the screen, which is a phone-shaped bug;
 - the Reader's Lens open on top of the dialogue it is meant to annotate.
 
+CI runs one job per browser engine, in parallel, with two Playwright workers each.
+Before that it was all three engines in one job at Playwright's CI default of a single
+worker: 540 software-rendered WebGL tests, one at a time, for about three hours. Three
+hours is not feedback — it is why two WebKit camera failures sat in the branch across
+several pushes without anyone reading the result. `fail-fast` is off, so a WebKit break
+still reports what Firefox and Chromium did.
+
+Note that the workflow sets `cancel-in-progress`, so pushing cancels the run you are
+waiting on. That is the right default; just do not push while you need the answer.
+
 `walkToObjective()` on the debug surface really walks, in the same steps and through the
 same blockers as the player. An objective walled off behind its own scenery therefore
 shows up as a walk that does not arrive, rather than as a beat that silently never fires.
