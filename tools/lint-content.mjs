@@ -263,6 +263,26 @@ if (!/enclosed\s*\?/.test(readFileSync(join(root, 'content/qingmao/world/areas.t
     !/enclosed: area\.ceiling/.test(areasSource)) {
   warn('areas', 'generated areas no longer take enclosed from the canon ceiling flag');
 }
+// Named characters need a chapter-referenced appearance note, and anyone the bible
+// describes as long-haired must carry the hair spec the rig reads.
+for (const character of read('canon/characters.json').characters) {
+  if (character.id === 'narrator') continue;
+  if (!character.appearance?.length) fail('characters', `${character.id} has no appearance notes`);
+  for (const note of character.appearance ?? []) {
+    if (!Array.isArray(note.chapters) || note.chapters.length !== 2) {
+      fail('characters', `${character.id} has an appearance note with no chapter reference`);
+    }
+  }
+  if (character.hair && !['long', 'short'].includes(character.hair.length)) {
+    fail('characters', `${character.id} has an unknown hair length "${character.hair.length}"`);
+  }
+  if (character.hair && !['loose', 'tied', 'topknot'].includes(character.hair.style)) {
+    fail('characters', `${character.id} has an unknown hair style "${character.hair.style}"`);
+  }
+}
+const fangYuan = read('canon/characters.json').characters.find((c) => c.id === 'fang-yuan');
+if (fangYuan?.hair?.length !== 'long') fail('characters', 'Fang Yuan should have long hair');
+
 for (const moment of timeline.mustLand) {
   const beat = beatById.get(moment.id);
   if (!beat) fail('must-land', `moment ${moment.n} ("${moment.title}") points at unknown beat ${moment.id}`);

@@ -47,7 +47,22 @@ argument for having it.
 | Only the Continue button advanced dialogue, which is not the gesture anyone uses on a phone | Tapping anywhere on the dialogue panel advances |
 | **The screen went black after the chapter 2 choice.** The prologue ends on `fade: black` and the fade back lives at the top of the *next* script — invisible while beats chained, fatal once control returns between them | `playScene()` now calls `restorePresentation()`, which clears the fade, the letterbox, the scene art and the lens panel at the end of every scene, whatever the script left set. A scene must not leak presentation state into exploration |
 
-### A note on the regression test for that last one
+### Reported after playing on a phone
+
+| Issue | Fix |
+| --- | --- |
+| **The joystick felt reversed, and differently reversed depending on which way you faced.** The movement basis was a plain 2D rotation of the raw input, which is the wrong handedness for this camera: at yaw 0 forward drove the player *toward* the camera, at yaw 90 forward was right but strafing was mirrored | Extracted to `engine/core/movement.ts` and derived from the camera's own forward and right vectors. `tests/unit/movement.test.mts` checks every axis at 24 camera angles |
+| Dragging right orbited the camera left | The yaw sign is corrected, and **Invert horizontal look**, **Invert vertical look** and a **look sensitivity** slider are in Options, because this one is partly taste |
+| The touch stick was twitchy and had no deadzone, and a thumb sliding off it also dragged the camera | A 0.12 deadzone with the range rescaled past it, so just past the threshold is a slow walk; the usable throw is 78% of the ring; the knob lights up past the deadzone; a touch that starts on the stick can never become a look drag |
+| **The chapter 3 room had no bed and no window**, though the narration describes both down to the broken latch | The room is built from what the chapter says: bed with blanket and pillow, a window with mullions and a sill, table, stool, chest, shelf, and twelve stones in a cloth bag beside the bed |
+| **Interiors rendered almost black.** A roof blocks the sun, so a room lit by the outdoor rig got nothing, and outdoor fog distances turned its own walls to near-black at 14 units | Enclosed-but-not-underground areas get their own lighting balance and an overhead fill, and fog is pushed past the far wall. Point lights were also using candela-scale intensities of `1.6`, which arrive as ~0.1 at floor level |
+| The third-person camera sat 16 units back inside an 18-wide bedroom — outside the wall, looking in | Camera distance is clamped to the area's smaller half-extent for interiors |
+| The gold objective disc filled the corner of a small room like a blob | A thin ring, scaled to the area, that fades out as you arrive |
+| Fang Yuan read as a cone wearing a hat | Rebuilt with human proportions — robe skirt, chest, cross-collar, sash, separate head with a face — and **long black hair**, loose or tied per the canon bible's new `hair` field. The content lint now requires chapter-referenced appearance notes and a valid hair spec for every named character |
+| The region name was centred underneath the nav buttons and clipped | It is a flex item in the header now, so the layout keeps them apart at every width |
+| Control returned a moment before the next beat's area loaded, so the camera framed the previous area | `playScene` no longer clears `inScene`; the caller does, once the next beat is set up |
+
+### A note on the regression test for the black screen
 
 The first version of the test skipped the prologue to reach the end, and passed even
 with the fix removed — because a skip does not run `fade` commands at all, so it never

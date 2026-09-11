@@ -76,6 +76,10 @@ export interface SettingsState {
   haptics: boolean;
   holdToGuard: boolean;
   holdToRun: boolean;
+  invertLookX: boolean;
+  invertLookY: boolean;
+  /** 0.2 to 2.0. Touch and mouse share it; the gamepad scales from the same value. */
+  lookSensitivity: number;
   refinementFailure: boolean;
   guUpkeep: boolean;
   keymap: Record<string, string>;
@@ -127,6 +131,9 @@ export function defaultSettings(): SettingsState {
     haptics: true,
     holdToGuard: true,
     holdToRun: true,
+    invertLookX: false,
+    invertLookY: false,
+    lookSensitivity: 1,
     refinementFailure: true,
     guUpkeep: true,
     keymap: {

@@ -24,6 +24,12 @@ export interface CharacterVariant {
   chapters: ChapterRange;
 }
 
+export interface CanonHair {
+  length: 'long' | 'short';
+  style: 'loose' | 'tied' | 'topknot';
+  note?: string;
+}
+
 export interface CanonCharacter {
   id: string;
   name: string;
@@ -35,6 +41,7 @@ export interface CanonCharacter {
   voice: string;
   palette: Palette;
   rig: string | null;
+  hair?: CanonHair;
   variants?: CharacterVariant[];
 }
 

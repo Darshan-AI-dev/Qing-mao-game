@@ -10,9 +10,9 @@
  * lint cross-checks it against the canon bible's `ceiling` flag.
  */
 import {
-  BoxGeometry, CircleGeometry, Color, ConeGeometry, CylinderGeometry, Group,
-  InstancedMesh, Matrix4, Mesh, MeshLambertMaterial, PlaneGeometry, Quaternion,
-  Vector3, type BufferGeometry, type Material
+  BoxGeometry, Color, ConeGeometry, CylinderGeometry, DoubleSide,
+  Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial,
+  PlaneGeometry, Quaternion, RingGeometry, Vector3, type BufferGeometry, type Material
 } from 'three';
 import { Rng } from '../core/rng';
 
@@ -31,7 +31,11 @@ export interface PropPlacement {
   rotation?: number;
 }
 
-export type PropKind = 'bamboo' | 'rock' | 'tree' | 'villager' | 'lantern' | 'pillar' | 'crate' | 'orchid';
+export type PropKind =
+  | 'bamboo' | 'rock' | 'tree' | 'villager' | 'lantern' | 'pillar' | 'crate' | 'orchid'
+  // Interior furniture. The chapter 3 room is described down to the window latch and
+  // the stones by the bed, so those have to exist as objects, not as narration.
+  | 'bed' | 'table' | 'stool' | 'chest' | 'shelf' | 'window';
 
 export interface AreaDescription {
   id: string;
@@ -50,6 +54,8 @@ export interface AreaDescription {
   water?: { x: number; z: number; w: number; d: number; color: number }[];
   /** Ceilings can be raised locally, e.g. the stone forest's vault. */
   ceilingHeight?: number;
+  /** Hand-placed interior details: blankets, window mullions, a bag of stones. */
+  dressing?: InteriorDressing[];
   blockers?: Blocker[];
 }
 
@@ -81,6 +87,13 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
     case 'pillar': return { geometry: new CylinderGeometry(1.5, 2.1, 22, 7), material: mat(PALETTE.stone), blocker: { x: 0, z: 0, w: 1.8, d: 1.8 } };
     case 'crate': return { geometry: new BoxGeometry(1.2, 1, 1.2), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 0.7, d: 0.7 } };
     case 'orchid': return { geometry: new ConeGeometry(0.22, 0.6, 5), material: mat(PALETTE.orchid) };
+    case 'bed': return { geometry: new BoxGeometry(2.0, 0.42, 3.1), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 1.1, d: 1.7 } };
+    case 'table': return { geometry: new BoxGeometry(1.5, 0.08, 0.95), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 0.8, d: 0.55 } };
+    case 'stool': return { geometry: new CylinderGeometry(0.26, 0.3, 0.44, 8), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
+    case 'chest': return { geometry: new BoxGeometry(1.1, 0.62, 0.66), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 0.6, d: 0.4 } };
+    case 'shelf': return { geometry: new BoxGeometry(1.8, 0.07, 0.42), material: mat(PALETTE.wood) };
+    // A pale panel standing in for daylight through an opening, with its frame.
+    case 'window': return { geometry: new BoxGeometry(1.7, 1.5, 0.12), material: new MeshLambertMaterial({ color: new Color(0x9fc6d2), emissive: new Color(0x32505c) }) };
   }
 }
 
@@ -232,6 +245,8 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     }
   }
 
+  if (description.dressing?.length) dressInterior(shell, description.dressing, castShadow);
+
   // --- assemble the chunk list
   const chunks: { group: Group; centre: Vector3; radius: number }[] = [];
   const diagonal = Math.hypot(description.size.x, description.size.z) / 2;
@@ -271,6 +286,12 @@ function heightOffset(kind: PropKind): number {
     case 'pillar': return 11;
     case 'crate': return 0.5;
     case 'orchid': return 0.3;
+    case 'bed': return 0.42;
+    case 'table': return 0.78;
+    case 'stool': return 0.22;
+    case 'chest': return 0.31;
+    case 'shelf': return 1.55;
+    case 'window': return 1.85;
   }
 }
 
@@ -309,10 +330,68 @@ function hash(value: string): number {
   return h || 1;
 }
 
-/** A flat marker disc for objectives and interaction points. */
-export function marker(x: number, z: number, color = PALETTE.gold): Mesh {
-  const disc = new Mesh(new CircleGeometry(1.1, 16), mat(color));
-  disc.rotation.x = -Math.PI / 2;
-  disc.position.set(x, 0.08, z);
-  return disc;
+/**
+ * Adds the small touches that make an interior read as lived in: a blanket on the bed,
+ * mullions across a window, a bag of stones on the floor beside it. Called by the area
+ * builder after the instanced props are placed.
+ */
+export function dressInterior(root: Group, dressing: InteriorDressing[], castShadow: boolean): void {
+  for (const item of dressing) {
+    switch (item.kind) {
+      case 'blanket': {
+        const blanket = new Mesh(new BoxGeometry(1.8, 0.1, 1.9), mat(0x8f9a86));
+        blanket.position.set(item.x, 0.48, item.z);
+        blanket.castShadow = castShadow;
+        root.add(blanket);
+        const pillow = new Mesh(new BoxGeometry(0.9, 0.16, 0.42), mat(0xb3b6a0));
+        pillow.position.set(item.x, 0.52, item.z - 1.2);
+        root.add(pillow);
+        break;
+      }
+      case 'mullion': {
+        for (const offset of [-0.55, 0, 0.55]) {
+          const bar = new Mesh(new BoxGeometry(0.07, 1.5, 0.16), mat(PALETTE.wood));
+          bar.position.set(item.x + offset, 1.85, item.z);
+          root.add(bar);
+        }
+        const sill = new Mesh(new BoxGeometry(1.95, 0.12, 0.3), mat(PALETTE.wood));
+        sill.position.set(item.x, 1.05, item.z);
+        root.add(sill);
+        break;
+      }
+      case 'stone-bag': {
+        const bag = new Mesh(new CylinderGeometry(0.22, 0.28, 0.3, 8), mat(0x6e6a52));
+        bag.position.set(item.x, 0.15, item.z);
+        bag.castShadow = castShadow;
+        root.add(bag);
+        // A few stones spilled beside it, because twelve is a number you can count.
+        for (let i = 0; i < 4; i++) {
+          const stone = new Mesh(new ConeGeometry(0.08, 0.12, 5), mat(0x7fa89a));
+          stone.position.set(item.x + 0.32 + (i % 2) * 0.16, 0.06, item.z + 0.1 + Math.floor(i / 2) * 0.16);
+          root.add(stone);
+        }
+        break;
+      }
+    }
+  }
+}
+
+export interface InteriorDressing {
+  kind: 'blanket' | 'mullion' | 'stone-bag';
+  x: number;
+  z: number;
+}
+
+/**
+ * A flat ring marking an objective. A ring rather than a filled disc: a solid circle at
+ * the scale needed outdoors reads as an orange blob across the floor of a small room.
+ */
+export function marker(x: number, z: number, scale = 1, color = PALETTE.gold): Mesh {
+  const ring = new Mesh(
+    new RingGeometry(0.78 * scale, 1.05 * scale, 24),
+    new MeshBasicMaterial({ color: new Color(color), transparent: true, opacity: 0.72, side: DoubleSide })
+  );
+  ring.rotation.x = -Math.PI / 2;
+  ring.position.set(x, 0.06, z);
+  return ring;
 }

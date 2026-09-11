@@ -110,18 +110,44 @@ export class Renderer {
     this.lanterns = [];
   }
 
+  /** A soft overhead fill for an interior, on top of its lanterns. */
+  addFill(x: number, y: number, z: number, intensity = 16, colour = 0xffdcb0, distance = 34): void {
+    const light = new PointLight(colour, intensity, distance, 1);
+    light.position.set(x, y, z);
+    this.lanterns.push(light);
+    this.scene.add(light);
+  }
+
   addLantern(x: number, y: number, z: number): void {
     if (this.lanterns.length >= this.quality.budget.lanterns) return;
-    const light = new PointLight(0xffb15c, 1.6, 16, 2);
+    const light = new PointLight(0xffb15c, 9, 20, 1);
     light.position.set(x, y, z);
     this.lanterns.push(light);
     this.scene.add(light);
   }
 
   /** Time of day tints the hemisphere and sun; underground areas go genuinely dark. */
-  setLighting(options: { timeOfDay: number; underground: boolean; fogColor: number; fogNear: number; fogFar: number }): void {
-    const { timeOfDay, underground, fogColor, fogNear, fogFar } = options;
-    if (underground) {
+  setLighting(options: {
+    timeOfDay: number;
+    underground: boolean;
+    /** Enclosed but not underground: a room with a roof, lit by its own lamps and window. */
+    indoor?: boolean;
+    fogColor: number;
+    fogNear: number;
+    fogFar: number;
+  }): void {
+    const { timeOfDay, underground, indoor, fogColor, fogNear, fogFar } = options;
+    if (indoor && !underground) {
+      // A roof blocks the sun, so an interior lit only by the outdoor rig renders
+      // almost black. Rooms get their own balance: a soft sky fill, strong ambient,
+      // and a weak directional for shape.
+      this.hemi.intensity = 0.55;
+      this.hemi.color.setHex(0xc3d6dd);
+      this.hemi.groundColor.setHex(0x4a4030);
+      this.sun.intensity = 0.25;
+      this.sun.color.setHex(0xffe6c4);
+      this.ambient.intensity = 0.42;
+    } else if (underground) {
       this.hemi.intensity = 0.1;
       this.hemi.color.setHex(0x2a3440);
       this.hemi.groundColor.setHex(0x10161a);

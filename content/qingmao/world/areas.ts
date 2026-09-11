@@ -57,7 +57,12 @@ const prologue: AreaDescription = {
   blockers: []
 };
 
-/** Where he wakes. Rain on the roof, an open window, a thin blanket. */
+/**
+ * Where he wakes. Built to match what chapter 3 actually describes: rain on the roof,
+ * an open window with a latch that has been broken since last spring, a thin blanket,
+ * and twelve primeval stones in a cloth bag beside the bed. The first version of this
+ * room had crates and a lantern in it and nothing a reader would recognise.
+ */
 const hostelRoom: AreaDescription = {
   id: 'mountain.hostel-room',
   size: { x: 18, z: 20 },
@@ -68,10 +73,21 @@ const hostelRoom: AreaDescription = {
   ceilingHeight: 5.4,
   timeOfDay: 0.22,
   props: [
-    { kind: 'crate', places: [{ x: -5.4, z: -6 }, { x: -5.4, z: -4.2 }, { x: 5.6, z: 5.8 }] },
-    { kind: 'lantern', places: [{ x: 0, z: -8 }] }
+    // The bed against the far wall, the window beside it.
+    { kind: 'bed', places: [{ x: -5.6, z: -5.4, rotation: 0, scale: 1 }] },
+    { kind: 'window', places: [{ x: 0.5, z: -9.85, rotation: 0, scale: 1 }] },
+    { kind: 'table', places: [{ x: 4.6, z: -5.2, rotation: 0, scale: 1 }] },
+    { kind: 'stool', places: [{ x: 4.6, z: -3.6, rotation: 0, scale: 1 }] },
+    { kind: 'chest', places: [{ x: 6.4, z: 4.8, rotation: 0.3, scale: 1 }] },
+    { kind: 'shelf', places: [{ x: -5.6, z: -9.7, rotation: 0, scale: 1 }] },
+    { kind: 'lantern', places: [{ x: 5.2, z: -8.6 }] }
   ],
-  blockers: [{ x: -5.4, z: -5, w: 1.4, d: 2.4 }]
+  dressing: [
+    { kind: 'blanket', x: -5.6, z: -5.0 },
+    { kind: 'mullion', x: 0.5, z: -9.7 },
+    // Twelve stones, and he has already counted them.
+    { kind: 'stone-bag', x: -4.0, z: -3.4 }
+  ]
 };
 
 /** Pale-green two-storey bamboo houses on wooden stakes over uneven ground. */

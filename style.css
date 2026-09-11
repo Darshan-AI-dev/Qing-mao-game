@@ -170,19 +170,18 @@ kbd { font-family: var(--ui-font); font-size: 0.65rem; opacity: 0.65; border: 1p
 #lensPanel .veteran { color: var(--warn); font-style: italic; }
 #recollectionPanel p { font-style: italic; }
 
-/* Region name sits above the toast rather than on top of it: the previous build
-   stacked both at top centre. */
+/* The region name is a flex item in the header, between the brand and the nav, so the
+   layout keeps them apart instead of the label being centred underneath the buttons. */
 #regionName {
-  position: fixed; z-index: 8;
-  top: calc(var(--safe-top) + 0.7rem); left: 50%; transform: translateX(-50%);
-  max-width: min(60vw, 26rem);
+  flex: 1 1 auto; min-width: 0; align-self: center;
+  padding: 0 0.6rem;
   font-family: var(--ui-font); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--ink-faint); pointer-events: none; text-align: center;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 #toast {
   position: fixed; z-index: 12;
-  top: calc(var(--safe-top) + 2.6rem); left: 50%; transform: translateX(-50%) translateY(-0.4rem);
+  top: calc(var(--safe-top) + 3.4rem); left: 50%; transform: translateX(-50%) translateY(-0.4rem);
   max-width: min(28rem, calc(100vw - 2rem));
   padding: 0.5rem 0.9rem;
   background: var(--glass); border: 1px solid var(--glass-edge); border-radius: 999px;
@@ -278,11 +277,17 @@ footer > * { pointer-events: auto; }
 #joystick {
   position: fixed; z-index: 13;
   left: calc(var(--safe-left) + 1.2rem); bottom: calc(var(--safe-bottom) + 1.2rem);
-  width: 112px; height: 112px; border-radius: 50%;
+  width: 128px; height: 128px; border-radius: 50%;
   border: 1px solid var(--glass-edge); background: rgba(14, 32, 37, 0.45);
   display: none; touch-action: none;
 }
-#joystick span { position: absolute; inset: 34px; border-radius: 50%; background: rgba(99, 183, 148, 0.5); }
+#joystick span {
+  position: absolute; inset: 38px; border-radius: 50%;
+  background: rgba(99, 183, 148, 0.45);
+  transition: background 0.12s ease;
+}
+/* Lights up past the deadzone, so a resting thumb does not look like it is moving. */
+#joystick span.active { background: rgba(99, 183, 148, 0.82); }
 
 /* --------------------------------------------------------------- dialogs */
 dialog {
@@ -380,6 +385,7 @@ textarea { min-height: 6rem; resize: vertical; }
 @media (max-width: 560px) {
   header { padding: 0.45rem 0.6rem; }
   .brand small { display: none; }
+  #regionName { display: none; }
   .brand h1 { font-size: 0.92rem; }
   nav button { font-size: 0.7rem; padding: 0.4rem 0.55rem; }
   nav kbd { display: none; }
@@ -406,8 +412,8 @@ textarea { min-height: 6rem; resize: vertical; }
   .action { padding: 0.35rem 0.45rem; min-width: 52px; }
   .action .label { font-size: 0.64rem; }
   #dialoguePanel { bottom: calc(var(--safe-bottom) + 12rem); left: 0.6rem; right: 0.6rem; transform: none; width: auto; }
-  #joystick { width: 96px; height: 96px; }
-  #joystick span { inset: 30px; }
+  #joystick { width: 116px; height: 116px; }
+  #joystick span { inset: 34px; }
   #guWheel { right: 30vw; bottom: 30vh; }
   .chapterRow { grid-template-columns: 2.2rem 4.2rem 1fr; }
 }

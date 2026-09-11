@@ -10,11 +10,12 @@
     "preview": "vite preview --port 4173 --strictPort",
     "typecheck": "tsc --noEmit",
     "lint:content": "node tools/lint-content.mjs",
-    "test": "node tests/verify.cjs",
+    "test": "node tests/verify.cjs && npm run test:unit",
     "test:e2e": "playwright test",
     "verify": "npm run lint:content && npm run typecheck && npm test",
     "art:optimise": "node tools/optimise-art.mjs",
-    "vendor:three": "node tools/vendor-three.mjs"
+    "vendor:three": "node tools/vendor-three.mjs",
+    "test:unit": "node --experimental-strip-types --no-warnings tests/unit/movement.test.mts"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",

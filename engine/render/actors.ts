@@ -12,8 +12,8 @@
  */
 import {
   AnimationMixer, Bone, BoxGeometry, CapsuleGeometry, CircleGeometry, Color,
-  ConeGeometry, Group, Mesh, MeshBasicMaterial, MeshLambertMaterial, Object3D,
-  SkinnedMesh, Vector3, type AnimationClip
+  CylinderGeometry, Group, Mesh, MeshBasicMaterial, MeshLambertMaterial,
+  Object3D, SkinnedMesh, Vector3, type AnimationClip
 } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { charactersById, type CanonCharacter } from '../../canon/index';
@@ -141,20 +141,21 @@ export class Actor {
     this.phase += dtSeconds * (this.walking ? 7 : 1.5);
     const breath = Math.sin(this.phase) * 0.018;
     this.procedural.torso.position.y = breath;
-    this.procedural.head.position.y = 2.2 + breath;
+    this.procedural.head.position.y = 1.9 + breath;
     const gesturing = this.gesture !== null && now < this.gestureUntil;
     if (!gesturing) this.gesture = null;
     this.procedural.arms.forEach((arm, i) => {
       const side = i === 0 ? -1 : 1;
       const swing = this.walking ? Math.sin(this.phase) * side * 0.18 : 0;
       const raise = gesturing && side === 1 ? 0.32 : 0;
-      arm.position.set(side * 0.48, 1.94 + breath + raise, swing - raise * 0.8);
-      arm.rotation.z = side * (gesturing ? 0.3 : 0.06);
+      arm.position.set(side * 0.34, 1.6 + breath + raise * 0.5, swing - raise * 0.5);
+      arm.rotation.x = -swing * 1.4;
+      arm.rotation.z = side * (gesturing ? 0.5 : 0.05);
     });
     this.procedural.legs.forEach((leg, i) => {
       const side = i === 0 ? -1 : 1;
       const swing = this.walking ? Math.sin(this.phase) * side * 0.18 : 0;
-      leg.position.set(side * 0.19, Math.max(0, swing * 0.4), -swing);
+      leg.position.set(side * 0.13, 0.05 + Math.max(0, swing * 0.25), -swing * 0.9);
     });
   }
 
@@ -171,36 +172,96 @@ function buildStandIn(character: CanonCharacter, options: ActorOptions, root: Gr
   const hairMat = new MeshLambertMaterial({ color: rgb(hair) });
   const skinMat = new MeshLambertMaterial({ color: rgb(skin) });
 
-  const broad = character.rig?.includes('broad') ? 1.2 : 1;
-  const oneArm = options.variant ? character.variants?.find((v) => v.id === options.variant)?.oneArm ?? false : false;
+  const broad = character.rig?.includes('broad') ? 1.18 : character.rig?.includes('female') ? 0.92 : 1;
+  const oneArm = options.variant
+    ? character.variants?.find((v) => v.id === options.variant)?.oneArm ?? false
+    : false;
 
+  // Proportions, in world units, with the head at roughly 2.05:
+  //   robe skirt 0.00-1.15, torso 1.15-1.68, head 1.72-2.10.
+  // The first version put a 0.3-radius cone on top of the skull and left a gap between
+  // the head and the body, which read as a cone wearing a hat rather than a person.
   const torso = new Group();
-  const gown = new Mesh(new ConeGeometry(0.56 * broad, 1.7, 16, 1, true), robeMat);
-  gown.position.y = 1.05;
-  const sash = new Mesh(new BoxGeometry(0.8 * broad, 0.16, 0.66), trimMat);
-  sash.position.y = 1.25;
-  torso.add(gown, sash);
+
+  const skirt = new Mesh(new CylinderGeometry(0.3 * broad, 0.46 * broad, 1.15, 12, 1, true), robeMat);
+  skirt.position.y = 0.575;
+  const chest = new Mesh(new CylinderGeometry(0.26 * broad, 0.3 * broad, 0.54, 12), robeMat);
+  chest.position.y = 1.42;
+  // Cross-collar, the detail that makes the silhouette read as a robe.
+  const collar = new Mesh(new BoxGeometry(0.42 * broad, 0.2, 0.3), trimMat);
+  collar.position.set(0, 1.62, -0.08);
+  collar.rotation.z = 0.24;
+  const sash = new Mesh(new BoxGeometry(0.64 * broad, 0.12, 0.4), trimMat);
+  sash.position.y = 1.16;
+  const shoulders = new Mesh(new BoxGeometry(0.66 * broad, 0.12, 0.3), robeMat);
+  shoulders.position.y = 1.66;
+  torso.add(skirt, chest, collar, sash, shoulders);
 
   const head = new Group();
-  const skull = new Mesh(new CapsuleGeometry(0.24, 0.16, 4, 10), skinMat);
-  const crown = new Mesh(new ConeGeometry(0.3, 0.2, 14), hairMat);
-  crown.position.y = 0.28;
-  head.add(skull, crown);
-  head.position.y = 2.2;
+  const skull = new Mesh(new CapsuleGeometry(0.165, 0.1, 4, 12), skinMat);
+  const neck = new Mesh(new CylinderGeometry(0.075, 0.09, 0.12, 8), skinMat);
+  neck.position.y = -0.2;
+  head.add(skull, neck);
+  head.position.y = 1.9;
+
+  // Hair follows the canon bible rather than being one shape for everyone. Fang Yuan
+  // wears his long and black: loose in the bamboo room, gathered back after that.
+  const hairSpec = character.hair ?? { length: 'short', style: 'loose' };
+  const cap = new Mesh(new CapsuleGeometry(0.175, 0.06, 4, 12), hairMat);
+  cap.position.y = 0.055;
+  cap.scale.set(1, 0.78, 1);
+  head.add(cap);
+  // The face is cut out of the cap so it does not read as a helmet.
+  const face = new Mesh(new BoxGeometry(0.2, 0.14, 0.06), skinMat);
+  face.position.set(0, 0.01, -0.14);
+  head.add(face);
+
+  if (hairSpec.length === 'long') {
+    const fall = new Mesh(new BoxGeometry(0.3, 0.62, 0.14), hairMat);
+    fall.position.set(0, -0.26, 0.14);
+    head.add(fall);
+    for (const side of [-1, 1]) {
+      const strand = new Mesh(new BoxGeometry(0.08, 0.34, 0.15), hairMat);
+      strand.position.set(side * 0.15, -0.08, 0.02);
+      head.add(strand);
+    }
+    if (hairSpec.style === 'tied') {
+      const cord = new Mesh(new BoxGeometry(0.2, 0.05, 0.16), trimMat);
+      cord.position.set(0, -0.02, 0.16);
+      head.add(cord);
+      const tail = new Mesh(new BoxGeometry(0.13, 0.5, 0.11), hairMat);
+      tail.position.set(0, -0.6, 0.17);
+      head.add(tail);
+    }
+    if (hairSpec.style === 'topknot') {
+      const knot = new Mesh(new CylinderGeometry(0.075, 0.09, 0.14, 8), hairMat);
+      knot.position.set(0, 0.2, 0);
+      head.add(knot);
+      const pin = new Mesh(new BoxGeometry(0.22, 0.025, 0.025), trimMat);
+      pin.position.set(0, 0.21, 0);
+      head.add(pin);
+    }
+  }
 
   const arms: Object3D[] = [];
   for (const side of [-1, 1]) {
     if (oneArm && side === -1) continue;
-    const arm = new Mesh(new CapsuleGeometry(0.11, 0.62, 3, 7), robeMat);
-    arm.position.set(side * 0.48, 1.94, 0);
+    const arm = new Group();
+    const sleeve = new Mesh(new CylinderGeometry(0.085, 0.105, 0.5, 8), robeMat);
+    sleeve.position.y = -0.25;
+    const hand = new Mesh(new CapsuleGeometry(0.055, 0.04, 3, 6), skinMat);
+    hand.position.y = -0.55;
+    arm.add(sleeve, hand);
+    arm.position.set(side * 0.34 * broad, 1.6, 0);
     arms.push(arm);
     root.add(arm);
   }
 
   const legs: Object3D[] = [];
   for (const side of [-1, 1]) {
-    const leg = new Mesh(new BoxGeometry(0.2, 0.6, 0.24), robeMat);
-    leg.position.set(side * 0.19, 0.3, 0);
+    // Only the feet show below the robe; the legs drive the walk.
+    const leg = new Mesh(new BoxGeometry(0.15, 0.1, 0.28), new MeshLambertMaterial({ color: rgb(trim) }));
+    leg.position.set(side * 0.13, 0.05, 0);
     legs.push(leg);
     root.add(leg);
   }
@@ -208,7 +269,7 @@ function buildStandIn(character: CanonCharacter, options: ActorOptions, root: Gr
   let blob: Object3D | null = null;
   if (!options.shadows) {
     // Low tier: one flat dark disc under the actor instead of a shadow map.
-    blob = new Mesh(new CircleGeometry(0.62, 12), new MeshBasicMaterial({ color: 0x0a1418, transparent: true, opacity: 0.32 }));
+    blob = new Mesh(new CircleGeometry(0.5, 12), new MeshBasicMaterial({ color: 0x0a1418, transparent: true, opacity: 0.3 }));
     blob.rotation.x = -Math.PI / 2;
     blob.position.y = 0.02;
     root.add(blob);

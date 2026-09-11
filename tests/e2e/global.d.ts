@@ -21,8 +21,12 @@ declare global {
         isExploring(): boolean;
         playerPosition(): { x: number; z: number };
         awaitingBeat(): string | null;
+        currentArea(): string;
         objectiveDistance(): number | null;
         lineCount(): number;
+        cameraPosition(): { x: number; y: number; z: number };
+        areaContents(id: string): { props: string[]; dressing: string[]; enclosed: boolean };
+        characterLook(id: string): { length: string; style: string; colour: number[]; meshes: number };
         sceneStateAfterSkip(): { flagsApplied: number; evidence: number };
       };
       legacy: {

@@ -205,7 +205,9 @@ export class Input {
       for (const touch of Array.from(event.changedTouches)) {
         if (touch.identifier === this.stickTouchId && this.stickOrigin) {
           event.preventDefault();
-          const radius = this.stick.getBoundingClientRect().width / 2 || 56;
+          // The usable throw is smaller than the ring, so the stick reaches full tilt
+          // without the thumb having to leave the control.
+          const radius = (this.stick.getBoundingClientRect().width / 2 || 56) * 0.78;
           const dx = (touch.clientX - this.stickOrigin.x) / radius;
           const dy = (touch.clientY - this.stickOrigin.y) / radius;
           const length = Math.hypot(dx, dy);
@@ -213,7 +215,11 @@ export class Input {
           this.move.x = dx * scale;
           this.move.z = dy * scale;
           const knob = this.stick.firstElementChild as HTMLElement | null;
-          if (knob) knob.style.transform = `translate(${this.move.x * radius * 0.6}px, ${this.move.z * radius * 0.6}px)`;
+          if (knob) {
+            knob.style.transform = `translate(${this.move.x * radius * 0.82}px, ${this.move.z * radius * 0.82}px)`;
+            // Visually confirm the deadzone, so a resting thumb does not look active.
+            knob.classList.toggle('active', length >= 0.12);
+          }
         } else if (touch.identifier === this.lookTouchId) {
           event.preventDefault();
           this.look.dx += touch.clientX - (this.lastPointer?.x ?? touch.clientX);
@@ -230,7 +236,10 @@ export class Input {
           this.move.x = 0;
           this.move.z = 0;
           const knob = this.stick.firstElementChild as HTMLElement | null;
-          if (knob) knob.style.transform = '';
+          if (knob) {
+            knob.style.transform = '';
+            knob.classList.remove('active');
+          }
         } else if (touch.identifier === this.lookTouchId) {
           this.lookTouchId = null;
           this.lastPointer = null;
@@ -240,6 +249,11 @@ export class Input {
     const canvasStart = (event: TouchEvent) => {
       const touch = event.changedTouches[0];
       if (!touch || this.lookTouchId !== null) return;
+      // A touch that began on the stick is never a look drag.
+      if (this.stickTouchId !== null && touch.identifier === this.stickTouchId) return;
+      const stickBox = this.stick.getBoundingClientRect();
+      if (touch.clientX >= stickBox.left && touch.clientX <= stickBox.right &&
+          touch.clientY >= stickBox.top && touch.clientY <= stickBox.bottom) return;
       this.source = 'touch';
       this.lookTouchId = touch.identifier;
       this.lastPointer = { x: touch.clientX, y: touch.clientY };

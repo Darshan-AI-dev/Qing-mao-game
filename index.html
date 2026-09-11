@@ -31,6 +31,7 @@
       <h1>Qing Mao <i>Rebirth</i></h1>
     </div>
   </div>
+  <div id="regionName" aria-live="polite"></div>
   <nav aria-label="Panels">
     <button id="atlasButton" type="button">Atlas <kbd>M</kbd></button>
     <button id="journalButton" type="button">Journal <kbd>J</kbd></button>
@@ -49,7 +50,6 @@
 <aside id="lensPanel" class="glass" hidden aria-label="Reader's Lens"></aside>
 <aside id="recollectionPanel" class="glass" hidden aria-live="polite"></aside>
 
-<div id="regionName" aria-live="polite"></div>
 <div id="toast" role="status"></div>
 <div id="sluggishRow" hidden aria-live="polite"></div>
 
@@ -244,6 +244,10 @@
     <label class="inlineCheck"><input id="holdToGuard" type="checkbox" checked> Hold to guard (uncheck to toggle)</label>
     <label class="inlineCheck"><input id="holdToRun" type="checkbox" checked> Hold to run (uncheck to toggle)</label>
     <label class="inlineCheck"><input id="haptics" type="checkbox" checked> Vibration, where supported</label>
+    <label>Look sensitivity <input id="lookSensitivity" type="range" min="20" max="200" value="100"></label>
+    <label class="inlineCheck"><input id="invertLookX" type="checkbox"> Invert horizontal look</label>
+    <label class="inlineCheck"><input id="invertLookY" type="checkbox"> Invert vertical look</label>
+    <p class="fine">By default, dragging right turns the view right and dragging down looks down. The left stick moves Fang Yuan relative to the camera, so pushing up always walks away from you.</p>
     <p class="fine">iOS Safari does not support vibration, so it is never the only signal for anything.</p>
     <details><summary>Keys</summary><div id="keymapList" class="keymapList"></div></details>
   </fieldset>

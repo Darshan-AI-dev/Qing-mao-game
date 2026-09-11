@@ -25,6 +25,11 @@ async function skipToControl(page: Page): Promise<void> {
   await page.waitForFunction(() => window.qingMao.debug.isExploring(), null, { timeout: 30_000 });
 }
 
+/** Control must not come back until the next beat's area is actually loaded. */
+async function currentArea(page: Page): Promise<string> {
+  return page.evaluate(() => window.qingMao.debug.currentArea());
+}
+
 test('control returns to the player after the opening scene', async ({ page }) => {
   await openGame(page);
   await skipToControl(page);
@@ -126,6 +131,65 @@ test('the world is still being drawn once control returns', async ({ page }) => 
   // A black screen and a stopped renderer look identical to a player; check both.
   const stats = await page.evaluate(() => window.qingMao.frameStats());
   expect(stats.drawCalls, 'nothing is being drawn after the scene').toBeGreaterThan(0);
+});
+
+test('forward walks away from the camera, not toward it', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+
+  // The handedness of the movement basis is covered exhaustively at 24 camera angles
+  // by tests/unit/movement.test.mts. This one only has to prove it is wired up — the
+  // chapter 3 room is a bedroom, so a long walk in any direction hits a wall.
+  const before = await page.evaluate(() => ({
+    player: window.qingMao.debug.playerPosition(),
+    camera: window.qingMao.debug.cameraPosition()
+  }));
+  await page.keyboard.down('KeyW');
+  await page.waitForTimeout(400);
+  await page.keyboard.up('KeyW');
+  const after = await page.evaluate(() => window.qingMao.debug.playerPosition());
+
+  const distBefore = Math.hypot(before.player.x - before.camera.x, before.player.z - before.camera.z);
+  const distAfter = Math.hypot(after.x - before.camera.x, after.z - before.camera.z);
+  expect(distAfter, 'forward moved the player toward the camera').toBeGreaterThan(distBefore + 0.5);
+});
+
+test('the camera stays inside the walls of a small room', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+  // Control is only released once the next beat's area is up, so this is deterministic.
+  expect(await currentArea(page)).toBe('mountain.hostel-room');
+  // A fixed 16-unit orbit put the camera outside an 18-by-20 bedroom, so the player
+  // was looking at the room through its own wall.
+  const view = await page.evaluate(() => ({
+    camera: window.qingMao.debug.cameraPosition(),
+    area: window.qingMao.debug.areaContents('mountain.hostel-room')
+  }));
+  expect(view.area.enclosed).toBe(true);
+  expect(Math.abs(view.camera.x), 'camera is outside the room on x').toBeLessThan(9);
+  expect(Math.abs(view.camera.z), 'camera is outside the room on z').toBeLessThan(10);
+});
+
+test('the chapter 3 room has the bed, window and stones the text describes', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+  // The prologue hands off to the bamboo room; walk into it and check its contents.
+  const contents = await page.evaluate(() => window.qingMao.debug.areaContents('mountain.hostel-room'));
+  for (const required of ['bed', 'window', 'table', 'chest']) {
+    expect(contents.props, `the room has no ${required}`).toContain(required);
+  }
+  expect(contents.dressing, 'no blanket on the bed').toContain('blanket');
+  expect(contents.dressing, 'no bag of stones').toContain('stone-bag');
+  expect(contents.enclosed, 'the room should have a ceiling').toBe(true);
+});
+
+test('Fang Yuan has long black hair', async ({ page }) => {
+  await openGame(page);
+  const hair = await page.evaluate(() => window.qingMao.debug.characterLook('fang-yuan'));
+  expect(hair.length).toBe('long');
+  // Near-black, not brown: every channel low and close together.
+  expect(Math.max(...hair.colour)).toBeLessThan(0.12);
+  expect(hair.meshes, 'the long-hair geometry is not in the actor').toBeGreaterThan(4);
 });
 
 test('tapping the dialogue panel advances the line', async ({ page }) => {

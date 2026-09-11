@@ -7,11 +7,12 @@
  * sequel. Swapping the content import is the whole of what game 2 has to do here.
  */
 import { Vector3, type Object3D } from 'three';
-import { areasById, mustLandForChapter, actForChapter } from '../canon/index';
+import { areasById, charactersById, mustLandForChapter, actForChapter } from '../canon/index';
 import { graph, illustrationsById, loadScript, t } from '../content/qingmao/index';
 import { AREAS, areaDescription } from '../content/qingmao/world/areas';
 import { bus } from './core/bus';
 import { Rng } from './core/rng';
+import { orbitCamera, worldMove } from './core/movement';
 import type { Beat } from './core/beats';
 import { Renderer } from './render/renderer';
 import { Weather } from './render/weather';
@@ -82,6 +83,8 @@ class Game implements TimelineHost {
   /** The beat waiting to be started, if the player is between beats. */
   private awaiting: Beat | null = null;
   private objective: Object3D | null = null;
+  private lastMove = { x: 0, z: 0 };
+  private lastHeld: ReadonlySet<Intent> = new Set();
   private fadeNode: HTMLElement;
   private letterboxNode: HTMLElement;
 
@@ -111,7 +114,7 @@ class Game implements TimelineHost {
       graph,
       economy: this.economy,
       upkeep: this.upkeep,
-      replay: (beatId) => void this.playScene(beatId),
+      replay: (beatId) => void this.replayScene(beatId),
       travel: (areaId) => this.enterArea(areaId),
       unlockedAreas: () => this.unlockedAreas(),
       applySettings: () => this.settingsFromDom(),
@@ -193,6 +196,7 @@ class Game implements TimelineHost {
     this.calendar.setWeather(beat.weather);
     await this.playScene(beat.id);
     this.completeBeat(beat);
+    this.inScene = false;
   }
 
   private completeBeat(beat: Beat): void {
@@ -212,10 +216,13 @@ class Game implements TimelineHost {
   /** A gold disc at the area origin, where every scene stages itself. */
   private placeObjective(beat: Beat): void {
     this.clearObjective();
-    const disc = marker(0, 0);
-    disc.name = `objective:${beat.id}`;
-    this.objective = disc;
-    this.renderer.scene.add(disc);
+    const description = areaDescription(this.currentArea);
+    // Scaled to the area: a disc sized for open ground fills a bedroom.
+    const scale = Math.max(0.35, Math.min(1, Math.min(description.size.x, description.size.z) / 60));
+    const ring = marker(0, 0, scale);
+    ring.name = `objective:${beat.id}`;
+    this.objective = ring;
+    this.renderer.scene.add(ring);
   }
 
   private clearObjective(): void {
@@ -242,6 +249,12 @@ class Game implements TimelineHost {
     void this.enterBeat(beat);
   }
 
+  /** Revisiting a scene from the Journal: play it, then hand control straight back. */
+  private async replayScene(beatId: string): Promise<void> {
+    await this.playScene(beatId);
+    this.inScene = false;
+  }
+
   private async playScene(beatId: string): Promise<void> {
     const beat = graph.get(beatId);
     if (!beat) return;
@@ -257,7 +270,9 @@ class Game implements TimelineHost {
     byId('skipScene').hidden = true;
     this.dialogue.hide();
     this.restorePresentation();
-    this.inScene = false;
+    // Control is released by the caller, once the next beat has been set up. Clearing
+    // it here left a window where the player could act while the previous area, its
+    // camera framing and its objective marker were all still in place.
   }
 
   /**
@@ -312,14 +327,27 @@ class Game implements TimelineHost {
     this.currentArea = areaId;
     this.save.area = areaId;
 
+    // Genuinely dark means underground: caves, the stone forest, the blood lake. A
+    // bedroom with a roof is "indoor", which is a different lighting problem — lit by
+    // its own window and lamp rather than by the sun it cannot see.
+    const dark = canon?.dark ?? description.dark ?? false;
+    const enclosed = description.enclosed;
+    const span = Math.max(description.size.x, description.size.z);
+    // An interior's own walls sit well inside outdoor fog distances, so they fog to
+    // near-black and the room reads as a void. Push it past the far wall.
+    const lit = enclosed && !dark;
     this.renderer.setLighting({
       timeOfDay: description.timeOfDay,
-      // An enclosed area is genuinely dark, and the lighting follows the canon flag.
-      underground: description.enclosed && (canon?.dark ?? description.dark ?? false),
-      fogColor: description.fog.color,
-      fogNear: description.fog.near,
-      fogFar: description.fog.far
+      underground: enclosed && dark,
+      indoor: lit,
+      fogColor: lit ? 0x2c3a3f : description.fog.color,
+      fogNear: lit ? span * 1.1 : description.fog.near,
+      fogFar: lit ? span * 2.6 : description.fog.far
     });
+    if (enclosed && !dark) {
+      // One overhead fill, hung just under the ceiling.
+      this.renderer.addFill(0, (description.ceilingHeight ?? 6) - 1.1, 0, 1.25);
+    }
 
     const player = this.spawn('fang-yuan');
     // Spawn within sight of what the beat stages at the area's origin. The previous
@@ -475,11 +503,18 @@ class Game implements TimelineHost {
     this.lastTick = now;
 
     const frame = this.input.frame();
+    this.lastMove = frame.move;
+    this.lastHeld = frame.held;
     this.handleIntents(frame.pressed);
     if (!this.inScene) this.movePlayer(frame, dt);
     this.updateCamera(frame, dt);
 
     for (const actor of this.actors.values()) actor.update(dt, now);
+    if (this.objective) {
+      // Fades out as you arrive, so it never sits on top of the scene it points at.
+      const distance = this.distanceToObjective() ?? Infinity;
+      this.objective.visible = distance > OBJECTIVE_RANGE * 0.6;
+    }
     this.weather.update(dt, this.player.x, this.player.z);
     this.feedback.update(dt);
     this.renderer.render(now);
@@ -544,24 +579,26 @@ class Game implements TimelineHost {
   }
 
   private movePlayer(frame: { move: { x: number; z: number }; held: ReadonlySet<Intent> }, dt: number): void {
-    const speed = (frame.held.has('run') ? 13 : 7) * dt;
-    const sin = Math.sin(this.cameraYaw);
-    const cos = Math.cos(this.cameraYaw);
-    const dx = (frame.move.x * cos - frame.move.z * sin) * speed;
-    const dz = (frame.move.x * sin + frame.move.z * cos) * speed;
-    if (!dx && !dz) {
+    const { dx, dz, facing } = worldMove(frame.move, this.cameraYaw);
+    if (facing === null) {
       this.actors.get('fang-yuan')?.play('idle');
       return;
     }
-    const next = { x: this.player.x + dx, z: this.player.z + dz };
-    if (!this.blocked(next.x, this.player.z)) this.player.x = next.x;
-    if (!this.blocked(this.player.x, next.z)) this.player.z = next.z;
-    this.player.facing = Math.atan2(dx, dz);
+    const running = frame.held.has('run');
+    const speed = (running ? 13 : 7) * dt;
+    const nextX = this.player.x + dx * speed;
+    const nextZ = this.player.z + dz * speed;
+    // Axes are tested separately so a wall you are brushing along does not stop you.
+    if (!this.blocked(nextX, this.player.z)) this.player.x = nextX;
+    if (!this.blocked(this.player.x, nextZ)) this.player.z = nextZ;
+    this.player.facing = facing;
+
     const actor = this.actors.get('fang-yuan');
     if (actor) {
       actor.setPosition(this.player.x, 0, this.player.z);
-      actor.setFacing(this.player.facing);
-      actor.play(frame.held.has('run') ? 'run' : 'walk');
+      actor.setFacing(facing);
+      // A half-pushed stick walks; only a firm push runs.
+      actor.play(running && Math.hypot(dx, dz) > 0.7 ? 'run' : 'walk');
     }
   }
 
@@ -575,20 +612,37 @@ class Game implements TimelineHost {
 
   private updateCamera(frame: { look: { dx: number; dy: number } }, dt: number): void {
     if (this.inScene) return;
-    this.cameraYaw -= frame.look.dx * 0.005;
-    this.cameraPitch = Math.min(1.25, Math.max(0.08, this.cameraPitch + frame.look.dy * 0.004));
+    const settings = this.save.settings;
+    // Dragging right turns the view right. The first version subtracted, which orbited
+    // the camera the other way and made the controls feel mirrored.
+    const yawSign = settings.invertLookX ? -1 : 1;
+    const pitchSign = settings.invertLookY ? -1 : 1;
+    this.cameraYaw += frame.look.dx * 0.005 * settings.lookSensitivity * yawSign;
+    this.cameraPitch = Math.min(
+      1.25,
+      Math.max(0.08, this.cameraPitch + frame.look.dy * 0.004 * settings.lookSensitivity * pitchSign)
+    );
     if (this.freeCamera) {
       this.cameraDistance = Math.max(4, this.cameraDistance - frame.look.dy * dt);
       return;
     }
-    const height = Math.sin(this.cameraPitch) * this.cameraDistance + 2;
-    const flat = Math.cos(this.cameraPitch) * this.cameraDistance;
-    this.renderer.camera.position.set(
-      this.player.x - Math.sin(this.cameraYaw) * flat,
-      height,
-      this.player.z - Math.cos(this.cameraYaw) * flat
-    );
+    const eye = orbitCamera(this.player, this.cameraYaw, this.cameraPitch, this.effectiveCameraDistance());
+    this.renderer.camera.position.set(eye.x, eye.y, eye.z);
     this.renderer.camera.lookAt(new Vector3(this.player.x, 2, this.player.z));
+  }
+
+  /**
+   * Pulls the camera in so it stays inside the room.
+   *
+   * The default 16-unit orbit is fine outdoors and puts the camera through the wall of
+   * an 18-by-20 bedroom, which renders as the room seen from outside. Interiors get a
+   * distance proportional to their smaller half-extent.
+   */
+  private effectiveCameraDistance(): number {
+    const description = areaDescription(this.currentArea);
+    if (!description.enclosed) return this.cameraDistance;
+    const halfExtent = Math.min(description.size.x, description.size.z) / 2;
+    return Math.max(4.5, Math.min(this.cameraDistance, halfExtent * 0.85));
   }
 
   private flags(): Set<string> {
@@ -715,6 +769,10 @@ class Game implements TimelineHost {
     setCheck('holdToRun', settings.holdToRun);
     setCheck('refinementFailure', settings.refinementFailure);
     setCheck('guUpkeep', settings.guUpkeep);
+    setCheck('invertLookX', settings.invertLookX);
+    setCheck('invertLookY', settings.invertLookY);
+    const sensitivity = maybe<HTMLInputElement>('lookSensitivity');
+    if (sensitivity) sensitivity.value = String(Math.round(settings.lookSensitivity * 100));
     setCheck('lensToggle', this.save.reader.lens);
     setCheck('veteranToggle', this.save.reader.veteran);
   }
@@ -731,6 +789,8 @@ class Game implements TimelineHost {
     }
     const textSize = maybe<HTMLSelectElement>('textSize');
     if (textSize) settings.textSize = Number(textSize.value) as 1 | 2 | 3;
+    const sensitivity = maybe<HTMLInputElement>('lookSensitivity');
+    if (sensitivity) settings.lookSensitivity = Math.max(0.2, Number(sensitivity.value) / 100);
     for (const id of ['reducedMotion', 'manualAim', 'aimAssist', 'haptics',
                       'holdToGuard', 'holdToRun', 'refinementFailure', 'guUpkeep'] as const) {
       const node = maybe<HTMLInputElement>(id);
@@ -799,6 +859,10 @@ class Game implements TimelineHost {
     return !this.inScene;
   }
 
+  area(): string {
+    return this.currentArea;
+  }
+
   playerPosition(): { x: number; z: number } {
     return { x: this.player.x, z: this.player.z };
   }
@@ -813,6 +877,52 @@ class Game implements TimelineHost {
 
   lineCount(): number {
     return this.dialogue.lines.length;
+  }
+
+  cameraPosition(): { x: number; y: number; z: number } {
+    const p = this.renderer.camera.position;
+    return { x: p.x, y: p.y, z: p.z };
+  }
+
+  /** What an area is built from, so a test can assert the room has a bed in it. */
+  areaContents(id: string): { props: string[]; dressing: string[]; enclosed: boolean } {
+    const description = areaDescription(id);
+    return {
+      props: description.props.map((group) => group.kind),
+      dressing: (description.dressing ?? []).map((item) => item.kind),
+      enclosed: description.enclosed
+    };
+  }
+
+  /** Hair spec and the geometry actually built for it. */
+  characterLook(id: string): { length: string; style: string; colour: number[]; meshes: number } {
+    const canon = charactersById.get(id);
+    const actor = this.actors.get(id);
+    let meshes = 0;
+    actor?.root.traverse(() => { meshes += 1; });
+    return {
+      length: canon?.hair?.length ?? 'short',
+      style: canon?.hair?.style ?? 'loose',
+      colour: canon?.palette.hair ?? [0, 0, 0],
+      meshes
+    };
+  }
+
+  /** Raw input and resolved movement, for diagnosing control problems. */
+  moveDebug(): Record<string, unknown> {
+    const frame = { move: { ...this.lastMove }, held: this.lastHeld };
+    const resolved = worldMove(frame.move, this.cameraYaw);
+    return {
+      rawMove: frame.move,
+      held: [...frame.held],
+      cameraYaw: this.cameraYaw,
+      resolved,
+      player: { ...this.player },
+      area: this.currentArea,
+      inScene: this.inScene,
+      blockedAhead: this.blocked(this.player.x + resolved.dx, this.player.z + resolved.dz),
+      blockerCount: this.blockers.length
+    };
   }
 
   /** How much state the completed beats have actually applied. */
@@ -901,8 +1011,13 @@ async function boot(): Promise<void> {
       isExploring: () => game.isExploring(),
       playerPosition: () => game.playerPosition(),
       awaitingBeat: () => game.awaitingBeatId(),
+      currentArea: () => game.area(),
       objectiveDistance: () => game.objectiveDistance(),
       lineCount: () => game.lineCount(),
+      cameraPosition: () => game.cameraPosition(),
+      areaContents: (id: string) => game.areaContents(id),
+      characterLook: (id: string) => game.characterLook(id),
+      moveDebug: () => game.moveDebug(),
       sceneStateAfterSkip: () => game.sceneStateAfterSkip()
     },
     legacy: { build: () => buildLegacy(game.save), fallback: defaultLegacy, validate: validateLegacy }
