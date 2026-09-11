@@ -72,9 +72,10 @@ def main() -> None:
     if not play:
         raise SystemExit(f'no screenshots in {args.dir}; run tools/visual-sweep.mjs first')
 
-    sheet(play, args.dir.parent / 'sheet-play.png')
-    if wide:
-        sheet(wide, args.dir.parent / 'sheet-wide.png')
+    # Named after the sweep, so a phone sweep does not overwrite the desktop sheets.
+    suffix = '' if args.dir.name == 'sweep' else f'-{args.dir.name.removeprefix("sweep-")}'
+    play_sheet = sheet(play, args.dir.parent / f'sheet-play{suffix}.png')
+    wide_sheet = sheet(wide, args.dir.parent / f'sheet-wide{suffix}.png') if wide else None
 
     print(f'{"area":34s} play  spread    wide')
     flagged = []
@@ -97,7 +98,7 @@ def main() -> None:
              'wide': {n: {'mean': l[0], 'spread': l[1]} for n, l in wide_by_name.items()}},
             indent=2)
     )
-    print(f'\nsheet-play.png and sheet-wide.png written')
+    print(f'\n{play_sheet} and {wide_sheet} written')
     if flagged:
         print(f'FLAGGED: {", ".join(flagged)}')
 

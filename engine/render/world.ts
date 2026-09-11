@@ -10,7 +10,7 @@
  * lint cross-checks it against the canon bible's `ceiling` flag.
  */
 import {
-  BoxGeometry, CircleGeometry, Color, ConeGeometry, CylinderGeometry, DoubleSide,
+  BoxGeometry, BufferAttribute, CircleGeometry, Color, ConeGeometry, CylinderGeometry, DoubleSide,
   Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial,
   PlaneGeometry, Quaternion, RingGeometry, Vector3, type BufferGeometry, type Material
 } from 'three';
@@ -95,7 +95,14 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
     case 'bamboo': return { geometry: new CylinderGeometry(0.12, 0.16, 9, 6), material: mat(PALETTE.bamboo), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
     case 'rock': return { geometry: new ConeGeometry(1.9, 3.4, 6), material: mat(PALETTE.rock), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
     case 'tree': return { geometry: new ConeGeometry(3.1, 7.2, 7), material: mat(PALETTE.leaf), blocker: { x: 0, z: 0, w: 1, d: 1 } };
-    case 'villager': return { geometry: new ConeGeometry(0.52, 1.9, 7), material: mat(PALETTE.cloth) };
+    // Not a cone. A pale seven-sided cone at 1.9 tall is fine as a distant crowd and
+    // looks like a traffic cone the moment the camera is in the same room as one — on
+    // a phone, where interiors put the camera close, the hall and the tavern each had
+    // a cream cone standing next to the player.
+    case 'villager': return {
+      geometry: villagerGeometry(),
+      material: new MeshLambertMaterial({ vertexColors: true })
+    };
     // A post with a paper lamp on it. The post alone was a bare brown stick that read
     // as a pole planted in the floor, and in the Gu room one stood directly behind the
     // player and looked like part of him.
@@ -363,6 +370,33 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   return { group: root, chunks, blockers, lanterns };
 }
 
+/**
+ * A background person: robe, shoulders, head and hair, merged into one geometry.
+ *
+ * The parts carry their colour in a vertex attribute rather than in separate materials,
+ * so the whole crowd is still a single instanced draw call however many of them there
+ * are — the same budget a field of cones cost, for something that reads as people.
+ */
+function villagerGeometry(): BufferGeometry {
+  const parts: BufferGeometry[] = [];
+  const add = (geometry: BufferGeometry, y: number, hex: number) => {
+    geometry.translate(0, y, 0);
+    const colour = new Color(hex);
+    const count = geometry.attributes['position']!.count;
+    const colours = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) colours.set([colour.r, colour.g, colour.b], i * 3);
+    geometry.setAttribute('color', new BufferAttribute(colours, 3));
+    geometry.deleteAttribute('uv');
+    parts.push(geometry);
+  };
+  add(new CylinderGeometry(0.17, 0.27, 1.18, 8), -0.36, PALETTE.cloth);
+  add(new CylinderGeometry(0.15, 0.17, 0.4, 8), 0.43, PALETTE.cloth);
+  add(new BoxGeometry(0.36, 0.08, 0.2), 0.6, 0x6d6a4e);
+  add(new BoxGeometry(0.2, 0.22, 0.19), 0.76, 0xc9a887);
+  add(new BoxGeometry(0.22, 0.1, 0.21), 0.86, 0x241c16);
+  return mergeGeometries(parts, false) ?? parts[0]!;
+}
+
 /** Post plus paper lamp, merged so the pair is still one instanced draw call. */
 function lanternGeometry(): BufferGeometry {
   const post = new CylinderGeometry(0.1, 0.13, 3.4, 6);
@@ -379,6 +413,7 @@ function heightOffset(kind: PropKind): number {
     case 'bamboo': return 4.5;
     case 'rock': return 1.7;
     case 'tree': return 3.6;
+    // The figure is built around its own middle, so it only needs lifting to the waist.
     case 'villager': return 0.95;
     // The lamp sits at the top of its post, so the geometry is built around the lamp
     // and the offset is the post's full height rather than half of it.

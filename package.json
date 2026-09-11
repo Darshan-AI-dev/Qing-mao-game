@@ -17,7 +17,7 @@
     "vendor:three": "node tools/vendor-three.mjs",
     "test:unit": "node --experimental-strip-types --no-warnings tests/unit/movement.test.mts",
     "sweep": "npm run build && node tools/visual-sweep.mjs && python3 tools/contact-sheet.py",
-    "sweep:phone": "npm run build && node tools/visual-sweep.mjs --phone && python3 tools/contact-sheet.py",
+    "sweep:phone": "npm run build && node tools/visual-sweep.mjs --phone --out sweep-phone && python3 tools/contact-sheet.py --dir sweep-phone",
     "sweep:play": "npm run build && node tools/play-sweep.mjs",
     "sweep:play:phone": "npm run build && node tools/play-sweep.mjs --phone"
   },

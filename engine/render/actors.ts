@@ -207,7 +207,11 @@ function buildStandIn(character: CanonCharacter, options: ActorOptions, root: Gr
   // the head and the body, which read as a cone wearing a hat rather than a person.
   const torso = new Group();
 
-  const skirt = new Mesh(new CylinderGeometry(0.3 * broad, 0.46 * broad, 1.15, 12, 1, true), robeMat);
+  // Closed, and less flared than it was. Open-ended, the skirt had no bottom and its
+  // inner wall was back-face culled, so from a low camera you looked straight through
+  // the front of the robe at the lit inside of the back of it: on a phone, where the
+  // camera sits close and low in a room, Fang Yuan read as a pale lampshade.
+  const skirt = new Mesh(new CylinderGeometry(0.3 * broad, 0.4 * broad, 1.15, 12, 1, false), robeMat);
   skirt.position.y = 0.575;
   const chest = new Mesh(new CylinderGeometry(0.26 * broad, 0.3 * broad, 0.54, 12), robeMat);
   chest.position.y = 1.42;

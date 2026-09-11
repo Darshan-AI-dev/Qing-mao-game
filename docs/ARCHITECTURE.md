@@ -102,7 +102,7 @@ those are visible in an assertion; all of them are obvious in a screenshot.
 
 ```bash
 npm run sweep            # every area, desktop framing
-npm run sweep:phone      # every area, 430 x 932
+npm run sweep:phone      # every area, 430 x 932 — a different set of bugs
 npm run sweep:play       # play the opening chapters and photograph every step
 npm run sweep:play:phone # the same, at 430 x 932
 ```

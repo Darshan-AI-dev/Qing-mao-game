@@ -34,6 +34,10 @@ export interface RendererStats {
   tier: TierName;
 }
 
+/** Vertical field of view in landscape, and the aspect it is chosen for. */
+const BASE_FOV = 52;
+const LANDSCAPE_ASPECT = 16 / 9;
+
 export class Renderer {
   readonly renderer: WebGLRenderer;
   readonly scene = new Scene();
@@ -71,7 +75,7 @@ export class Renderer {
     this.renderer.shadowMap.enabled = budget.shadows !== 'blob';
     if (budget.shadows === 'soft') this.renderer.shadowMap.type = PCFSoftShadowMap;
 
-    this.camera = new PerspectiveCamera(52, 1, 0.2, budget.viewDistance + 60);
+    this.camera = new PerspectiveCamera(BASE_FOV, 1, 0.2, budget.viewDistance + 60);
     this.camera.position.set(0, 12, 18);
 
     // Sky-and-ground light plus one directional sun. Cheap, and it suits cel shading.
@@ -222,7 +226,16 @@ export class Renderer {
     const height = canvas.clientHeight || window.innerHeight;
     this.renderer.setPixelRatio(dpr);
     this.renderer.setSize(width, height, false);
-    this.camera.aspect = width / Math.max(1, height);
+    const aspect = width / Math.max(1, height);
+    this.camera.aspect = aspect;
+    // Widen the lens in portrait.
+    //
+    // A fixed 52-degree vertical field of view is about 55 across on a laptop and only
+    // 25 across on a phone held upright, which is why every interior on a phone was the
+    // back of Fang Yuan's head and very little room. Opening the vertical angle as the
+    // frame narrows gives back most of the width; the cap keeps it short of the
+    // fish-eye a truly constant horizontal field would need at this aspect.
+    this.camera.fov = Math.min(74, BASE_FOV * Math.sqrt(Math.max(1, LANDSCAPE_ASPECT / aspect)));
     this.camera.updateProjectionMatrix();
   }
 
