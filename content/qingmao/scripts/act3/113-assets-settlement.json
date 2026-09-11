@@ -1,0 +1,131 @@
+{
+  "id": "act3/113-assets-settlement",
+  "beat": "act3.assets.settlement",
+  "chapters": [
+    113,
+    115
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 113-115.",
+    "adaptation": "Unlocks the tavern and property loop. Fang Zheng is in the room and says the wrong thing."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "fang-qiu",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "fang-zheng",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 113,
+      "text": "The property changes hands"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Found in my favour. The property, the tavern, the leaf terraces and the accounts, transferred on a recorded date that nobody can argue with.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Unlocks the tavern and property loop. Fang Zheng is in the room and says the wrong thing.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "fang-qiu",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "fang-qiu",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 114,
+      "text": "Chapter 114"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "My uncle asked whether family meant anything to me. I told him it meant a recorded transfer date, which is the only form of it that has ever protected anybody in this clan.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 115,
+      "text": "Chapter 115"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Took possession. Fang Zheng was in the room and said he hoped this would let us be brothers again. He believed it. I have stopped finding that useful and started finding it inconvenient.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "econ.property"
+    },
+    {
+      "op": "flag",
+      "set": "flag.assets-won"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

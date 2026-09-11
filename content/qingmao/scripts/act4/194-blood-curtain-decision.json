@@ -1,0 +1,156 @@
+{
+  "id": "act4/194-blood-curtain-decision",
+  "beat": "act4.blood-curtain.decision",
+  "chapters": [
+    194,
+    197
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 194-197.",
+    "adaptation": "The decision is on screen. Mass death is staged through aftermath and reaction, never as a scoring mechanic."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "storm",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "reader-red-storm"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "bai-ning-bing",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 194,
+      "text": "The curtain"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The curtain went up over the mountain. I will record the decision and not the arithmetic under it, because the arithmetic does not improve on a second reading.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The decision is on screen. Mass death is staged through aftermath and reaction, never as a scoring mechanic.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "bai-ning-bing",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "bai-ning-bing",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 195,
+      "text": "Chapter 195"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "It went wrong. Badly, and in a way I had not priced, which is the first time in two lives I can write that sentence honestly.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 196,
+      "text": "Chapter 196"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Used the Cicada. The second time in two lives, and the last one I have, spent on a mountain I was already finished with.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 197,
+      "text": "Chapter 197"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Spring, then autumn, and a short distance backward. Knowing exactly what is about to happen is not the same as being able to stop it, and the second time through I did not try to stop all of it.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act4.blood-curtain.decision.method",
+      "prompt": "There is one decision left in this.",
+      "method": "blood-curtain",
+      "options": [
+        {
+          "id": "proceed",
+          "label": "Proceed.",
+          "method": "proceed"
+        },
+        {
+          "id": "wait",
+          "label": "Wait for the better moment.",
+          "method": "wait"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "flag.curtain-raised"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

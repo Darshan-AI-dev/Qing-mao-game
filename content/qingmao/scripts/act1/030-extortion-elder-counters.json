@@ -1,0 +1,156 @@
+{
+  "id": "act1/030-extortion-elder-counters",
+  "beat": "act1.extortion.elder-counters",
+  "chapters": [
+    30,
+    33
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 30-33.",
+    "adaptation": "The academy elder is the first adult who is a real obstacle. The Mo family escalates behind him."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "academy-elder-mo",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "mo-bei",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "mo-yan",
+      "at": [
+        4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 30,
+      "text": "Someone has started counting"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Someone has started counting on the other side. Elder Mo Chen asked me two questions in the corridor, both of them answerable, neither of them idle.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The academy elder is the first adult who is a real obstacle. The Mo family escalates behind him.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "academy-elder-mo",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "academy-elder-mo",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 31,
+      "text": "Chapter 31"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "He does not have evidence. He has a pattern and the patience to wait for it to resolve. That is a worse opponent than a witness.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 32,
+      "text": "Chapter 32"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The Mo family sent word through the academy rather than through the clan, which means they want this settled quietly. Quiet is expensive for them and cheap for me.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 33,
+      "text": "Chapter 33"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Mo Bei came to the academy himself and stood in a classroom doorway as if the doorway owed him the space. I stood up when he entered. It cost nothing and it made his entrance smaller.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "flag.elder-watching"
+    },
+    {
+      "op": "flag",
+      "set": "know.mo-family"
+    },
+    {
+      "op": "evidence",
+      "add": "toll.elder-report"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

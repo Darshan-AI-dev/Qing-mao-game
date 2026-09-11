@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Qing Mao · Rebirth</title>
+<meta name="description" content="Live the Qing Mao arc of Reverend Insanity, chapters 1 to 200. Every chapter is played, staged, or recorded in Fang Yuan's own ledger.">
+<meta name="theme-color" content="#12282e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="world" aria-label="Qing Mao Mountain, in three dimensions"></canvas>
+<div id="fade" aria-hidden="true"></div>
+<div id="letterbox" aria-hidden="true"><span></span><span></span></div>
+<div id="telegraphLayer" aria-hidden="true"></div>
+
+<header>
+  <div class="brand">
+    <span class="seal" aria-hidden="true">青茅</span>
+    <div>
+      <small>REVEREND INSANITY · CHAPTERS 1–200</small>
+      <h1>Qing Mao <i>Rebirth</i></h1>
+    </div>
+  </div>
+  <nav aria-label="Panels">
+    <button id="atlasButton" type="button">Atlas <kbd>M</kbd></button>
+    <button id="journalButton" type="button">Journal <kbd>J</kbd></button>
+    <button id="optionsButton" type="button">Options</button>
+    <button id="pauseButton" type="button">Pause <kbd>Esc</kbd></button>
+  </nav>
+</header>
+
+<section id="quest" class="glass">
+  <small id="chapterLabel"></small>
+  <h2 id="questTitle"></h2>
+  <p id="questText"></p>
+  <div class="questMeta"><span id="calendarLabel"></span><span id="distance"></span></div>
+</section>
+
+<aside id="lensPanel" class="glass" hidden aria-label="Reader's Lens"></aside>
+<aside id="recollectionPanel" class="glass" hidden aria-live="polite"></aside>
+
+<div id="regionName" aria-live="polite"></div>
+<div id="toast" role="status"></div>
+<div id="sluggishRow" hidden aria-live="polite"></div>
+
+<section id="dialoguePanel" class="glass" hidden>
+  <figure id="sceneArt" hidden><img id="sceneImage" alt=""><figcaption id="sceneArtCaption"></figcaption></figure>
+  <small id="dialogueSpeaker"></small>
+  <p id="dialogueText"></p>
+  <p id="dialogueThought" hidden></p>
+  <div id="dialogueChoices" hidden></div>
+  <div class="dialogueControls">
+    <button id="dialogueContinue" type="button" class="primary">Continue</button>
+    <button id="dialogueBacklogToggle" type="button">Recent lines</button>
+    <label class="inlineCheck"><input id="autoAdvance" type="checkbox"> Auto-advance</label>
+    <button id="skipScene" type="button" hidden>Skip scene</button>
+  </div>
+  <div id="dialogueBacklog" hidden tabindex="0" aria-label="Recent dialogue"></div>
+</section>
+
+<footer>
+  <section class="vitals glass">
+    <div class="who"><strong>Fang Yuan</strong><span id="rank">Unawakened</span></div>
+    <div class="healthmeter"><div id="healthBar"></div></div>
+    <div class="meter"><div id="essenceBar"></div></div>
+    <div class="statline"><span id="essenceText">Aperture dormant</span><span id="stones"></span></div>
+  </section>
+  <div class="actionArea">
+    <button id="recollectButton" type="button" class="recollect" hidden>Recall <kbd>G</kbd></button>
+    <div id="actions" class="actions" aria-label="Abilities"></div>
+    <button id="guWheelButton" type="button" class="wheelToggle" aria-label="Gu wheel">Gu</button>
+    <button id="contextButton" type="button" class="context" hidden>Interact</button>
+  </div>
+</footer>
+
+<div id="guWheel" hidden aria-label="Gu wheel"></div>
+<div id="joystick" aria-label="Movement"><span></span></div>
+
+<dialog id="intro">
+  <small>CHAPTERS 1–200 · A STORY WORLD</small>
+  <h2>A second life.<br><em>The same resolve.</em></h2>
+  <p>Five hundred years of memory. A mountain village. One chance to begin again.</p>
+  <p>Two hundred chapters of the Qing Mao arc: the rebirth, the awakening, the Liquor worm and the cave, the academy, the inheritance trials, the year-end duel, the winter crossing, the family assets, the wolf tide, the investigation, and the night the mountain came apart. Every chapter is played, staged, or recorded in his own ledger.</p>
+
+  <section class="notice">
+    <h3>Before you begin</h3>
+    <p>This story contains violence, cruelty, death and mass death, and many of the people involved are teenagers. Decisions and consequences happen on screen; violence is cut away from, and the aftermath is shown through places and people rather than detail.</p>
+    <label>Intensity
+      <select id="introIntensity">
+        <option value="faithful" selected>Faithful · the default</option>
+        <option value="restrained">Restrained · more cut-aways, aftermath summarised</option>
+      </select>
+    </label>
+    <p class="fine">Neither setting changes what happens in the story. You can change it at any time in Options.</p>
+  </section>
+
+  <div class="introControls">
+    <b>Keyboard</b> WASD to move · drag to look · E to interact · G to recall<br>
+    <b>Touch</b> left stick to move · drag to look · one context button · the Gu wheel<br>
+    <b>Gamepad</b> standard mapping, left stick to move, A to interact
+  </div>
+
+  <p id="tierNote" class="fine"></p>
+  <p id="migrationNote" class="fine" hidden></p>
+  <p id="iosStorageWarning" class="fine warn" hidden>On iPhone and iPad, Safari clears a site's saved data after seven days without a visit. Adding this game to your Home&nbsp;Screen exempts it, and is the only reliable way to keep a long save.</p>
+
+  <button id="begin" type="button" class="primary">Enter Qing Mao</button>
+  <div class="startRow">
+    <button id="startAct2" type="button" class="secondary">Start at chapter 51</button>
+    <button id="startAct3" type="button" class="secondary">Start at chapter 101</button>
+    <button id="startAct4" type="button" class="secondary">Start at chapter 151</button>
+  </div>
+  <p class="fine">A fan adaptation. All dialogue, inner-voice lines and ledger entries are original writing; nothing is transcribed from any translation. Progress is saved in this browser.</p>
+</dialog>
+
+<dialog id="previously">
+  <small>PREVIOUSLY</small>
+  <h2>From his own ledger</h2>
+  <div id="previouslyBody"></div>
+  <button id="previouslyClose" type="button" class="primary">Continue</button>
+</dialog>
+
+<dialog id="journal">
+  <div class="dialogHead">
+    <h2>Field journal</h2>
+    <button id="closeJournal" type="button">Close</button>
+  </div>
+  <nav class="tabs" aria-label="Journal sections">
+    <button type="button" data-journal-tab="chapters" class="active">Chapters</button>
+    <button type="button" data-journal-tab="ledger">Stones</button>
+    <button type="button" data-journal-tab="codex">Codex</button>
+    <button type="button" data-journal-tab="moments">Moments</button>
+    <button type="button" data-journal-tab="threads">Unfinished business</button>
+  </nav>
+  <div id="journalContent"></div>
+  <div class="saveRow">
+    <span>Slots</span>
+    <button id="save-slot1" type="button">Save 1</button><button id="load-slot1" type="button">Load 1</button>
+    <button id="save-slot2" type="button">Save 2</button><button id="load-slot2" type="button">Load 2</button>
+    <button id="save-slot3" type="button">Save 3</button><button id="load-slot3" type="button">Load 3</button>
+  </div>
+  <div class="saveRow">
+    <button id="exportSave" type="button">Export progress</button>
+    <button id="importSave" type="button">Import progress</button>
+    <input id="saveFile" type="file" accept="application/json" hidden>
+    <button id="reportErrata" type="button">Report a canon issue</button>
+    <button id="reset" type="button" class="danger">Begin a new life</button>
+  </div>
+</dialog>
+
+<dialog id="atlas">
+  <div class="dialogHead">
+    <h2>Paths through Qing Mao</h2>
+    <button id="closeAtlas" type="button">Close</button>
+  </div>
+  <p>Choose an area you have reached. Travel preserves your progress.</p>
+  <div id="realmChoices" class="realmChoices"></div>
+</dialog>
+
+<dialog id="options">
+  <div class="dialogHead">
+    <h2>How to play</h2>
+    <button id="closeOptions" type="button" class="primary">Apply and return</button>
+  </div>
+
+  <fieldset>
+    <legend>Story</legend>
+    <label>Challenge
+      <select id="difficulty">
+        <option value="story">Story · less incoming damage</option>
+        <option value="standard">Standard</option>
+        <option value="hard">Hard · more incoming damage</option>
+      </select>
+    </label>
+    <label>Intensity
+      <select id="intensity">
+        <option value="faithful">Faithful · the default</option>
+        <option value="restrained">Restrained · more cut-aways</option>
+      </select>
+    </label>
+    <label>Combat approach
+      <select id="approach">
+        <option value="balanced">Balanced</option>
+        <option value="patient">Patient · lower essence cost</option>
+        <option value="force">Forceful · more damage, more cost</option>
+      </select>
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Reader's Lens</legend>
+    <label class="inlineCheck"><input id="lensToggle" type="checkbox"> Chapter anchors and adaptation notes</label>
+    <p class="fine">Where a scene was condensed and why, and notes on what you know before his rivals do.</p>
+    <label class="inlineCheck"><input id="veteranToggle" type="checkbox"> Veteran foresight</label>
+    <p class="fine">Short nods to arcs after chapter 200. Off by default; hints, never summaries.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Systems</legend>
+    <label class="inlineCheck"><input id="guUpkeep" type="checkbox" checked> Gu need feeding</label>
+    <label class="inlineCheck"><input id="refinementFailure" type="checkbox" checked> Refinements can fail</label>
+    <p class="fine">Canonical refinements can never fail outright either way — a bad attempt costs days and stones. Turning this off removes the roll from optional recipes too.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Graphics</legend>
+    <label>Quality
+      <select id="tier">
+        <option value="auto">Automatic · measured on first launch</option>
+        <option value="low">Low · phones, 30 fps target</option>
+        <option value="medium">Medium · 60 fps target</option>
+        <option value="high">High · desktops and recent phones</option>
+      </select>
+    </label>
+    <p class="fine">A recent phone can run High. The automatic choice is a starting point, not a ceiling.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Reading and motion</legend>
+    <label>Text size
+      <select id="textSize"><option value="1">Small</option><option value="2" selected>Medium</option><option value="3">Large</option></select>
+    </label>
+    <label>Typeface
+      <select id="fontChoice"><option value="serif">Serif</option><option value="readable">Easier to read</option></select>
+    </label>
+    <label class="inlineCheck"><input id="reducedMotion" type="checkbox"> Reduce motion</label>
+    <p class="fine">Also follows your system setting. Camera shake and most particle movement are removed.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Input</legend>
+    <label class="inlineCheck"><input id="aimAssist" type="checkbox" checked> Aim assist (default on touch)</label>
+    <label class="inlineCheck"><input id="manualAim" type="checkbox"> Manual aiming</label>
+    <label class="inlineCheck"><input id="holdToGuard" type="checkbox" checked> Hold to guard (uncheck to toggle)</label>
+    <label class="inlineCheck"><input id="holdToRun" type="checkbox" checked> Hold to run (uncheck to toggle)</label>
+    <label class="inlineCheck"><input id="haptics" type="checkbox" checked> Vibration, where supported</label>
+    <p class="fine">iOS Safari does not support vibration, so it is never the only signal for anything.</p>
+    <details><summary>Keys</summary><div id="keymapList" class="keymapList"></div></details>
+  </fieldset>
+
+  <fieldset>
+    <legend>Sound</legend>
+    <p class="fine">This version ships without sound. The settings are reserved so a sound pack can be added later without changing your save.</p>
+    <label>Master <input type="range" min="0" max="100" value="80" disabled></label>
+    <label>Music <input type="range" min="0" max="100" value="60" disabled></label>
+    <label>Effects <input type="range" min="0" max="100" value="80" disabled></label>
+  </fieldset>
+</dialog>
+
+<dialog id="errata">
+  <small>REPORT A CANON ISSUE</small>
+  <h2>Something does not match the book</h2>
+  <p class="fine">Filed with the scene and the chapter attached, which is what makes it easy to act on.</p>
+  <p>Scene <code id="errataScene"></code> · chapter <code id="errataChapter"></code></p>
+  <textarea id="errataNote" rows="5" placeholder="What it should be, and where you are reading it from."></textarea>
+  <button id="errataSubmit" type="button" class="primary">File it</button>
+  <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
+</dialog>
+
+<dialog id="pause">
+  <small>THE MOUNTAIN CAN WAIT</small>
+  <h2>Paused</h2>
+  <p id="saveStatus">Progress is saved automatically in this browser.</p>
+  <button id="resume" type="button" class="primary">Resume</button>
+</dialog>
+
+<section id="unsupported" hidden>
+  <h2>This game needs WebGL2</h2>
+  <p id="unsupportedBody"></p>
+</section>
+
+<noscript><p style="padding:2rem">This game needs JavaScript and WebGL2.</p></noscript>
+<script type="module" src="/engine/main.ts"></script>
+<script>
+  // Registered only for the hosted build; a service worker cannot run from file://.
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+  }
+</script>
+</body>
+</html>

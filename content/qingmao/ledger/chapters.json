@@ -1,0 +1,1406 @@
+{
+  "note": "One private-ledger entry per chapter, written in Fang Yuan's voice. Original writing: these are his records of cost and conclusion, never summaries of the source text. The Journal's Chapters view and the 'Previously...' card read from here.",
+  "voice": "First person, past tense, terse. Records what he did, what it cost, and what he concluded. He explains himself to no one.",
+  "chapters": [
+    {
+      "chapter": 1,
+      "beat": "prologue.last-stand",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Eight of them, and none willing to be the first through the door. I spent what I had left making the arithmetic clear to them. When the accounting no longer favoured me I reached for the Cicada, which is the one thing in five hundred years I never spent."
+    },
+    {
+      "chapter": 2,
+      "beat": "prologue.last-stand",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Spring, then autumn. The sum of a life drawn back to its opening balance. I did not feel it as mercy; I felt it as a ledger closed and reopened on the first page."
+    },
+    {
+      "chapter": 3,
+      "beat": "act1.waking.bamboo-room",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Rain on the bamboo. Fifteen years old, a thin blanket, an aperture that does not exist yet, and twelve primeval stones to my name. The room is exactly as I remember it, which means everything in it is already accounted for."
+    },
+    {
+      "chapter": 4,
+      "beat": "act1.awakening.ceremony",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "The Hope Gu gathered and the aperture opened. Forty-four percent. The elder read it out the way a clerk reads a figure he has read ten thousand times, and the crowd agreed with him."
+    },
+    {
+      "chapter": 5,
+      "beat": "act1.awakening.ceremony",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "My brother's grade was read second, and the hall behaved as though a verdict had been handed down on both of us. A grade, one hundred percent. He will be funded. I will be tolerated. Both of those are useful to know precisely."
+    },
+    {
+      "chapter": 6,
+      "beat": "act1.awakening.ceremony",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "Walked the mountain afterward to put distances back in my legs. Spear bamboo, straight and sharpened at the tip, exactly where it stood five centuries ago. The landscape is the only thing here that has not changed its mind about me."
+    },
+    {
+      "chapter": 7,
+      "beat": "act1.academy.first-gu",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Took Moonlight Gu from the Gu room. A pale crescent, cold as jade, and the clan's signature because the clan owns the method of breeding it. Convenient for them. The first thing I learned about it is what it eats."
+    },
+    {
+      "chapter": 8,
+      "beat": "act1.academy.first-gu",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Two primeval stones for a jar of Green Bamboo Wine. Out of twelve that is a sixth of everything I have, spent on a smell. Anyone watching would call it a boy wasting money, and I intend for them to."
+    },
+    {
+      "chapter": 9,
+      "beat": "act1.household.brothers",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "My uncle keeps the house, the furniture and the accounts that were my father's. He called me nephew four times in one conversation, which is three more than necessary."
+    },
+    {
+      "chapter": 10,
+      "beat": "act1.household.brothers",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "My aunt serves tea and an itemised grievance with it. She has decided we are a debt the household is carrying. I let her believe the debt will never be called in."
+    },
+    {
+      "chapter": 11,
+      "beat": "act1.household.brothers",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "Fang Zheng asked whether I was angry about the grades. He meant it kindly. I told him the grades were accurate, which is true and not an answer, and watched him accept it."
+    },
+    {
+      "chapter": 12,
+      "beat": "act1.liquor-worm.search",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Set the wine out on the mountain after dark. Nothing on the first night, nothing on the second. The memory says a wine-loving Gu lives here; it does not say which crevice, and five hundred years is a long time for a crevice to stay the same shape."
+    },
+    {
+      "chapter": 13,
+      "beat": "act1.liquor-worm.search",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Fourth night. A bead of white light came out of the bamboo, drank, and went northeast at a speed I had to spend essence to match. I have seen worse returns on two stones."
+    },
+    {
+      "chapter": 14,
+      "beat": "act1.liquor-worm.cave",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "The crevice opens into a cave with remains in it. A monk, by the vessels. Dead long enough that the clan has had time to build a different story over the top of him."
+    },
+    {
+      "chapter": 15,
+      "beat": "act1.liquor-worm.cave",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "An image wall, still running on an exhausted Photo-audio Gu. What it shows does not match what the clan celebrates every spring. I watched it three times to be certain I could repeat it without error."
+    },
+    {
+      "chapter": 16,
+      "beat": "act1.liquor-worm.cave",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Noted the entrance traces I left: crushed bamboo at the mouth, a scuffed ledge, one footprint in wet clay. Ordinary, individually. Together they are a direction for anyone who thinks to look."
+    },
+    {
+      "chapter": 17,
+      "beat": "act1.liquor-worm.cave",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "The worm will not be taken by hand. It is faster than I am and it has no reason to trust a jar twice. Spent two more nights on the problem than I would have liked."
+    },
+    {
+      "chapter": 18,
+      "beat": "act1.liquor-worm.cave",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Considered and discarded the clan's methods, all of which require telling the clan. An advantage announced is an advantage surrendered."
+    },
+    {
+      "chapter": 19,
+      "beat": "act1.liquor-worm.cave",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Used the Cicada's weight on it, and the resistance went out of the worm like water out of a cracked jar. I now own something no fifteen-year-old on this mountain can explain, and a cave nobody knows I can find. The wall will go dark eventually. I will still know where it is."
+    },
+    {
+      "chapter": 20,
+      "beat": "act1.cultivation.first-weeks",
+      "act": "act1",
+      "coverage": "ledger",
+      "ledger": "The worm refines essence by a small stage while it is fed, and it is fed on wine, which costs stones, which I do not have. The cultivation is free. The appetite is not."
+    },
+    {
+      "chapter": 21,
+      "beat": "act1.cultivation.first-weeks",
+      "act": "act1",
+      "coverage": "ledger",
+      "ledger": "Confirmed what I remembered: it will not raise Rank two essence. Whatever advantage this gives me has a ceiling, and the ceiling arrives before the danger does. Plan accordingly."
+    },
+    {
+      "chapter": 22,
+      "beat": "act1.academy.moonblade",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Moonblade practice in the courtyard. Three straw targets, and every clean strike empties a measurable portion of the sea. Knowing the motion is not the same as owning the motion."
+    },
+    {
+      "chapter": 23,
+      "beat": "act1.academy.moonblade",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Second day of drills. The elder corrects my stance, which is the stance of a swordsman who has been dead for five centuries. I let him correct it. A boy who already knows everything is a boy somebody investigates."
+    },
+    {
+      "chapter": 24,
+      "beat": "act1.academy.moonblade",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Third day. I can place three strikes without pausing to breathe. The useful number is not the damage; it is how many strikes stand between me and an empty aperture."
+    },
+    {
+      "chapter": 25,
+      "beat": "act1.extortion.toll",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Stopped Mo Yan at the academy gate after class and explained what his continued comfort was worth. He paid. Not because he was frightened of me — because paying was cheaper than the conversation."
+    },
+    {
+      "chapter": 26,
+      "beat": "act1.extortion.toll",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Second collection. Same gate, same hour. Predictability is the whole product: he budgets for it, and a budgeted loss is one nobody complains about loudly."
+    },
+    {
+      "chapter": 27,
+      "beat": "act1.extortion.toll",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Third collection. Two of his friends stayed to watch and then left without him, which told him more about his position than I did."
+    },
+    {
+      "chapter": 28,
+      "beat": "act1.extortion.toll",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Raised the rate. Still inside what his allowance absorbs. The ceiling on extortion is not courage, it is household accounting."
+    },
+    {
+      "chapter": 29,
+      "beat": "act1.extortion.toll",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Counted the week: enough for the worm's wine and a margin. Also counted witnesses. Four students can place me at that gate, and one of them takes notes for a living."
+    },
+    {
+      "chapter": 30,
+      "beat": "act1.extortion.elder-counters",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "Someone has started counting on the other side. Elder Mo Chen asked me two questions in the corridor, both of them answerable, neither of them idle."
+    },
+    {
+      "chapter": 31,
+      "beat": "act1.extortion.elder-counters",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "He does not have evidence. He has a pattern and the patience to wait for it to resolve. That is a worse opponent than a witness."
+    },
+    {
+      "chapter": 32,
+      "beat": "act1.extortion.elder-counters",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "The Mo family sent word through the academy rather than through the clan, which means they want this settled quietly. Quiet is expensive for them and cheap for me."
+    },
+    {
+      "chapter": 33,
+      "beat": "act1.extortion.elder-counters",
+      "act": "act1",
+      "coverage": "staged",
+      "ledger": "Mo Bei came to the academy himself and stood in a classroom doorway as if the doorway owed him the space. I stood up when he entered. It cost nothing and it made his entrance smaller."
+    },
+    {
+      "chapter": 34,
+      "beat": "act1.extortion.servant",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "They sent a servant with a cudgel to the bamboo path at dusk. He had no expectation of resistance, which is the only part of their planning I will describe as competent."
+    },
+    {
+      "chapter": 35,
+      "beat": "act1.extortion.servant",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Dealt with it. The decision took longer than the act. I will not write the act down; the ledger is for costs, and the cost here was time and one set of livery I had to account for."
+    },
+    {
+      "chapter": 36,
+      "beat": "act1.extortion.servant",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Evidence on the path: a body that cannot stay there, livery with a household mark on it, and one cart driver who passed the junction four minutes too early. Three problems, three different prices."
+    },
+    {
+      "chapter": 37,
+      "beat": "act1.extortion.servant",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "The village has decided a servant ran off with something. I did not build that story. I simply did not interfere with it, which is usually cheaper than building one."
+    },
+    {
+      "chapter": 38,
+      "beat": "act1.extortion.negotiation",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Mo Bei came to terms in a classroom with the elder present. I said very little. The advantage in that room was not strength and it was not leverage — it was being the only person in it who was not afraid of how the conversation looked."
+    },
+    {
+      "chapter": 39,
+      "beat": "act1.caravan.gambling",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "The caravan is in. Unusual Gu, overpriced, and a gambling-stone stall that prices uncertainty better than most clans price certainty."
+    },
+    {
+      "chapter": 40,
+      "beat": "act1.caravan.gambling",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Lost four stones on two shells. The merchant is honest in the way a scale is honest: he does not cheat, he simply knows the odds he is selling."
+    },
+    {
+      "chapter": 41,
+      "beat": "act1.caravan.gambling",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Bought a Mudskin Toad Gu, mostly so that the rest of what I bought would look like an afterthought. Minor protection. Its real function is to be the thing I talk about."
+    },
+    {
+      "chapter": 42,
+      "beat": "act1.caravan.gambling",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Watched the stall long enough to learn which shells the merchant handles gently. A purple-gold shell is sealed, and a sealed shell can have contained anything."
+    },
+    {
+      "chapter": 43,
+      "beat": "act1.caravan.fossil",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Three stones for the fossil. As of today the Liquor worm came out of a gambling stone at a travelling market in front of witnesses. The cover story is worth more than the worm's refinement and it cost less than the wine."
+    },
+    {
+      "chapter": 44,
+      "beat": "act1.jia-jin-sheng.night",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Someone followed me onto the mountain after dark. Jia Jin Sheng, armed, and confident in a way that only makes sense if he has already decided how the evening ends."
+    },
+    {
+      "chapter": 45,
+      "beat": "act1.jia-jin-sheng.night",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Let him follow. A pursuer who believes he is hunting chooses the ground, and a pursuer who chooses the ground can be told which ground to choose."
+    },
+    {
+      "chapter": 46,
+      "beat": "act1.jia-jin-sheng.night",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Took the high path toward the ravine and he came, the way a man comes when he believes he is choosing. The useful thing about arrogance is that it is navigable."
+    },
+    {
+      "chapter": 47,
+      "beat": "act1.jia-jin-sheng.night",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "It is done. I will record what it cost instead of what it looked like: essence, most of one evening, and a margin of luck I do not intend to need again."
+    },
+    {
+      "chapter": 48,
+      "beat": "act1.jia-jin-sheng.night",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Cleanup. His trail up the mountain, one villager who saw him leave, residue from a Gu I did not use, and a disappearance that will be reported by morning. Cleaned what could be cleaned and priced the rest."
+    },
+    {
+      "chapter": 49,
+      "beat": "act1.jia-jin-sheng.night",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "He is a missing clan youth now, which is a category the clan has procedures for. Procedures are slower than suspicion and they leave a record. I would rather be in a record than in a rumour."
+    },
+    {
+      "chapter": 50,
+      "beat": "act1.breakthrough.middle-stage",
+      "act": "act1",
+      "coverage": "played",
+      "ledger": "Pressed against the aperture wall until the membrane moved. Rank one, middle stage. A small step, taken on schedule, paid for in wine and stones and one evening on the mountain. The road is long and I have walked it before."
+    },
+    {
+      "chapter": 51,
+      "beat": "act2.inquiry.jia-fu",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Jia Fu opened an inquiry. He is grieving and he is formal, and he has arranged the second to hold the first. I came with my fossil and my dates in order."
+    },
+    {
+      "chapter": 52,
+      "beat": "act2.inquiry.jia-fu",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "He asked where the Liquor worm came from. I said the caravan, the purple-gold shell, the market, the witnesses. All of it is true and none of it is the answer."
+    },
+    {
+      "chapter": 53,
+      "beat": "act2.inquiry.jia-fu",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "They brought out Bamboo Gentleman. It stays green while the speaker is telling the truth, and it stayed green. I will not pretend that was my doing."
+    },
+    {
+      "chapter": 54,
+      "beat": "act2.inquiry.jia-fu",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Second session. He asked the same question with different words, which is what a man does when the evidence has run out and the certainty has not."
+    },
+    {
+      "chapter": 55,
+      "beat": "act2.inquiry.jia-fu",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "He asked about the night itself. I accounted for my evening in the kind of detail nobody invents and nobody enjoys listening to."
+    },
+    {
+      "chapter": 56,
+      "beat": "act2.inquiry.jia-fu",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "What he has: a missing cousin, a youth who was on the mountain, and an instinct. What he needs: one piece of anything. I spent the week making sure the cheapest piece was already gone."
+    },
+    {
+      "chapter": 57,
+      "beat": "act2.inquiry.jia-fu",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Third session, shorter. The elders are tired of it. An inquiry that cannot produce a finding becomes an expense, and expenses end themselves."
+    },
+    {
+      "chapter": 58,
+      "beat": "act2.inquiry.jia-fu",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Closed without a finding. I did not win this; I was not convicted, which is a different and more durable outcome."
+    },
+    {
+      "chapter": 59,
+      "beat": "act2.inquiry.jia-fu",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Jia Fu said, in front of the council, that he intends to send for an investigator. He named Tie Xue Leng. I wrote the name down and left the page where I would see it again."
+    },
+    {
+      "chapter": 60,
+      "beat": "act2.inheritance.image-wall",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Went back to the cave and broke the wall. The images were finished with; what was behind them was not history, it was a test, and a test implies someone expected a successor."
+    },
+    {
+      "chapter": 61,
+      "beat": "act2.inheritance.image-wall",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Eastern lamps, a passage, and a chamber with a golden Earth Treasury Flower in it. The inheritance hands you what the next obstacle demands. That is either generosity or design, and I have met very little generosity."
+    },
+    {
+      "chapter": 62,
+      "beat": "act2.academy.little-light",
+      "act": "act2",
+      "coverage": "staged",
+      "ledger": "Took Little Light Gu at the Gu room while I was eligible to. It supports the crescent. A star beside the moon; the clan's poetry, my damage figures."
+    },
+    {
+      "chapter": 63,
+      "beat": "act2.academy.little-light",
+      "act": "act2",
+      "coverage": "staged",
+      "ledger": "Second Light. The Moonblade is measurably heavier now, and the cost per strike has not moved. That ratio is the only kind of progress I trust."
+    },
+    {
+      "chapter": 64,
+      "beat": "act2.inheritance.earth-treasury",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "White Boar Gu out of the flower. It increases bodily strength as it is nourished, and the strength stays after the feeding. Permanent returns on a recurring cost. Rare."
+    },
+    {
+      "chapter": 65,
+      "beat": "act2.hunter.map",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "The Wang family hunt this mountain and they keep their knowledge on a beast skin. Not a treasure — working notes. Working notes are worth more."
+    },
+    {
+      "chapter": 66,
+      "beat": "act2.hunter.map",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Found the rest where they sleep between circuits. Cooking fire, two bowls, a portrait. One occupant, and he is proprietary about the mountain."
+    },
+    {
+      "chapter": 67,
+      "beat": "act2.hunter.map",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Took the map. I will not write more than that. The cost was an afternoon and a decision I had already made before I walked up."
+    },
+    {
+      "chapter": 68,
+      "beat": "act2.hunter.map",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Compared it against the copies the clan hands out. The circles on this one have been concealed on those. Somebody has been selling the mountain with pieces removed."
+    },
+    {
+      "chapter": 69,
+      "beat": "act2.hunter.map",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "The map separates animal territory from trap lines. A boar trail to the northeast, a hideout I was not meant to find, and two red circles I will not walk into until I know why they are circled."
+    },
+    {
+      "chapter": 70,
+      "beat": "act2.boar.strength",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Hunted the trail. Three boars over four days, and the Gu took its share of each. My arms are heavier than they were on Monday."
+    },
+    {
+      "chapter": 71,
+      "beat": "act2.boar.strength",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Boar blood is the cheapest diet in my inventory, and the hunting that produces it also produces meat I can sell. The only Gu I own that pays for itself."
+    },
+    {
+      "chapter": 72,
+      "beat": "act2.boar.strength",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Fed it again. Strength is accumulating in a body that was a scholar's body a week ago. The clan will notice eventually; bodies are harder to hide than Gu."
+    },
+    {
+      "chapter": 73,
+      "beat": "act2.boar.strength",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Stopped counting the boars and started counting the days. Training has a rate, and the rate is what limits me, not the appetite."
+    },
+    {
+      "chapter": 74,
+      "beat": "act2.wang-da.inference",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Went back to the hideout with the map in hand. The concealed circles line up with where the occupant does not go. A man's avoidances are his biography."
+    },
+    {
+      "chapter": 75,
+      "beat": "act2.wang-da.inference",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "A portrait on the wall, fresh ash in the fire, boots by the door in a size I have already measured. Wang Da exists and he is still on this mountain."
+    },
+    {
+      "chapter": 76,
+      "beat": "act2.wang-da.inference",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Considered finding him. Decided against it. I know the dangerous ground on this mountain better than he does, and knowledge that lets you avoid a fight is worth more than a fight you win."
+    },
+    {
+      "chapter": 77,
+      "beat": "act2.wang-da.inference",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Left the hideout the way I found it. If he never learns the map changed hands, the map keeps working for both of us and only one of us knows it."
+    },
+    {
+      "chapter": 78,
+      "beat": "act2.mission.roster",
+      "act": "act2",
+      "coverage": "staged",
+      "ledger": "The affairs hall posted a winter roster. Jiao San leads it, and he carries the group's equipment himself, which tells me what kind of leader he is and what kind of loss it would be."
+    },
+    {
+      "chapter": 79,
+      "beat": "act2.inheritance.boulder",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "The boar strength stopped increasing. Reached the ceiling, as remembered, and the passage ahead has a round boulder in it that needed exactly that ceiling. Pushed it up the slope. Jade Skin Gu in the flower behind it: three seconds of guard, three quarters of the damage turned."
+    },
+    {
+      "chapter": 80,
+      "beat": "act2.inheritance.stone-forest",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Below the passage the cave opens into a stone forest. I could not see the ceiling from the floor. I went back for a light before I went in, which is the whole lesson of this place."
+    },
+    {
+      "chapter": 81,
+      "beat": "act2.inheritance.stone-forest",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Jade-eye monkeys. They conceal themselves against the pillars and their bodies come apart into stone when they are finished. Jade Skin held. Went in twice more to learn the pillars rather than the monkeys."
+    },
+    {
+      "chapter": 82,
+      "beat": "act2.duel.preparation",
+      "act": "act2",
+      "coverage": "staged",
+      "ledger": "The year-end examination is posted. My brother will be in it, funded, equipped and genuinely talented. The clan has already decided what the result means."
+    },
+    {
+      "chapter": 83,
+      "beat": "act2.duel.preparation",
+      "act": "act2",
+      "coverage": "staged",
+      "ledger": "Watched him train for three afternoons. He layers his defences and he changes them in the same order every time, because nobody has ever made him improvise."
+    },
+    {
+      "chapter": 84,
+      "beat": "act2.duel.preparation",
+      "act": "act2",
+      "coverage": "staged",
+      "ledger": "Wrote the order down. Shield, then the second shield, then the retreat. A sequence is not a defence; it is a schedule, and a schedule can be met early."
+    },
+    {
+      "chapter": 85,
+      "beat": "act2.duel.fang-zheng",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "First exchange of the duel. He opened exactly as written, in the order I had copied down three afternoons earlier, and the crowd read it as a strong start for him."
+    },
+    {
+      "chapter": 86,
+      "beat": "act2.duel.fang-zheng",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Second phase. I spent essence to break the layer rather than the boy, and the layer did not come back. A defence you cannot reapply is a countdown."
+    },
+    {
+      "chapter": 87,
+      "beat": "act2.duel.fang-zheng",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Won. He was sincere about the handshake, which was worse for him than losing. The clan adjusted its opinion of me by one notch and its opinion of him by none."
+    },
+    {
+      "chapter": 88,
+      "beat": "act2.winter.mission-brief",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Accepted a mission because refusing it would have been the remarkable choice. Permafrost, decayed soil, a week in the cold, and the pay will not cover the wine."
+    },
+    {
+      "chapter": 89,
+      "beat": "act2.winter.mission-brief",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Missions are how the clan spends its youths' time so that the time cannot be spent on anything else. I have been aware of this arrangement for five hundred years and I am still inside it."
+    },
+    {
+      "chapter": 90,
+      "beat": "act2.winter.mission-brief",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Gathered the soil. Jiao San apologises when he gives orders. Noted the quantity, the pay, and the four days I will not get back."
+    },
+    {
+      "chapter": 91,
+      "beat": "act2.secret.rank-two",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Cultivated at Jiang He's place. He is incurious, which is precisely what I am paying for, and he does not ask why a Rank one needs privacy."
+    },
+    {
+      "chapter": 92,
+      "beat": "act2.secret.rank-two",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Rank two. Red steel. Nobody saw it and nobody will be told. Concealed advancement has a price I am now carrying: every time I fight below my rank, someone who is paying attention gets a free observation."
+    },
+    {
+      "chapter": 93,
+      "beat": "act2.winter.boar-king",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "The crossing went wrong on the second day. A boar king and lightning wolves, and a group that was organised for soil-gathering."
+    },
+    {
+      "chapter": 94,
+      "beat": "act2.winter.boar-king",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Jiao San put himself between the wolves and the youngest of them and kept doing it until he couldn't. I am recording that because it happened, not because it changed what I did."
+    },
+    {
+      "chapter": 95,
+      "beat": "act2.winter.boar-king",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Went into the carcass. It was warm and it was the only position on that field that the wolves had no interest in. Survival is frequently undignified and the dignity is never the part that kills you."
+    },
+    {
+      "chapter": 96,
+      "beat": "act2.winter.boar-king",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Came out with a snowy tusk and most of my essence. Of the group, a minority walked back down. The clan will hold an inquiry into the loss, because a clan is a thing that holds inquiries."
+    },
+    {
+      "chapter": 97,
+      "beat": "act2.affairs.application",
+      "act": "act2",
+      "coverage": "staged",
+      "ledger": "Applied for the family-asset mission while the hall was still busy with the inquiry. A request filed during a crisis is a request nobody reads twice."
+    },
+    {
+      "chapter": 98,
+      "beat": "act2.affairs.application",
+      "act": "act2",
+      "coverage": "staged",
+      "ledger": "Elder Bo took the application and said it would be considered. He means it will be considered by people who owe my uncle nothing in particular, which is the most I can ask for today."
+    },
+    {
+      "chapter": 99,
+      "beat": "act2.refinement.white-jade",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "Refinement room. White Boar and Jade Skin, with the tusk added to improve the binding. The recipe is not certain, whatever the instructors say."
+    },
+    {
+      "chapter": 100,
+      "beat": "act2.refinement.white-jade",
+      "act": "act2",
+      "coverage": "played",
+      "ledger": "White Jade Gu. Six seconds of guard and nine tenths of the damage turned. It cost the tusk, eight stones and two days. Without the tusk it would have cost more days and more stones, and I would still have it, because some things on this road are only ever a question of price."
+    },
+    {
+      "chapter": 101,
+      "beat": "act3.assets.petition",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "The application came back approved in principle, which is the clan's way of saying the argument has been moved to a room I am allowed into. Pulled the asset records myself rather than asking for a summary."
+    },
+    {
+      "chapter": 102,
+      "beat": "act3.assets.petition",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "The records are clear and my uncle's position is not. He has been managing property he does not own and reporting the management as ownership for six years."
+    },
+    {
+      "chapter": 103,
+      "beat": "act3.assets.petition",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Filed the discrepancy. Not as an accusation — as a clerical question. A clerical question is answered by a clerk, and a clerk's answer becomes a document."
+    },
+    {
+      "chapter": 104,
+      "beat": "act3.assets.petition",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Man Shi carried the record boxes for me because I asked him to and nobody else ever has. He is a head taller than the room and entirely unaware of it. Useful, and not in the way people assume."
+    },
+    {
+      "chapter": 105,
+      "beat": "act3.assets.witnesses",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Went looking for people who remember the original arrangement. Three of them do. Two want money and one wants my uncle embarrassed, which is cheaper."
+    },
+    {
+      "chapter": 106,
+      "beat": "act3.assets.witnesses",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Paid the two. Recorded the amount, because the point of this ledger is that I never pretend a victory was free."
+    },
+    {
+      "chapter": 107,
+      "beat": "act3.assets.witnesses",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "My aunt came to the tavern to explain to the room that I was ungrateful. She is effective at this. I let her finish and then asked her, quietly, which year the transfer was recorded in."
+    },
+    {
+      "chapter": 108,
+      "beat": "act3.assets.witnesses",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "She did not know. Neither does he. A household that cannot date its own paperwork loses to a household that can."
+    },
+    {
+      "chapter": 109,
+      "beat": "act3.assets.council",
+      "act": "act3",
+      "coverage": "staged",
+      "ledger": "The council heard it. My uncle spoke first and spoke too long, which is what a man does when his case is a feeling."
+    },
+    {
+      "chapter": 110,
+      "beat": "act3.assets.council",
+      "act": "act3",
+      "coverage": "staged",
+      "ledger": "Elder Bo asked for the dates. I gave the dates. There is a particular silence a council makes when the tedious party turns out to be the correct one."
+    },
+    {
+      "chapter": 111,
+      "beat": "act3.assets.council",
+      "act": "act3",
+      "coverage": "staged",
+      "ledger": "Adjourned for consideration. Consideration means the elders are counting who is owed what by whom, and I am not owed anything, which in this instance works in my favour."
+    },
+    {
+      "chapter": 112,
+      "beat": "act3.assets.council",
+      "act": "act3",
+      "coverage": "staged",
+      "ledger": "Used the adjournment to settle the two witnesses properly and to leave my uncle entirely alone. A man with nothing to react to looks like a man with nothing."
+    },
+    {
+      "chapter": 113,
+      "beat": "act3.assets.settlement",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Found in my favour. The property, the tavern, the leaf terraces and the accounts, transferred on a recorded date that nobody can argue with."
+    },
+    {
+      "chapter": 114,
+      "beat": "act3.assets.settlement",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "My uncle asked whether family meant anything to me. I told him it meant a recorded transfer date, which is the only form of it that has ever protected anybody in this clan."
+    },
+    {
+      "chapter": 115,
+      "beat": "act3.assets.settlement",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Took possession. Fang Zheng was in the room and said he hoped this would let us be brothers again. He believed it. I have stopped finding that useful and started finding it inconvenient."
+    },
+    {
+      "chapter": 116,
+      "beat": "act3.bai.interlude",
+      "act": "act3",
+      "coverage": "staged",
+      "ledger": "Word from the Bai clan reached the village before the Bai did. A clan that keeps its own accounts and settles them late. Someone there has a grievance against their own house, and a grievance is a handle."
+    },
+    {
+      "chapter": 117,
+      "beat": "act3.leaves.nine-leaf",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Nine Leaf Vitality Grass. It yields leaves on a cycle and a leaf restores vitality, which makes it the only healing I own and the only income I can predict."
+    },
+    {
+      "chapter": 118,
+      "beat": "act3.leaves.nine-leaf",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Jiang Ya buys the leaves at five stones and does not ask where the terraces came from. Prices first, pleasantries after. My preferred kind of merchant."
+    },
+    {
+      "chapter": 119,
+      "beat": "act3.moonglow.failure",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Attempted Moonglow. The refinement did not take. Lost the materials and the better part of a week."
+    },
+    {
+      "chapter": 120,
+      "beat": "act3.moonglow.failure",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Went back over the recipe. The error was not in the recipe. Some refinements fail because refinement is uncertain, and instructors who tell students otherwise are managing morale, not teaching."
+    },
+    {
+      "chapter": 121,
+      "beat": "act3.moonglow.failure",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Re-bought the materials out of leaf income. The failure cost eleven stones and nine days, and it did not cost me Moonlight Gu, which is the only line in that sentence that mattered."
+    },
+    {
+      "chapter": 122,
+      "beat": "act3.moonglow.success",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Second attempt. Slower, colder, and with the ingredients measured twice, because the first failure was not a recipe problem and I had nothing else to change."
+    },
+    {
+      "chapter": 123,
+      "beat": "act3.moonglow.success",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Moonglow Gu. Rank two ranged, and it replaces the crescent as the thing I actually fight with."
+    },
+    {
+      "chapter": 124,
+      "beat": "act3.moonglow.success",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Retired the Moonblade to practice. Kept Moonlight Gu fed anyway. A Gu you stop feeding is a Gu you no longer own, and I do not give things away on the assumption that I will never need them."
+    },
+    {
+      "chapter": 125,
+      "beat": "act3.tavern.property",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "The tavern has a wage bill, a supplier, a stock loss and a landlord, and as of this month the landlord is me. The arithmetic is the same arithmetic as the aperture: income, upkeep, margin."
+    },
+    {
+      "chapter": 126,
+      "beat": "act3.tavern.property",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Traded for a Black Boar Gu and kept the strength after the trade went through. Strength that survives the sale of its source is the closest thing to free money I have found on this mountain."
+    },
+    {
+      "chapter": 127,
+      "beat": "act3.tavern.property",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Man Shi broke a table and then repaired it badly. Put him on the door instead. A troublemaker pointed outward is a fixture."
+    },
+    {
+      "chapter": 128,
+      "beat": "act3.four-flavours.refinement",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Four Flavours needs a second Liquor worm. Bought one, which means I have spent real money to destroy a Gu I paid for, in order to make a Gu that eats more than both of them did."
+    },
+    {
+      "chapter": 129,
+      "beat": "act3.four-flavours.refinement",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Spent three days confirming the recipe against two sources before touching the materials. The last failure taught me what nine days cost."
+    },
+    {
+      "chapter": 130,
+      "beat": "act3.four-flavours.refinement",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Refined it, and it took. Two sources, three days of checking and a steadier hand than I had in month nine."
+    },
+    {
+      "chapter": 131,
+      "beat": "act3.four-flavours.refinement",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Four Flavours Liquor worm. It raises Rank two essence by a small stage, and it drinks six stones' worth of wine every four days. My income now has a job and the job is feeding a worm."
+    },
+    {
+      "chapter": 132,
+      "beat": "act3.stealth-scales",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Bought Stealth Scales from the medicine hall's back shelf. Ordinary wolves lose track of what wears it."
+    },
+    {
+      "chapter": 133,
+      "beat": "act3.stealth-scales",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "And Earth Communication Ear Grass, which marks what is moving through the ground. Together they cost nineteen stones and they are the reason I expect to survive the season."
+    },
+    {
+      "chapter": 134,
+      "beat": "act3.stealth-scales",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Tested both on the lower slopes. Concealment holds while I am walking and fails when I am fighting. Noted, because the failure mode is the whole design of this winter."
+    },
+    {
+      "chapter": 135,
+      "beat": "act3.wolf-tide.warnings",
+      "act": "act3",
+      "coverage": "staged",
+      "ledger": "The tide is coming. Nobody argues with the season; they argue about the roster, which is how a village spends the last quiet week it will get."
+    },
+    {
+      "chapter": 136,
+      "beat": "act3.wolf-tide.warnings",
+      "act": "act3",
+      "coverage": "staged",
+      "ledger": "Qing Shu has been given the forward position. He is old, he is scarred, and he asked for the equipment rather than the honour, which is how I know he understands the assignment."
+    },
+    {
+      "chapter": 137,
+      "beat": "act3.wolf-tide.warnings",
+      "act": "act3",
+      "coverage": "staged",
+      "ledger": "The village is fortifying. I bought water shield stock instead of helping, and the difference between those two activities is the difference between me and Qing Shu."
+    },
+    {
+      "chapter": 138,
+      "beat": "act3.wolf-tide.warnings",
+      "act": "act3",
+      "coverage": "staged",
+      "ledger": "Water Shield Gu, recorded and stored. White Jade stays equipped. Redundancy is cheap when it is bought before it is needed."
+    },
+    {
+      "chapter": 139,
+      "beat": "act3.wolf-tide.forest",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Into the forest. Lightning wolves, and not one kind of them — the small fast ones drive, the heavy ones arrive afterward. The pack is a structure, not a crowd."
+    },
+    {
+      "chapter": 140,
+      "beat": "act3.wolf-tide.forest",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Concealed and moved. Two hours of crossing that would have been twenty minutes of fighting, and I finished with essence in hand."
+    },
+    {
+      "chapter": 141,
+      "beat": "act3.wolf-tide.forest",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Fought once, because a ravine gave me no alternative. Spent a third of the sea on four wolves. That exchange rate is the argument for never fighting."
+    },
+    {
+      "chapter": 142,
+      "beat": "act3.wolf-tide.forest",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Listened through the soil at the ridge and counted what was behind the first wave. There is no position on this mountain that holds against that number. Qing Shu's included."
+    },
+    {
+      "chapter": 143,
+      "beat": "act3.qing-shu.last-stand",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Found his position from above. He had it arranged properly — lines, reliefs, a fallback. It was competent and it was not going to be enough, and both of those things were visible from where I stood."
+    },
+    {
+      "chapter": 144,
+      "beat": "act3.qing-shu.last-stand",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Watched. I will not dress that word up. I was concealed, I had leaves, and I had the essence to intervene, and I chose the ridge."
+    },
+    {
+      "chapter": 145,
+      "beat": "act3.qing-shu.last-stand",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "It fell at dusk. He was organising a relief that no longer existed when it stopped. I came down the other side of the ridge and arrived in the village with everybody else. Nothing about that day requires explanation, and nobody has asked for one."
+    },
+    {
+      "chapter": 146,
+      "beat": "act3.aftermath.tally",
+      "act": "act3",
+      "coverage": "ledger",
+      "ledger": "The tally: the forward position gone, the second line holding, a third of the forest burnt. The village will be talking about Qing Shu for twenty years, and it will be talking about him accurately."
+    },
+    {
+      "chapter": 147,
+      "beat": "act3.aftermath.tally",
+      "act": "act3",
+      "coverage": "ledger",
+      "ledger": "Leaf prices doubled. Wounded people need vitality and there is only one supply on this mountain. I did not raise my price. A man who gouges during a disaster is a man people remember clearly."
+    },
+    {
+      "chapter": 148,
+      "beat": "act3.aftermath.tally",
+      "act": "act3",
+      "coverage": "ledger",
+      "ledger": "The tavern was full every night for a week. Grief drinks. Took the income and said the right things to the right people at the right volume."
+    },
+    {
+      "chapter": 149,
+      "beat": "act3.aftermath.tally",
+      "act": "act3",
+      "coverage": "ledger",
+      "ledger": "Closed the season's accounts. Up four hundred and sixty stones, net of upkeep. I have never been this solvent and I have never been this close to needing to leave."
+    },
+    {
+      "chapter": 150,
+      "beat": "act3.yao-le.encounter",
+      "act": "act3",
+      "coverage": "played",
+      "ledger": "Met a Yao girl in the forest past the second ridge. Soaked through, frightened, and visibly relieved to see a face from the village. She said my name like it was good news."
+    },
+    {
+      "chapter": 151,
+      "beat": "act4.yao-le.rank-three",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "What I needed was in front of me and it had a name and it was glad to see me. I am not going to write the rest of it here. The ledger records cost, and the cost was a person who trusted the wrong face."
+    },
+    {
+      "chapter": 152,
+      "beat": "act4.yao-le.rank-three",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Rank three. White silver. Genuine, verifiable, and the clan will examine the result long before it examines the route. The site is three things now: a location, an absence, and a last-seen."
+    },
+    {
+      "chapter": 153,
+      "beat": "act4.council.elder",
+      "act": "act4",
+      "coverage": "staged",
+      "ledger": "The council acknowledged the rank. Chi Lian spoke in favour as though we had an arrangement of long standing, which we do not, and which it is now in both our interests to let stand."
+    },
+    {
+      "chapter": 154,
+      "beat": "act4.council.elder",
+      "act": "act4",
+      "coverage": "staged",
+      "ledger": "An elder at fifteen. The smiles in that hall were real gestures of power and none of them were trust. Yao Ji was outside the hall asking people about her sister."
+    },
+    {
+      "chapter": 155,
+      "beat": "act4.forge.elder-tools",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "An elder can requisition what a student could only look at. Sky Canopy for defence, Thunderwings for distance. Sky Canopy replaces White Jade; Thunderwings is the first thing I have owned that makes leaving a plan instead of a wish."
+    },
+    {
+      "chapter": 156,
+      "beat": "act4.forge.blood-moon",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Reviewed the clan's Rank three recipes. Most of them bind the holder to clan supply lines through the diet. Convenient for the clan."
+    },
+    {
+      "chapter": 157,
+      "beat": "act4.forge.blood-moon",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Chose Blood Moon and refined it without error. A red crescent with a second hit that lands late. Its diet is blood, which is available anywhere there are animals, which is everywhere I am going."
+    },
+    {
+      "chapter": 158,
+      "beat": "act4.medicine.order",
+      "act": "act4",
+      "coverage": "staged",
+      "ledger": "Chi Zhong has inherited the medical administration and is pressing an order his predecessor could not enforce. He is young for the post and he quotes regulations at people who outrank him."
+    },
+    {
+      "chapter": 159,
+      "beat": "act4.medicine.order",
+      "act": "act4",
+      "coverage": "staged",
+      "ledger": "Complied with the order, publicly, at a small cost. A new elder who fights the first requisition is a new elder with a file."
+    },
+    {
+      "chapter": 160,
+      "beat": "act4.village.search",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Yao Ji has been asking the same question, in the same words, for five weeks. The village has started avoiding her, which helps me and costs her."
+    },
+    {
+      "chapter": 161,
+      "beat": "act4.village.search",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Walked the route back to see what I had left behind. A path that is used more than it should be, and two people who can date the afternoon."
+    },
+    {
+      "chapter": 162,
+      "beat": "act4.village.search",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Cleaned what could be cleaned. Two stones to a carter with a poor memory and a better one afterward. The third item cannot be cleaned, only contradicted, and contradictions need a second story to lean on."
+    },
+    {
+      "chapter": 163,
+      "beat": "act4.village.search",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Built the second story out of three true facts and one arrangement of them. That is the strongest kind, and it is the kind that survives an investigator."
+    },
+    {
+      "chapter": 164,
+      "beat": "act4.centipede.equip",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Added the Chainsaw Golden Centipede. Close range, expensive per swing. I do not intend to use it and I intend very much to have it."
+    },
+    {
+      "chapter": 165,
+      "beat": "act4.centipede.equip",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Practised with it away from the village. Everything I equip now is chosen for a road rather than for a clan."
+    },
+    {
+      "chapter": 166,
+      "beat": "act4.centipede.equip",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Priced the full inventory's upkeep at Rank three. It is roughly four times what it was in winter. Being an elder is a job with a subscription."
+    },
+    {
+      "chapter": 167,
+      "beat": "act4.supplies.tusita",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Requisitioned travelling supplies through the medicine hall on a legitimate order. Chi Zhong signed it because the paperwork was correct."
+    },
+    {
+      "chapter": 168,
+      "beat": "act4.supplies.tusita",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Tusita Flower. Storage, and the reason a departure can be packed in advance without anyone seeing luggage."
+    },
+    {
+      "chapter": 169,
+      "beat": "act4.supplies.tusita",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Packed. Thirty chapters early, by the calendar of my own intentions. Nobody in this village would believe how long I have been leaving."
+    },
+    {
+      "chapter": 170,
+      "beat": "act4.investigation.arrival",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Tie Ruo Nan arrived. Travelling clothes, a notebook, and the unhurried attention of somebody who expects to be lied to and is not offended by it."
+    },
+    {
+      "chapter": 171,
+      "beat": "act4.investigation.arrival",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "She did not open with Yao Le. She opened with Jia Jin Sheng, which means she read the old inquiry before she came, which means she is better than Jia Fu was."
+    },
+    {
+      "chapter": 172,
+      "beat": "act4.investigation.arrival",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Gave her the fossil account and the dates. She wrote both down and asked me to repeat one detail. I repeated it identically, which is what a true account does and also what a rehearsed one does."
+    },
+    {
+      "chapter": 173,
+      "beat": "act4.investigation.arrival",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "She is going to walk the places. I have known that since chapter fifty-nine and I have spent two years making the places boring."
+    },
+    {
+      "chapter": 174,
+      "beat": "act4.investigation.trail",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "She went up the bamboo path. There is a trail there that does not lead anywhere interesting any more, and it took me four separate afternoons across two years to make that true."
+    },
+    {
+      "chapter": 175,
+      "beat": "act4.investigation.trail",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "She asked the carter. He told her about a cart, a junction and nothing else, because that is now all he has."
+    },
+    {
+      "chapter": 176,
+      "beat": "act4.investigation.trail",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "She asked why a Rank one student's essence readings from two winters ago do not match a Rank two's. Nobody else in two years has asked that question. I had an answer ready and I did not enjoy using it."
+    },
+    {
+      "chapter": 177,
+      "beat": "act4.investigation.trail",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Tie Xue Leng is with her now. He has asked me nothing. He watches, and when he speaks it will be a conclusion rather than a question."
+    },
+    {
+      "chapter": 178,
+      "beat": "act4.investigation.theory",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "She has a theory. It is coherent, it fits most of the evidence, and it is wrong, and it is wrong in a direction she chose herself."
+    },
+    {
+      "chapter": 179,
+      "beat": "act4.investigation.theory",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "It is wrong because of the two pieces I removed and the one I arranged. If I had left the first of those in place it would be right, and I would be finished."
+    },
+    {
+      "chapter": 180,
+      "beat": "act4.investigation.theory",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Presented her theory to the council. They accepted it. Jia Fu did not, and Jia Fu has no standing and no evidence, which is where he has been since chapter fifty-nine."
+    },
+    {
+      "chapter": 181,
+      "beat": "act4.investigation.theory",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Closed. I have recorded the exact margin by which this did not go the other way, because I intend to remember it as a near miss and not as a talent."
+    },
+    {
+      "chapter": 182,
+      "beat": "act4.deep-inheritance.founder",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "There is something under the clan. Not a vault — a purpose. I went down because the alternative was to wait for it to come up."
+    },
+    {
+      "chapter": 183,
+      "beat": "act4.deep-inheritance.founder",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "The chamber is larger than any room on this mountain and it was not built for the living. Whoever designed the Gu Yue clan was not designing a clan."
+    },
+    {
+      "chapter": 184,
+      "beat": "act4.deep-inheritance.founder",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Took the Heavenly Essence Treasure Lotus. Nothing prevented me, which is the part that concerns me."
+    },
+    {
+      "chapter": 185,
+      "beat": "act4.deep-inheritance.founder",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "The founder is down here and he has been down here the whole time. The clan has spent three hundred years celebrating a story about a man who is currently beneath its floor."
+    },
+    {
+      "chapter": 186,
+      "beat": "act4.blood-lake.stone-aperture",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Lord Sky Crane came over the mountain from Central Continent with a grudge that predates everyone now standing on it. The clan is furniture to him."
+    },
+    {
+      "chapter": 187,
+      "beat": "act4.blood-lake.stone-aperture",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Used the Stone Aperture Gu. Rank three peak, inside a quarter of an hour, in a chamber that was built to make exactly that offer."
+    },
+    {
+      "chapter": 188,
+      "beat": "act4.blood-lake.stone-aperture",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "It is expended, and with it the chance of anything beyond this rank. I traded my ceiling for my survival and I would do it again, and I am writing it down as a loss because that is what it is."
+    },
+    {
+      "chapter": 189,
+      "beat": "act4.blood-lake.stone-aperture",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "The blood lake is not a lake. Stood at the edge of it and understood, finally, what the founder's history was an advertisement for."
+    },
+    {
+      "chapter": 190,
+      "beat": "act4.founder.sky-crane",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "The two of them began, and the scale of it put every fight I have had on this mountain into its proper category. Duels, examinations, wolves. Training."
+    },
+    {
+      "chapter": 191,
+      "beat": "act4.founder.sky-crane",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Kept to the edges. There is no version of that fight in which I am a participant and a version in which I am a survivor, and only one of those is available."
+    },
+    {
+      "chapter": 192,
+      "beat": "act4.founder.sky-crane",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Bai Ning Bing came down into it, which I did not arrange and did not prevent. There is a difference between those two and nobody down there was keeping score."
+    },
+    {
+      "chapter": 193,
+      "beat": "act4.founder.sky-crane",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Fang Zheng was carried off toward Central Continent, unconscious and alive. Alive is the part that is going to cost somebody later. I am recording it so that I do not forget where he went."
+    },
+    {
+      "chapter": 194,
+      "beat": "act4.blood-curtain.decision",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "The curtain went up over the mountain. I will record the decision and not the arithmetic under it, because the arithmetic does not improve on a second reading."
+    },
+    {
+      "chapter": 195,
+      "beat": "act4.blood-curtain.decision",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "It went wrong. Badly, and in a way I had not priced, which is the first time in two lives I can write that sentence honestly."
+    },
+    {
+      "chapter": 196,
+      "beat": "act4.blood-curtain.decision",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Used the Cicada. The second time in two lives, and the last one I have, spent on a mountain I was already finished with."
+    },
+    {
+      "chapter": 197,
+      "beat": "act4.blood-curtain.decision",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Spring, then autumn, and a short distance backward. Knowing exactly what is about to happen is not the same as being able to stop it, and the second time through I did not try to stop all of it."
+    },
+    {
+      "chapter": 198,
+      "beat": "act4.blood-curtain.cicada",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Out across the glacier, with the mountain behind me doing what mountains do when something that old finishes with them. I did not look back at it, and not for any reason worth recording."
+    },
+    {
+      "chapter": 199,
+      "beat": "act4.bai.transformation",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "Gave Bai the Yin Gu. The arm is back and something else is different, and we both watched it happen without discussing it. I kept Yang. That is not an oversight and Bai knows it is not an oversight."
+    },
+    {
+      "chapter": 200,
+      "beat": "act4.escape.raft",
+      "act": "act4",
+      "coverage": "played",
+      "ledger": "A raft on the Yellow Dragon River. Rank one, no healing Gu, one companion I control through a Gu I did not give away, and the Southern Border ahead of us. Qing Mao is finished. I have been here before — not this river, but this position — and last time it took five hundred years. I know several things now that I did not know then."
+    }
+  ]
+}

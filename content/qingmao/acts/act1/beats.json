@@ -1,0 +1,624 @@
+{
+  "act": "act1",
+  "note": "Beats are addressed by stable ID. legacyStep maps a pre-v5 save's step counter onto this graph; inserting a beat never renumbers another.",
+  "beats": [
+    {
+      "id": "prologue.last-stand",
+      "title": "The last stand of the first life",
+      "chapters": [
+        1,
+        2
+      ],
+      "coverage": "played",
+      "template": "boss-gauntlet",
+      "area": "prologue.last-stand",
+      "script": "act1/001-last-stand.json",
+      "requires": [],
+      "sets": [
+        "prologue.done",
+        "gu.cicada"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "narrator"
+      ],
+      "mustLand": 1,
+      "recollection": null,
+      "foresight": null,
+      "art": "prologue-last-stand",
+      "sfx": null,
+      "music": null,
+      "day": 0,
+      "weather": "storm",
+      "legacyStep": 0,
+      "designNote": "Full power, hopeless odds. Also the combat tutorial, so the drop to Rank one in the next beat has something to be a drop from."
+    },
+    {
+      "id": "act1.waking.bamboo-room",
+      "title": "Rain on the upper floor",
+      "chapters": [
+        3,
+        3
+      ],
+      "coverage": "played",
+      "template": "waking",
+      "area": "mountain.hostel-room",
+      "script": "act1/003-waking-bamboo-room.json",
+      "requires": [
+        "prologue.last-stand"
+      ],
+      "sets": [
+        "rank.0",
+        "calendar.start"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": "Five hundred years of it, and the first thing he checks is the window latch.",
+      "foresight": null,
+      "art": "bamboo-dawn",
+      "sfx": null,
+      "music": null,
+      "day": 1,
+      "weather": "rain",
+      "legacyStep": 0,
+      "designNote": "First inner-voice line, first Recollection, movement tutorial. Weak on purpose."
+    },
+    {
+      "id": "act1.awakening.ceremony",
+      "title": "Forty-four percent",
+      "chapters": [
+        4,
+        6
+      ],
+      "coverage": "staged",
+      "template": "ceremony",
+      "area": "mountain.awakening-river",
+      "script": "act1/004-awakening-ceremony.json",
+      "requires": [
+        "act1.waking.bamboo-room"
+      ],
+      "sets": [
+        "rank.1.initial",
+        "aptitude.c",
+        "know.fang-zheng-a-grade"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "fang-zheng",
+        "elder-gu-room",
+        "narrator"
+      ],
+      "mustLand": 2,
+      "recollection": "He already knows the number the elder is about to read out.",
+      "foresight": "Stand on the far bank before the orchids are named and the ceremony reads differently.",
+      "art": "awakening",
+      "sfx": null,
+      "music": null,
+      "day": 11,
+      "weather": "mist",
+      "legacyStep": 1,
+      "designNote": "Crowd reactions staged in the round. His inner reading of the verdict runs over the elder's lines."
+    },
+    {
+      "id": "act1.academy.first-gu",
+      "title": "The crescent in your palm",
+      "chapters": [
+        7,
+        8
+      ],
+      "coverage": "played",
+      "template": "gu-selection",
+      "area": "mountain.gu-room",
+      "script": "act1/007-academy-first-gu.json",
+      "requires": [
+        "act1.awakening.ceremony"
+      ],
+      "sets": [
+        "gu.moonlight",
+        "econ.stones-open",
+        "know.tavern"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "elder-gu-room",
+        "tavern-keeper"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 14,
+      "weather": "clear",
+      "legacyStep": 1,
+      "designNote": "First upkeep explained here: Moonlight Gu eats moon orchid petals. The stone ledger opens."
+    },
+    {
+      "id": "act1.household.brothers",
+      "title": "A house that is not his",
+      "chapters": [
+        9,
+        11
+      ],
+      "coverage": "staged",
+      "template": "household-scene",
+      "area": "mountain.uncle-house",
+      "script": "act1/009-household-brothers.json",
+      "requires": [
+        "act1.academy.first-gu"
+      ],
+      "sets": [
+        "know.assets-dispute",
+        "know.uncle"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "fang-qiu",
+        "fang-qiu-wife",
+        "fang-zheng"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 18,
+      "weather": "rain",
+      "legacyStep": 2,
+      "designNote": "The brothers begin to diverge and the asset dispute is seeded. Restores an arc the old build skipped."
+    },
+    {
+      "id": "act1.liquor-worm.search",
+      "title": "A jar bought with tomorrow",
+      "chapters": [
+        12,
+        13
+      ],
+      "coverage": "played",
+      "template": "search-lure",
+      "area": "mountain.bamboo-grove",
+      "script": "act1/012-liquor-worm-search.json",
+      "requires": [
+        "act1.academy.first-gu"
+      ],
+      "sets": [
+        "item.wine",
+        "know.liquor-worm"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "tavern-keeper"
+      ],
+      "mustLand": null,
+      "recollection": "A wine-loving Gu lives on this mountain. He does not remember which crevice.",
+      "foresight": "Walk the grove before calling the memory up and the lure can be set on the first night.",
+      "art": "bamboo-dawn",
+      "sfx": null,
+      "music": null,
+      "day": 22,
+      "weather": "mist",
+      "legacyStep": 2,
+      "designNote": "Several nights of searching, not one visit. The Recollection points at an opportunity, never a waypoint."
+    },
+    {
+      "id": "act1.liquor-worm.cave",
+      "title": "What the mountain remembers",
+      "chapters": [
+        14,
+        19
+      ],
+      "coverage": "played",
+      "template": "cave-inheritance",
+      "area": "mountain.flower-wine-cave",
+      "script": "act1/014-liquor-worm-cave.json",
+      "requires": [
+        "act1.liquor-worm.search"
+      ],
+      "sets": [
+        "gu.liquor-worm",
+        "know.image-wall",
+        "secret.liquor-worm-origin"
+      ],
+      "reads": [],
+      "evidence": [
+        "cave.entry-traces"
+      ],
+      "cast": [
+        "fang-yuan",
+        "flower-wine-monk",
+        "narrator"
+      ],
+      "mustLand": 3,
+      "recollection": null,
+      "foresight": "The image wall contradicts the clan before anyone in the game says so.",
+      "art": "lotus-chamber",
+      "sfx": null,
+      "music": null,
+      "day": 31,
+      "weather": "clear",
+      "legacyStep": 3,
+      "designNote": "Genuinely dark; the player carries the light. The Cicada's pressure is a set piece with a fixed outcome."
+    },
+    {
+      "id": "act1.cultivation.first-weeks",
+      "title": "Weeks of small sums",
+      "chapters": [
+        20,
+        21
+      ],
+      "coverage": "ledger",
+      "template": "ledger-only",
+      "area": "mountain.hostel-room",
+      "script": "act1/020-cultivation-first-weeks.json",
+      "requires": [
+        "act1.liquor-worm.cave"
+      ],
+      "sets": [
+        "know.liquor-worm-limits"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 36,
+      "weather": "clear",
+      "legacyStep": 3,
+      "designNote": "The Liquor worm stops refining Rank two essence. Recorded, not played."
+    },
+    {
+      "id": "act1.academy.moonblade",
+      "title": "Control, before force",
+      "chapters": [
+        22,
+        24
+      ],
+      "coverage": "played",
+      "template": "training-drill",
+      "area": "mountain.training-yard",
+      "script": "act1/022-academy-moonblade.json",
+      "requires": [
+        "act1.academy.first-gu"
+      ],
+      "sets": [
+        "skill.moonblade"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "elder-gu-room"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 40,
+      "weather": "clear",
+      "legacyStep": 4,
+      "designNote": "Three nonliving practice targets. Every strike shows its essence cost."
+    },
+    {
+      "id": "act1.extortion.toll",
+      "title": "An after-class arrangement",
+      "chapters": [
+        25,
+        29
+      ],
+      "coverage": "played",
+      "template": "extortion-loop",
+      "area": "mountain.academy-gate",
+      "script": "act1/025-extortion-toll.json",
+      "requires": [
+        "act1.academy.moonblade"
+      ],
+      "sets": [
+        "econ.toll-income",
+        "secret.extortion"
+      ],
+      "reads": [],
+      "evidence": [
+        "toll.witnesses",
+        "toll.ledger-gap"
+      ],
+      "cast": [
+        "fang-yuan",
+        "mo-yan"
+      ],
+      "mustLand": 4,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 44,
+      "weather": "clear",
+      "legacyStep": 5,
+      "designNote": "Recurs over several in-game days. The player chooses the rate and how visible it is."
+    },
+    {
+      "id": "act1.extortion.elder-counters",
+      "title": "Someone has started counting",
+      "chapters": [
+        30,
+        33
+      ],
+      "coverage": "staged",
+      "template": "escalation",
+      "area": "mountain.academy-classroom",
+      "script": "act1/030-extortion-elder-counters.json",
+      "requires": [
+        "act1.extortion.toll"
+      ],
+      "sets": [
+        "flag.elder-watching",
+        "know.mo-family"
+      ],
+      "reads": [
+        "toll.witnesses"
+      ],
+      "evidence": [
+        "toll.elder-report"
+      ],
+      "cast": [
+        "fang-yuan",
+        "academy-elder-mo",
+        "mo-bei",
+        "mo-yan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 52,
+      "weather": "rain",
+      "legacyStep": 5,
+      "designNote": "The academy elder is the first adult who is a real obstacle. The Mo family escalates behind him."
+    },
+    {
+      "id": "act1.extortion.servant",
+      "title": "A man sent to settle it",
+      "chapters": [
+        34,
+        37
+      ],
+      "coverage": "played",
+      "template": "confrontation-choice",
+      "area": "mountain.bamboo-path",
+      "script": "act1/034-extortion-servant.json",
+      "requires": [
+        "act1.extortion.elder-counters"
+      ],
+      "sets": [
+        "secret.mo-servant"
+      ],
+      "reads": [],
+      "evidence": [
+        "servant.body",
+        "servant.livery",
+        "servant.witness"
+      ],
+      "cast": [
+        "fang-yuan",
+        "mo-servant"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 60,
+      "weather": "mist",
+      "legacyStep": 6,
+      "designNote": "The choice is on screen; the blow is cut away from. Aftermath runs through guards, classroom whispers and changed NPC remarks."
+    },
+    {
+      "id": "act1.extortion.negotiation",
+      "title": "Composure as the weapon",
+      "chapters": [
+        38,
+        38
+      ],
+      "coverage": "played",
+      "template": "negotiation",
+      "area": "mountain.academy-classroom",
+      "script": "act1/038-extortion-negotiation.json",
+      "requires": [
+        "act1.extortion.servant"
+      ],
+      "sets": [
+        "econ.mo-settlement",
+        "flag.extortion-closed"
+      ],
+      "reads": [
+        "servant.witness",
+        "toll.elder-report"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "mo-bei",
+        "academy-elder-mo"
+      ],
+      "mustLand": 4,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 68,
+      "weather": "clear",
+      "legacyStep": 6,
+      "designNote": "No combat. What the player left behind sets how much he has to concede."
+    },
+    {
+      "id": "act1.caravan.gambling",
+      "title": "Inside the purple-gold shell",
+      "chapters": [
+        39,
+        42
+      ],
+      "coverage": "played",
+      "template": "gambling",
+      "area": "mountain.caravan-market",
+      "script": "act1/039-caravan-gambling.json",
+      "requires": [
+        "act1.extortion.negotiation"
+      ],
+      "sets": [
+        "econ.gambling-open",
+        "gu.mudskin-toad"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "caravan-merchant"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 72,
+      "weather": "clear",
+      "legacyStep": 7,
+      "designNote": "Stone gambling as a real mini-game with real losses. Its point is the next beat."
+    },
+    {
+      "id": "act1.caravan.fossil",
+      "title": "A story others will believe",
+      "chapters": [
+        43,
+        43
+      ],
+      "coverage": "played",
+      "template": "trade",
+      "area": "mountain.caravan-market",
+      "script": "act1/043-caravan-fossil.json",
+      "requires": [
+        "act1.caravan.gambling"
+      ],
+      "sets": [
+        "item.fossil",
+        "cover.liquor-worm"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "caravan-merchant"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 78,
+      "weather": "clear",
+      "legacyStep": 7,
+      "designNote": "The fossil is the cover story. Its real value is as evidence at the inquiry."
+    },
+    {
+      "id": "act1.jia-jin-sheng.night",
+      "title": "Someone on the path behind you",
+      "chapters": [
+        44,
+        49
+      ],
+      "coverage": "played",
+      "template": "stealth-confrontation",
+      "area": "mountain.bamboo-path",
+      "script": "act1/044-jia-jin-sheng-night.json",
+      "requires": [
+        "act1.caravan.fossil"
+      ],
+      "sets": [
+        "secret.jjs"
+      ],
+      "reads": [],
+      "evidence": [
+        "jjs.trail",
+        "jjs.witness",
+        "jjs.gu-residue",
+        "jjs.missing-report"
+      ],
+      "cast": [
+        "fang-yuan",
+        "jia-jin-sheng"
+      ],
+      "mustLand": 5,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-cicada",
+      "sfx": null,
+      "music": null,
+      "day": 84,
+      "weather": "mist",
+      "legacyStep": 8,
+      "designNote": "Notice the tail, choose where to lead him, then the cleanup. Every piece left behind is recorded for chapter 51."
+    },
+    {
+      "id": "act1.breakthrough.middle-stage",
+      "title": "Rank one, middle stage",
+      "chapters": [
+        50,
+        50
+      ],
+      "coverage": "played",
+      "template": "breakthrough-ritual",
+      "area": "mountain.hostel-room",
+      "script": "act1/050-breakthrough-middle-stage.json",
+      "requires": [
+        "act1.jia-jin-sheng.night"
+      ],
+      "sets": [
+        "rank.1.middle"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 92,
+      "weather": "rain",
+      "legacyStep": 8,
+      "designNote": "A staged ritual, not a quest-complete pop-up. Act I closes on an autosave and a title card."
+    }
+  ]
+}

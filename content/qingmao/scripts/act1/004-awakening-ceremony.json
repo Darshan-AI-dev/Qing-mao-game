@@ -1,0 +1,330 @@
+{
+  "id": "act1/004-awakening-ceremony",
+  "beat": "act1.awakening.ceremony",
+  "chapters": [
+    4,
+    6
+  ],
+  "quality": "final",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 4-6.",
+    "adaptation": "The previous build covered the awakening in a single interaction. Here it is staged in the round, with the crowd, so the verdict lands on a person in front of people.",
+    "irony": "He knows the number before the elder reads it, and so do you."
+  },
+  "veteran": [
+    "Keep the forty-four percent in mind. It is the figure everything in this arc is priced against."
+  ],
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "timeOfDay",
+      "value": 0.0
+    },
+    {
+      "op": "weather",
+      "kind": "mist",
+      "intensity": 0.5
+    },
+    {
+      "op": "title",
+      "chapter": 4,
+      "text": "Forty-four percent"
+    },
+    {
+      "op": "art",
+      "id": "awakening"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        10
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "elder-gu-room",
+      "at": [
+        0,
+        2
+      ],
+      "facing": 0
+    },
+    {
+      "op": "place",
+      "actor": "fang-zheng",
+      "at": [
+        -3,
+        11
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        7,
+        26
+      ],
+      "look": [
+        0,
+        2,
+        4
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "A clear, faintly blue river. On the far bank, moon orchids: jade stems, crescent petals, pearl-bright centres.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "elder-gu-room",
+      "text": "Step to the water. One at a time, and in the order you were given.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "He has read this list out for thirty years. He does not look at the faces any more.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "camera",
+      "to": [
+        3,
+        3,
+        14
+      ],
+      "look": [
+        0,
+        2,
+        6
+      ],
+      "seconds": 2.2
+    },
+    {
+      "op": "gesture",
+      "actor": "elder-gu-room",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "line",
+      "actor": "elder-gu-room",
+      "text": "Fang Yuan.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "move",
+      "actor": "fang-yuan",
+      "to": [
+        0,
+        4
+      ],
+      "seconds": 2.0
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The Hope Gu gather over the water. Light collects without heat.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Now.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "wait",
+      "seconds": 1.0
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Something opens. Not a door — a volume, where there was none.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "codex.aperture"
+    },
+    {
+      "op": "line",
+      "actor": "elder-gu-room",
+      "text": "C grade. Forty-four percent.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "camera",
+      "to": [
+        -2,
+        2.6,
+        9
+      ],
+      "look": [
+        0,
+        1.9,
+        4
+      ],
+      "seconds": 1.6
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The sound the crowd makes is not cruelty. It is arithmetic, done out loud.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "A clerk reading a figure he has read ten thousand times, and four hundred people agreeing with him.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Forty-four percent of a sea. It is not a verdict. It is a budget.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 5,
+      "text": "The second name"
+    },
+    {
+      "op": "line",
+      "actor": "elder-gu-room",
+      "text": "Fang Zheng.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "move",
+      "actor": "fang-zheng",
+      "to": [
+        -1,
+        4
+      ],
+      "seconds": 1.8
+    },
+    {
+      "op": "face",
+      "actor": "fang-yuan",
+      "target": "fang-zheng"
+    },
+    {
+      "op": "wait",
+      "seconds": 0.8
+    },
+    {
+      "op": "line",
+      "actor": "elder-gu-room",
+      "text": "A grade. One hundred percent.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The crowd does something different this time, and it does it for longer.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-zheng",
+      "text": "Brother — did you hear? A grade!",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "He is not gloating. That is the part that will be inconvenient later.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "awakening.response",
+      "prompt": "Answer your brother.",
+      "method": "brother",
+      "options": [
+        {
+          "id": "accurate",
+          "label": "\"The grades are accurate.\"",
+          "method": "cold"
+        },
+        {
+          "id": "congratulate",
+          "label": "\"Good. The clan will pay for everything now.\"",
+          "method": "barbed"
+        },
+        {
+          "id": "nothing",
+          "label": "Say nothing at all.",
+          "method": "silent"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "know.fang-zheng-a-grade"
+    },
+    {
+      "op": "title",
+      "chapter": 6,
+      "text": "The mountain's green spears"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    },
+    {
+      "op": "timeOfDay",
+      "value": 0.35
+    },
+    {
+      "op": "weather",
+      "kind": "clear"
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Outside, the bamboo stands straight, each stem sharpened at the tip like a spear.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The mountain is the only thing here that has not changed its mind about me.",
+      "kind": "thought",
+      "sfx": null
+    }
+  ]
+}

@@ -1,0 +1,211 @@
+{
+  "id": "act1/007-academy-first-gu",
+  "beat": "act1.academy.first-gu",
+  "chapters": [
+    7,
+    8
+  ],
+  "quality": "final",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 7-8.",
+    "adaptation": "The two-stone price of Green Bamboo Wine is the figure the source text states. Everything else in the economy is balanced around numbers like it.",
+    "irony": "He is about to spend a sixth of everything he owns on a smell, and he wants to be seen doing it."
+  },
+  "commands": [
+    {
+      "op": "timeOfDay",
+      "value": 0.4
+    },
+    {
+      "op": "title",
+      "chapter": 7,
+      "text": "The crescent in your palm"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "elder-gu-room",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        3,
+        12
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "elder-gu-room",
+      "text": "Moonlight Gu. Every Gu Yue student takes it first, and most of them take nothing else.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "A translucent pale-blue crescent, cold as jade against the palm.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The clan owns the breeding method. That is why it is the signature, and not because of the poetry.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "elder-gu-room",
+      "text": "It eats moon orchid petals. Every six days, and it is your business to remember.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "codex.upkeep"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "So the first thing I learn about my first Gu is what it costs to keep.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "gesture",
+      "actor": "elder-gu-room",
+      "gesture": "talk-dismiss"
+    },
+    {
+      "op": "line",
+      "actor": "elder-gu-room",
+      "text": "The training courtyard is north. Do not practise indoors.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 8,
+      "text": "A jar bought with tomorrow"
+    },
+    {
+      "op": "fade",
+      "to": "black",
+      "seconds": 0.5
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        6
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "tavern-keeper",
+      "at": [
+        0,
+        -2
+      ],
+      "facing": 0
+    },
+    {
+      "op": "cut",
+      "to": [
+        4,
+        2.6,
+        9
+      ],
+      "look": [
+        0,
+        1.7,
+        1
+      ]
+    },
+    {
+      "op": "timeOfDay",
+      "value": 0.66
+    },
+    {
+      "op": "fade",
+      "to": "clear",
+      "seconds": 0.6
+    },
+    {
+      "op": "line",
+      "actor": "tavern-keeper",
+      "text": "Green Bamboo Wine. Two stones, and I will not pretend it is worth two stones to drink.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Twelve stones. Two of them is a sixth of everything I have, spent on a smell.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "wine.purchase",
+      "prompt": "Two primeval stones.",
+      "method": "wine",
+      "options": [
+        {
+          "id": "buy-openly",
+          "label": "Buy it in front of the room.",
+          "sets": "item.wine",
+          "method": "open"
+        },
+        {
+          "id": "buy-quietly",
+          "label": "Wait until the room thins out.",
+          "sets": "item.wine",
+          "method": "quiet"
+        }
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "tavern-keeper",
+      "text": "Most boys your age buy it to look older. You have the look of someone buying it for a reason.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Let him say that to whoever asks. A story I did not have to build is the cheapest kind.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "econ.stones-open"
+    }
+  ]
+}

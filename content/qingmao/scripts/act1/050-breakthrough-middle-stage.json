@@ -1,0 +1,75 @@
+{
+  "id": "act1/050-breakthrough-middle-stage",
+  "beat": "act1.breakthrough.middle-stage",
+  "chapters": [
+    50,
+    50
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 50.",
+    "adaptation": "A staged ritual, not a quest-complete pop-up. Act I closes on an autosave and a title card."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 50,
+      "text": "Rank one, middle stage"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Pressed against the aperture wall until the membrane moved. Rank one, middle stage. A small step, taken on schedule, paid for in wine and stones and one evening on the mountain. The road is long and I have walked it before.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "A staged ritual, not a quest-complete pop-up. Act I closes on an autosave and a title card.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "rank.1.middle"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

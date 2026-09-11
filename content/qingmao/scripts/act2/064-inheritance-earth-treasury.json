@@ -1,0 +1,83 @@
+{
+  "id": "act2/064-inheritance-earth-treasury",
+  "beat": "act2.inheritance.earth-treasury",
+  "chapters": [
+    64,
+    64
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 64.",
+    "adaptation": "Each advantage the inheritance hands over answers the obstacle after it."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "lotus-chamber"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 64,
+      "text": "The seed of strength"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "White Boar Gu out of the flower. It increases bodily strength as it is nourished, and the strength stays after the feeding. Permanent returns on a recurring cost. Rare.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Each advantage the inheritance hands over answers the obstacle after it.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "gu.white-boar"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

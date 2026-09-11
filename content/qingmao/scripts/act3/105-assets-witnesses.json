@@ -1,0 +1,166 @@
+{
+  "id": "act3/105-assets-witnesses",
+  "beat": "act3.assets.witnesses",
+  "chapters": [
+    105,
+    108
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 105-108.",
+    "adaptation": "Pressure, payment or patience. All three reach the same settlement at different prices."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "fang-qiu-wife",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "tavern-keeper",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 105,
+      "text": "People who remember the arrangement"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Went looking for people who remember the original arrangement. Three of them do. Two want money and one wants my uncle embarrassed, which is cheaper.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Pressure, payment or patience. All three reach the same settlement at different prices.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "fang-qiu-wife",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "fang-qiu-wife",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 106,
+      "text": "Chapter 106"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Paid the two. Recorded the amount, because the point of this ledger is that I never pretend a victory was free.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 107,
+      "text": "Chapter 107"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "My aunt came to the tavern to explain to the room that I was ungrateful. She is effective at this. I let her finish and then asked her, quietly, which year the transfer was recorded in.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 108,
+      "text": "Chapter 108"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "She did not know. Neither does he. A household that cannot date its own paperwork loses to a household that can.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act3.assets.witnesses.method",
+      "prompt": "Three people remember the arrangement.",
+      "method": "assets",
+      "options": [
+        {
+          "id": "pay",
+          "label": "Pay them.",
+          "method": "pay"
+        },
+        {
+          "id": "persuade",
+          "label": "Give them a reason of their own.",
+          "method": "persuade"
+        },
+        {
+          "id": "leave",
+          "label": "Leave them out of it.",
+          "method": "leave"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "econ.witness-costs"
+    },
+    {
+      "op": "evidence",
+      "add": "assets.pressure-witness"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

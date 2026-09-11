@@ -1,0 +1,127 @@
+{
+  "id": "act4/153-council-elder",
+  "beat": "act4.council.elder",
+  "chapters": [
+    153,
+    154
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 153-154.",
+    "adaptation": "Yao Ji begins appearing in the village between beats from here on."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "reader-hall"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "elder-bo",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "chi-lian",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 153,
+      "text": "An elder with a faction behind him"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The council acknowledged the rank. Chi Lian spoke in favour as though we had an arrangement of long standing, which we do not, and which it is now in both our interests to let stand.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Yao Ji begins appearing in the village between beats from here on.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "elder-bo",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "elder-bo",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 154,
+      "text": "Chapter 154"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "An elder at fifteen. The smiles in that hall were real gestures of power and none of them were trust. Yao Ji was outside the hall asking people about her sister.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "flag.elder-rank"
+    },
+    {
+      "op": "flag",
+      "set": "know.chi-lian"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

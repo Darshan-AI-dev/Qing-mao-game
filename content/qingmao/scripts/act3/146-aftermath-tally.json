@@ -1,0 +1,96 @@
+{
+  "id": "act3/146-aftermath-tally",
+  "beat": "act3.aftermath.tally",
+  "chapters": [
+    146,
+    149
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 146-149.",
+    "adaptation": "Awaiting its authoring pass; the beat, flags and evidence are final, the staging is not."
+  },
+  "commands": [
+    {
+      "op": "weather",
+      "kind": "mist",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 146,
+      "text": "The tally after the tide"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The tally: the forward position gone, the second line holding, a third of the forest burnt. The village will be talking about Qing Shu for twenty years, and it will be talking about him accurately.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 147,
+      "text": "Chapter 147"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Leaf prices doubled. Wounded people need vitality and there is only one supply on this mountain. I did not raise my price. A man who gouges during a disaster is a man people remember clearly.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 148,
+      "text": "Chapter 148"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The tavern was full every night for a week. Grief drinks. Took the income and said the right things to the right people at the right volume.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 149,
+      "text": "Chapter 149"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Closed the season's accounts. Up four hundred and sixty stones, net of upkeep. I have never been this solvent and I have never been this close to needing to leave.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "econ.tide-aftermath"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "id": "act4/167-supplies-tusita",
+  "beat": "act4.supplies.tusita",
+  "chapters": [
+    167,
+    169
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 167-169.",
+    "adaptation": "He is provisioning for departure thirty chapters before he leaves. Readers should notice."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "chi-zhong",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 167,
+      "text": "Packing for a road he has not named"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Requisitioned travelling supplies through the medicine hall on a legitimate order. Chi Zhong signed it because the paperwork was correct.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "He is provisioning for departure thirty chapters before he leaves. Readers should notice.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "chi-zhong",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "chi-zhong",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 168,
+      "text": "Chapter 168"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Tusita Flower. Storage, and the reason a departure can be packed in advance without anyone seeing luggage.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 169,
+      "text": "Chapter 169"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Packed. Thirty chapters early, by the calendar of my own intentions. Nobody in this village would believe how long I have been leaving.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "gu.tusita"
+    },
+    {
+      "op": "flag",
+      "set": "flag.supplies-ready"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

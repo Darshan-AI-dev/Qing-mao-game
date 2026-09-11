@@ -1,0 +1,143 @@
+{
+  "id": "act3/135-wolf-tide-warnings",
+  "beat": "act3.wolf-tide.warnings",
+  "chapters": [
+    135,
+    138
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 135-138.",
+    "adaptation": "Weather turns with the calendar. Qing Shu is established here so chapter 145 costs something."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "mist",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "qing-shu",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "elder-bo",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 135,
+      "text": "The season nobody argues with"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The tide is coming. Nobody argues with the season; they argue about the roster, which is how a village spends the last quiet week it will get.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Weather turns with the calendar. Qing Shu is established here so chapter 145 costs something.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "qing-shu",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "qing-shu",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 136,
+      "text": "Chapter 136"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Qing Shu has been given the forward position. He is old, he is scarred, and he asked for the equipment rather than the honour, which is how I know he understands the assignment.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 137,
+      "text": "Chapter 137"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The village is fortifying. I bought water shield stock instead of helping, and the difference between those two activities is the difference between me and Qing Shu.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 138,
+      "text": "Chapter 138"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Water Shield Gu, recorded and stored. White Jade stays equipped. Redundancy is cheap when it is bought before it is needed.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "know.wolf-tide"
+    },
+    {
+      "op": "flag",
+      "set": "gu.water-shield"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

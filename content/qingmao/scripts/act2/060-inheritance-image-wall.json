@@ -1,0 +1,87 @@
+{
+  "id": "act2/060-inheritance-image-wall",
+  "beat": "act2.inheritance.image-wall",
+  "chapters": [
+    60,
+    61
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 60-61.",
+    "adaptation": "The Photo-audio Gu is exhausted; the wall becomes ordinary stone. Knowing where to look is what is left."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 60,
+      "text": "Beyond the recorded history"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Went back to the cave and broke the wall. The images were finished with; what was behind them was not history, it was a test, and a test implies someone expected a successor.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The Photo-audio Gu is exhausted; the wall becomes ordinary stone. Knowing where to look is what is left.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 61,
+      "text": "Chapter 61"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Eastern lamps, a passage, and a chamber with a golden Earth Treasury Flower in it. The inheritance hands you what the next obstacle demands. That is either generosity or design, and I have met very little generosity.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "flag.wall-open"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

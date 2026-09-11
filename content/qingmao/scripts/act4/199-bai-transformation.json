@@ -1,0 +1,128 @@
+{
+  "id": "act4/199-bai-transformation",
+  "beat": "act4.bai.transformation",
+  "chapters": [
+    199,
+    199
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 199.",
+    "adaptation": "Bai's model swaps to the restored variant here. The Yang Gu stays with Fang Yuan; that is the sequel's lever."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "snow",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "uneasy-alliance"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "bai-ning-bing",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 199,
+      "text": "Yin, and what it changes"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Gave Bai the Yin Gu. The arm is back and something else is different, and we both watched it happen without discussing it. I kept Yang. That is not an oversight and Bai knows it is not an oversight.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Bai's model swaps to the restored variant here. The Yang Gu stays with Fang Yuan; that is the sequel's lever.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "bai-ning-bing",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "bai-ning-bing",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "choice",
+      "id": "act4.bai.transformation.method",
+      "prompt": "There is one decision left in this.",
+      "method": "bai",
+      "options": [
+        {
+          "id": "proceed",
+          "label": "Proceed.",
+          "method": "proceed"
+        },
+        {
+          "id": "wait",
+          "label": "Wait for the better moment.",
+          "method": "wait"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "gu.yang"
+    },
+    {
+      "op": "flag",
+      "set": "flag.bai-restored"
+    },
+    {
+      "op": "flag",
+      "set": "flag.no-healing-gu"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

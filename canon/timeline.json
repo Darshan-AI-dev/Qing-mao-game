@@ -1,0 +1,431 @@
+{
+  "note": "Chapter-keyed spine shared with the sequel. `mustLand` flags the fifteen scenes novel readers judge the game on (§3.1). `day` is the in-game calendar day the beat sits on, which drives seasons, weather and the upkeep clock.",
+  "calendar": {
+    "daysPerYear": 360,
+    "seasons": [
+      {
+        "id": "spring",
+        "name": "Spring",
+        "fromDay": 1,
+        "toDay": 90,
+        "weather": [
+          "rain",
+          "clear",
+          "mist"
+        ]
+      },
+      {
+        "id": "summer",
+        "name": "Summer",
+        "fromDay": 91,
+        "toDay": 180,
+        "weather": [
+          "clear",
+          "storm"
+        ]
+      },
+      {
+        "id": "autumn",
+        "name": "Autumn",
+        "fromDay": 181,
+        "toDay": 270,
+        "weather": [
+          "clear",
+          "mist",
+          "rain"
+        ]
+      },
+      {
+        "id": "winter",
+        "name": "Winter",
+        "fromDay": 271,
+        "toDay": 360,
+        "weather": [
+          "snow",
+          "mist",
+          "clear"
+        ]
+      }
+    ],
+    "note": "Day 1 is the morning Fang Yuan wakes in the bamboo room. The year-end duel sits at the turn of the year; the winter missions and the wolf tide follow the season, not the chapter count."
+  },
+  "acts": [
+    {
+      "id": "act1",
+      "number": 1,
+      "name": "Awakening",
+      "chapters": [
+        1,
+        50
+      ],
+      "spine": "Rebirth, awakening, the Liquor worm, extortion, Jia Jin Sheng."
+    },
+    {
+      "id": "act2",
+      "number": 2,
+      "name": "Inheritance",
+      "chapters": [
+        51,
+        100
+      ],
+      "spine": "The inquiry, the inheritance trials, the year-end duel, winter, the secret Rank two."
+    },
+    {
+      "id": "act3",
+      "number": 3,
+      "name": "Assets and the wolf tide",
+      "chapters": [
+        101,
+        150
+      ],
+      "spine": "Family assets, the tavern and the leaves, Four Flavours, the wolf tide, Qing Shu."
+    },
+    {
+      "id": "act4",
+      "number": 4,
+      "name": "The mountain falls",
+      "chapters": [
+        151,
+        200
+      ],
+      "spine": "Rank three, the investigation, the founder and Sky Crane, the blood curtain, the escape."
+    }
+  ],
+  "mustLand": [
+    {
+      "n": 1,
+      "id": "prologue.last-stand",
+      "title": "The last stand of the first life and the Cicada",
+      "chapters": [
+        1,
+        3
+      ],
+      "treatment": "Playable prologue at full power against hopeless odds, ending in the rebirth. He then wakes in the bamboo room, weak."
+    },
+    {
+      "n": 2,
+      "id": "act1.awakening.ceremony",
+      "title": "Awakening: C grade against an A grade",
+      "chapters": [
+        4,
+        6
+      ],
+      "treatment": "Staged ceremony with crowd reactions and Fang Yuan's inner reading of it."
+    },
+    {
+      "n": 3,
+      "id": "act1.liquor-worm.cave",
+      "title": "Liquor worm, the cave, and the Cicada revealed",
+      "chapters": [
+        12,
+        19
+      ],
+      "treatment": "Several nights of searching, the image wall, and the Cicada's pressure as a set piece."
+    },
+    {
+      "n": 4,
+      "id": "act1.extortion.negotiation",
+      "title": "Academy extortion and the Mo confrontation",
+      "chapters": [
+        25,
+        38
+      ],
+      "treatment": "A recurring toll, an escalation arc, and a negotiation where composure is the weapon."
+    },
+    {
+      "n": 5,
+      "id": "act1.jia-jin-sheng.night",
+      "title": "Jia Jin Sheng in the night, then the inquiry",
+      "chapters": [
+        44,
+        59
+      ],
+      "treatment": "Stealth, evidence cleanup, then an inquiry whose difficulty depends on what was left behind."
+    },
+    {
+      "n": 6,
+      "id": "act2.inheritance.stone-forest",
+      "title": "Inheritance trials",
+      "chapters": [
+        60,
+        81
+      ],
+      "treatment": "Boar strength, the boulder, the stone monkeys. The stone forest gets a ceiling and real darkness."
+    },
+    {
+      "n": 7,
+      "id": "act2.duel.fang-zheng",
+      "title": "Year-end duel against Fang Zheng",
+      "chapters": [
+        82,
+        87
+      ],
+      "treatment": "A multi-phase boss that rewards reading his defences rather than out-damaging them."
+    },
+    {
+      "n": 8,
+      "id": "act2.winter.boar-king",
+      "title": "Winter missions and the secret Rank two",
+      "chapters": [
+        88,
+        100
+      ],
+      "treatment": "Play the group losses and the boar-king survival. The secrecy feeds the exposure system."
+    },
+    {
+      "n": 9,
+      "id": "act3.assets.settlement",
+      "title": "Taking the family assets",
+      "chapters": [
+        97,
+        115
+      ],
+      "treatment": "The full political squeeze, then the property loop."
+    },
+    {
+      "n": 10,
+      "id": "act3.qing-shu.last-stand",
+      "title": "Qing Shu's last stand",
+      "chapters": [
+        139,
+        145
+      ],
+      "treatment": "Keep the observer framing; give it the staging and the time it deserves."
+    },
+    {
+      "n": 11,
+      "id": "act4.yao-le.rank-three",
+      "title": "Yao Le and the Rank-three breakthrough",
+      "chapters": [
+        150,
+        152
+      ],
+      "treatment": "The choice on screen, the act off screen, the breakthrough as a full ritual, then the clan's search."
+    },
+    {
+      "n": 12,
+      "id": "act4.investigation.theory",
+      "title": "Tie Ruo Nan's investigation",
+      "chapters": [
+        170,
+        181
+      ],
+      "treatment": "The payoff of the exposure system: she works the player's actual trail."
+    },
+    {
+      "n": 13,
+      "id": "act4.founder.sky-crane",
+      "title": "The founder, the blood lake, Lord Sky Crane",
+      "chapters": [
+        182,
+        193
+      ],
+      "treatment": "Bigger spaces; stage the fight between two powers clearly."
+    },
+    {
+      "n": 14,
+      "id": "act4.blood-curtain.cicada",
+      "title": "The blood curtain and the second Cicada activation",
+      "chapters": [
+        194,
+        198
+      ],
+      "treatment": "A cinematic sequence with a fixed outcome. Not a combat arena."
+    },
+    {
+      "n": 15,
+      "id": "act4.escape.raft",
+      "title": "Bai's transformation, the raft, no healing Gu",
+      "chapters": [
+        199,
+        200
+      ],
+      "treatment": "The hand-off to game 2."
+    }
+  ],
+  "milestones": [
+    {
+      "chapter": 1,
+      "day": 1,
+      "event": "Fang Yuan wakes in the bamboo room after five hundred years."
+    },
+    {
+      "chapter": 4,
+      "day": 11,
+      "event": "Awakening. Hope Gu opens the aperture; C grade, a forty-four percent primeval sea."
+    },
+    {
+      "chapter": 5,
+      "day": 11,
+      "event": "Fang Zheng's A grade is read out to the same crowd."
+    },
+    {
+      "chapter": 7,
+      "day": 14,
+      "event": "Moonlight Gu from the Gu room."
+    },
+    {
+      "chapter": 8,
+      "day": 16,
+      "event": "First purchase of Green Bamboo Wine, at the price the text states."
+    },
+    {
+      "chapter": 19,
+      "day": 31,
+      "event": "The Liquor worm is secured under the Cicada's pressure."
+    },
+    {
+      "chapter": 25,
+      "day": 44,
+      "event": "The academy toll begins."
+    },
+    {
+      "chapter": 38,
+      "day": 68,
+      "event": "The Mo negotiation closes."
+    },
+    {
+      "chapter": 43,
+      "day": 78,
+      "event": "The purple-gold fossil becomes the Liquor worm's origin story."
+    },
+    {
+      "chapter": 49,
+      "day": 89,
+      "event": "Jia Jin Sheng does not come back down the mountain."
+    },
+    {
+      "chapter": 50,
+      "day": 92,
+      "event": "Rank one middle stage."
+    },
+    {
+      "chapter": 59,
+      "day": 110,
+      "event": "Jia Fu's inquiry ends without a finding. He still means to send for an investigator."
+    },
+    {
+      "chapter": 64,
+      "day": 124,
+      "event": "White Boar Gu from the first Earth Treasury Flower."
+    },
+    {
+      "chapter": 69,
+      "day": 136,
+      "event": "The beast-skin map changes hands."
+    },
+    {
+      "chapter": 79,
+      "day": 159,
+      "event": "The boulder, and Jade Skin Gu beyond it."
+    },
+    {
+      "chapter": 81,
+      "day": 166,
+      "event": "The stone forest and the jade-eye monkeys."
+    },
+    {
+      "chapter": 87,
+      "day": 180,
+      "event": "The year-end duel. Fang Zheng's defences come apart."
+    },
+    {
+      "chapter": 90,
+      "day": 278,
+      "event": "The permafrost decayed-soil task is accepted."
+    },
+    {
+      "chapter": 92,
+      "day": 288,
+      "event": "Rank two, in secret, at Jiang He's place. Red-steel essence."
+    },
+    {
+      "chapter": 96,
+      "day": 300,
+      "event": "The beast crossing. Most of Jiao San's group does not return."
+    },
+    {
+      "chapter": 100,
+      "day": 312,
+      "event": "White Jade Gu, improved by the boar king's snowy tusk."
+    },
+    {
+      "chapter": 115,
+      "day": 348,
+      "event": "The family assets come away from Fang Qiu."
+    },
+    {
+      "chapter": 131,
+      "day": 28,
+      "year": 2,
+      "event": "The Four Flavours Liquor worm."
+    },
+    {
+      "chapter": 145,
+      "day": 62,
+      "year": 2,
+      "event": "Qing Shu's position falls. Fang Yuan watches."
+    },
+    {
+      "chapter": 152,
+      "day": 80,
+      "year": 2,
+      "event": "Rank three. White-silver essence. Yao Le does not return to the village."
+    },
+    {
+      "chapter": 153,
+      "day": 84,
+      "year": 2,
+      "event": "The council acknowledges a young Rank three elder."
+    },
+    {
+      "chapter": 181,
+      "day": 152,
+      "year": 2,
+      "event": "Tie Ruo Nan's theory is wrong, and it is a near miss."
+    },
+    {
+      "chapter": 193,
+      "day": 178,
+      "year": 2,
+      "event": "The founder against Lord Sky Crane. Fang Zheng is carried toward Central Continent."
+    },
+    {
+      "chapter": 198,
+      "day": 181,
+      "year": 2,
+      "event": "The blood curtain. The Cicada is used for the second and last time."
+    },
+    {
+      "chapter": 200,
+      "day": 184,
+      "year": 2,
+      "event": "The raft on the Yellow Dragon River. Rank one, no healing Gu, the Southern Border ahead."
+    }
+  ],
+  "sequelHandoff": {
+    "startsAtChapter": 201,
+    "threads": [
+      {
+        "id": "fang-zheng.sky-crane",
+        "summary": "Fang Zheng carried off toward Central Continent, alive and out of reach."
+      },
+      {
+        "id": "bai.yang-leverage",
+        "summary": "The Yang Gu is still Fang Yuan's, and Bai Ning Bing knows it."
+      },
+      {
+        "id": "no-healing-gu",
+        "summary": "No healing Gu. Every injury from here is a logistics problem."
+      },
+      {
+        "id": "weakened-cultivation",
+        "summary": "Back to Rank one after holding Rank three peak. He knows exactly what he has lost."
+      },
+      {
+        "id": "southern-border",
+        "summary": "The Southern Border ahead, chosen rather than fled to."
+      }
+    ]
+  }
+}

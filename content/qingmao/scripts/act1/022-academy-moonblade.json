@@ -1,0 +1,118 @@
+{
+  "id": "act1/022-academy-moonblade",
+  "beat": "act1.academy.moonblade",
+  "chapters": [
+    22,
+    24
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 22-24.",
+    "adaptation": "Three nonliving practice targets. Every strike shows its essence cost."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "elder-gu-room",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 22,
+      "text": "Control, before force"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Moonblade practice in the courtyard. Three straw targets, and every clean strike empties a measurable portion of the sea. Knowing the motion is not the same as owning the motion.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Three nonliving practice targets. Every strike shows its essence cost.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "elder-gu-room",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "elder-gu-room",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 23,
+      "text": "Chapter 23"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Second day of drills. The elder corrects my stance, which is the stance of a swordsman who has been dead for five centuries. I let him correct it. A boy who already knows everything is a boy somebody investigates.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 24,
+      "text": "Chapter 24"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Third day. I can place three strikes without pausing to breathe. The useful number is not the damage; it is how many strikes stand between me and an empty aperture.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "skill.moonblade"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

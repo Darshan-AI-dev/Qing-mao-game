@@ -1,0 +1,98 @@
+{
+  "id": "act1/043-caravan-fossil",
+  "beat": "act1.caravan.fossil",
+  "chapters": [
+    43,
+    43
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 43.",
+    "adaptation": "The fossil is the cover story. Its real value is as evidence at the inquiry."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "caravan-merchant",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 43,
+      "text": "A story others will believe"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Three stones for the fossil. As of today the Liquor worm came out of a gambling stone at a travelling market in front of witnesses. The cover story is worth more than the worm's refinement and it cost less than the wine.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The fossil is the cover story. Its real value is as evidence at the inquiry.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "caravan-merchant",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "caravan-merchant",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "flag",
+      "set": "item.fossil"
+    },
+    {
+      "op": "flag",
+      "set": "cover.liquor-worm"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

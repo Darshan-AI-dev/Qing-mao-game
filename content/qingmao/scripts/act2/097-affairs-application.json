@@ -1,0 +1,106 @@
+{
+  "id": "act2/097-affairs-application",
+  "beat": "act2.affairs.application",
+  "chapters": [
+    97,
+    98
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 97-98.",
+    "adaptation": "The family-asset mission opens here and is not settled until chapter 115."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "snow",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "elder-bo",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 97,
+      "text": "An application, and an inquiry into a loss"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Applied for the family-asset mission while the hall was still busy with the inquiry. A request filed during a crisis is a request nobody reads twice.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The family-asset mission opens here and is not settled until chapter 115.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "elder-bo",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "elder-bo",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 98,
+      "text": "Chapter 98"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Elder Bo took the application and said it would be considered. He means it will be considered by people who owe my uncle nothing in particular, which is the most I can ask for today.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "flag.assets-applied"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

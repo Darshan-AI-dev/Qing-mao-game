@@ -1,0 +1,24 @@
+{
+  "$schema": "./schema/ranks.schema.json",
+  "note": "Cultivation ranks and aptitude grades. Figures follow the source text where it states them; see timeline.json for the chapters each is established in.",
+  "ranks": [
+    { "id": "rank0", "name": "Unawakened", "label": "No aperture", "essence": "none", "chapters": [1, 4] },
+    { "id": "rank1", "name": "Rank one", "essence": "green copper", "stages": ["initial", "middle", "upper", "peak"], "chapters": [4, 50] },
+    { "id": "rank2", "name": "Rank two", "essence": "red steel", "stages": ["initial", "middle", "upper", "peak"], "chapters": [91, 92] },
+    { "id": "rank3", "name": "Rank three", "essence": "white silver", "stages": ["initial", "middle", "upper", "peak"], "chapters": [150, 152] },
+    { "id": "rank4", "name": "Rank four", "essence": "yellow gold", "stages": ["initial", "middle", "upper", "peak"], "chapters": [182, 193], "note": "Appears only as a power the player observes, never a player state in this game." },
+    { "id": "rank5", "name": "Rank five", "essence": "jade", "note": "Referenced as the ceiling of the forces circling Qing Mao. Not a player state." }
+  ],
+  "aptitude": [
+    { "grade": "A", "seaPercent": 100, "holder": "fang-zheng", "chapters": [5], "note": "The clan reads an A grade as a guaranteed investment." },
+    { "grade": "B", "seaPercent": 70, "note": "Comfortably promising by clan standards." },
+    { "grade": "C", "seaPercent": 44, "holder": "fang-yuan", "chapters": [4, 5], "note": "The figure the elders use to write Fang Yuan off. The game treats it as the starting budget of a resource, not a verdict." },
+    { "grade": "D", "seaPercent": 20, "note": "The clan stops spending on a D grade." }
+  ],
+  "apertureTerms": [
+    { "id": "aperture", "name": "aperture", "definition": "The space opened inside a Gu Master at awakening. It holds primeval essence and the Gu worms bound to it." },
+    { "id": "primeval-sea", "name": "primeval sea", "definition": "The portion of the aperture that can be filled with essence. Aptitude sets its size as a percentage." },
+    { "id": "primeval-essence", "name": "primeval essence", "definition": "The fuel a Gu Master spends to activate a Gu. It recovers slowly through cultivation and quickly through nothing at all." },
+    { "id": "aperture-wall", "name": "aperture wall", "definition": "The membrane a cultivator presses against to advance a small realm. Breakthroughs are staged as rituals in this game, never as a completion pop-up." }
+  ]
+}

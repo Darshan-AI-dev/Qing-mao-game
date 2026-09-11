@@ -1,0 +1,150 @@
+{
+  "id": "act2/085-duel-fang-zheng",
+  "beat": "act2.duel.fang-zheng",
+  "chapters": [
+    85,
+    87
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 85-87.",
+    "adaptation": "Multi-phase. Each phase is a defence to read, not a vitality bar to out-damage."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "fang-zheng",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "elder-gu-room",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 85,
+      "text": "The year-end duel"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "First exchange of the duel. He opened exactly as written, in the order I had copied down three afternoons earlier, and the crowd read it as a strong start for him.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Multi-phase. Each phase is a defence to read, not a vitality bar to out-damage.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "fang-zheng",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "fang-zheng",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 86,
+      "text": "Chapter 86"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Second phase. I spent essence to break the layer rather than the boy, and the layer did not come back. A defence you cannot reapply is a countdown.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 87,
+      "text": "Chapter 87"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Won. He was sincere about the handshake, which was worse for him than losing. The clan adjusted its opinion of me by one notch and its opinion of him by none.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act2.duel.fang-zheng.method",
+      "prompt": "His defences come up in the same order every time.",
+      "method": "duel",
+      "options": [
+        {
+          "id": "read",
+          "label": "Break the layer, not the boy.",
+          "method": "read"
+        },
+        {
+          "id": "rush",
+          "label": "Close the distance and keep it closed.",
+          "method": "rush"
+        },
+        {
+          "id": "wait",
+          "label": "Let him spend the first three.",
+          "method": "wait"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "flag.duel-won"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

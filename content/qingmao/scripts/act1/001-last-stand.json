@@ -1,0 +1,190 @@
+{
+  "id": "act1/001-last-stand",
+  "beat": "prologue.last-stand",
+  "chapters": [
+    1,
+    2
+  ],
+  "quality": "final",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 1-3.",
+    "adaptation": "The novel opens on the end of the first life and moves through it quickly. Here it is playable, at full power, so the drop to Rank one in the next scene has something to be a drop from.",
+    "irony": "Everything he spends here, he spends knowing he is about to lose all of it."
+  },
+  "veteran": [
+    "The worm he reaches for at the end is the only thing in five hundred years he never used."
+  ],
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "timeOfDay",
+      "value": 0.03
+    },
+    {
+      "op": "weather",
+      "kind": "storm",
+      "intensity": 0.9
+    },
+    {
+      "op": "title",
+      "chapter": 1,
+      "text": "The last stand of the first life"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        16,
+        30
+      ],
+      "look": [
+        0,
+        2,
+        0
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Eight of them have the doorway surrounded and none of them has gone through it.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "They are counting. Good. Counting is slower than moving.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "camera",
+      "to": [
+        7,
+        4,
+        12
+      ],
+      "look": [
+        0,
+        2,
+        0
+      ],
+      "seconds": 2.4
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Five hundred years of cultivation, and a room with one exit.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Four can be made to stand still. Two will run. The last two are the problem, and they know it.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "gesture",
+      "actor": "fang-yuan",
+      "gesture": "cast"
+    },
+    {
+      "op": "flag",
+      "set": "tutorial.combat"
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Spend what you have. The cost of every Gu is printed on it, and tonight the costs do not matter.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "wait",
+      "seconds": 1.2
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "That is the last of the essence. Noted, and irrelevant.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "camera",
+      "to": [
+        0,
+        3,
+        7
+      ],
+      "look": [
+        0,
+        2,
+        0
+      ],
+      "seconds": 1.8
+    },
+    {
+      "op": "title",
+      "chapter": 2,
+      "text": "Spring, then autumn"
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "There is one thing left, and he has carried it unused for five centuries.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "prologue.cicada",
+      "prompt": "Use the Spring Autumn Cicada.",
+      "method": "prologue",
+      "options": [
+        {
+          "id": "immediately",
+          "label": "Now, before they finish counting.",
+          "method": "cold"
+        },
+        {
+          "id": "last-moment",
+          "label": "Let it get as close as it is going to get.",
+          "method": "patient"
+        }
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Not mercy. A ledger closed, and reopened on the first page.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "fade",
+      "to": "black",
+      "seconds": 1.6
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

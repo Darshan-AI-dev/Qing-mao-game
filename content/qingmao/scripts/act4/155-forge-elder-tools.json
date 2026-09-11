@@ -1,0 +1,97 @@
+{
+  "id": "act4/155-forge-elder-tools",
+  "beat": "act4.forge.elder-tools",
+  "chapters": [
+    155,
+    155
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 155.",
+    "adaptation": "Sky Canopy replaces White Jade. The upkeep jump is the point of the promotion."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 155,
+      "text": "Tools for leaving"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "An elder can requisition what a student could only look at. Sky Canopy for defence, Thunderwings for distance. Sky Canopy replaces White Jade; Thunderwings is the first thing I have owned that makes leaving a plan instead of a wish.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Sky Canopy replaces White Jade. The upkeep jump is the point of the promotion.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act4.forge.elder-tools.method",
+      "prompt": "The materials are laid out.",
+      "method": "forge",
+      "options": [
+        {
+          "id": "careful",
+          "label": "Measure twice. Lose the day.",
+          "method": "careful"
+        },
+        {
+          "id": "fast",
+          "label": "Now, and accept the odds.",
+          "method": "fast"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "gu.sky-canopy"
+    },
+    {
+      "op": "flag",
+      "set": "gu.thunderwings"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

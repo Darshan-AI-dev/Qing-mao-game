@@ -1,0 +1,99 @@
+{
+  "id": "act2/062-academy-little-light",
+  "beat": "act2.academy.little-light",
+  "chapters": [
+    62,
+    63
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 62-63.",
+    "adaptation": "Awaiting its authoring pass; the beat, flags and evidence are final, the staging is not."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "elder-gu-room",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 62,
+      "text": "A star beside the crescent"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Took Little Light Gu at the Gu room while I was eligible to. It supports the crescent. A star beside the moon; the clan's poetry, my damage figures.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "elder-gu-room",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "elder-gu-room",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 63,
+      "text": "Chapter 63"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Second Light. The Moonblade is measurably heavier now, and the cost per strike has not moved. That ratio is the only kind of progress I trust.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "gu.little-light"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

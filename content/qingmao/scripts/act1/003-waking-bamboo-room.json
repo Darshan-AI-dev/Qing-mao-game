@@ -1,0 +1,126 @@
+{
+  "id": "act1/003-waking-bamboo-room",
+  "beat": "act1.waking.bamboo-room",
+  "chapters": [
+    3,
+    3
+  ],
+  "quality": "final",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 3.",
+    "adaptation": "The room is built from the text's description: wooden stakes under the living floor, a thin blanket, an open window, damp mountain air.",
+    "irony": "The player has just finished the prologue at full power. This body can barely cross the room."
+  },
+  "commands": [
+    {
+      "op": "timeOfDay",
+      "value": 0.22
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.7
+    },
+    {
+      "op": "title",
+      "chapter": 3,
+      "text": "Rain on the upper floor"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        2
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        2.4,
+        8
+      ],
+      "look": [
+        0,
+        1.6,
+        0
+      ]
+    },
+    {
+      "op": "fade",
+      "to": "clear",
+      "seconds": 1.8
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Rain on bamboo. Below the floor, wooden stakes hold the room above the slope.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Fifteen. The latch on that window has been broken since the spring before last.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "camera",
+      "to": [
+        2.5,
+        1.8,
+        4
+      ],
+      "look": [
+        0,
+        1.5,
+        0
+      ],
+      "seconds": 2.0
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Twelve primeval stones in a cloth bag by the bed. No aperture. No Gu but one, and that one is asleep.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Everything in this room is already accounted for. That is the advantage. It is not a large one.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "tutorial.movement"
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Stand up. The mountain is where it was.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "camera",
+      "to": [
+        0,
+        6,
+        12
+      ],
+      "look": [
+        0,
+        1.5,
+        0
+      ],
+      "seconds": 2.4
+    }
+  ]
+}

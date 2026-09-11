@@ -1,0 +1,99 @@
+{
+  "id": "act4/158-medicine-order",
+  "beat": "act4.medicine.order",
+  "chapters": [
+    158,
+    159
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 158-159.",
+    "adaptation": "Awaiting its authoring pass; the beat, flags and evidence are final, the staging is not."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "chi-zhong",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 158,
+      "text": "An order from a younger man"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Chi Zhong has inherited the medical administration and is pressing an order his predecessor could not enforce. He is young for the post and he quotes regulations at people who outrank him.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "chi-zhong",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "chi-zhong",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 159,
+      "text": "Chapter 159"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Complied with the order, publicly, at a small cost. A new elder who fights the first requisition is a new elder with a file.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "flag.medicine-pressure"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

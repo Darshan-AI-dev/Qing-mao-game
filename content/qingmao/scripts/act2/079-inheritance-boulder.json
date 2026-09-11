@@ -1,0 +1,86 @@
+{
+  "id": "act2/079-inheritance-boulder",
+  "beat": "act2.inheritance.boulder",
+  "chapters": [
+    79,
+    79
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 79.",
+    "adaptation": "White Boar Gu stops granting strength here. The boulder is the wall that proves it was enough."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 79,
+      "text": "What strength is for"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The boar strength stopped increasing. Reached the ceiling, as remembered, and the passage ahead has a round boulder in it that needed exactly that ceiling. Pushed it up the slope.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Jade Skin Gu in the flower behind it: three seconds of guard, three quarters of the damage turned.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "White Boar Gu stops granting strength here. The boulder is the wall that proves it was enough.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "gu.jade-skin"
+    },
+    {
+      "op": "flag",
+      "set": "flag.boar-ceiling"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

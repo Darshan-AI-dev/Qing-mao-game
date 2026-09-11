@@ -1,0 +1,117 @@
+{
+  "id": "act3/150-yao-le-encounter",
+  "beat": "act3.yao-le.encounter",
+  "chapters": [
+    150,
+    150
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 150.",
+    "adaptation": "Act III ends on the encounter, not on what follows. Give her enough lines to be a person first."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "yao-le",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 150,
+      "text": "Someone who recognises him"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Met a Yao girl in the forest past the second ridge. Soaked through, frightened, and visibly relieved to see a face from the village. She said my name like it was good news.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Act III ends on the encounter, not on what follows. Give her enough lines to be a person first.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "yao-le",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "yao-le",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "choice",
+      "id": "act3.yao-le.encounter.method",
+      "prompt": "Decide, and then do not look at it again.",
+      "method": "yao-le",
+      "options": [
+        {
+          "id": "quiet",
+          "label": "Somewhere nobody walks.",
+          "method": "quiet"
+        },
+        {
+          "id": "quick",
+          "label": "Immediately, and badly.",
+          "method": "quick"
+        },
+        {
+          "id": "avoid",
+          "label": "Leave. There will be another evening.",
+          "method": "avoid"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "know.yao-le"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

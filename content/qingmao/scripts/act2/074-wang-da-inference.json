@@ -1,0 +1,111 @@
+{
+  "id": "act2/074-wang-da-inference",
+  "beat": "act2.wang-da.inference",
+  "chapters": [
+    74,
+    77
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 74-77.",
+    "adaptation": "A portrait, a cooking fire, concealed markings. He avoids the fight by knowing the mountain better."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "mist",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 74,
+      "text": "The red circles"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Went back to the hideout with the map in hand. The concealed circles line up with where the occupant does not go. A man's avoidances are his biography.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "A portrait, a cooking fire, concealed markings. He avoids the fight by knowing the mountain better.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 75,
+      "text": "Chapter 75"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "A portrait on the wall, fresh ash in the fire, boots by the door in a size I have already measured. Wang Da exists and he is still on this mountain.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 76,
+      "text": "Chapter 76"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Considered finding him. Decided against it. I know the dangerous ground on this mountain better than he does, and knowledge that lets you avoid a fight is worth more than a fight you win.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 77,
+      "text": "Chapter 77"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Left the hideout the way I found it. If he never learns the map changed hands, the map keeps working for both of us and only one of us knows it.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "know.wang-da"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

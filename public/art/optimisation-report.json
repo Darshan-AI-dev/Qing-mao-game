@@ -1,0 +1,119 @@
+{
+  "files": [
+    {
+      "source": "awakening.png",
+      "out": "awakening.webp",
+      "bytes": 264344,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "source": "bamboo-dawn.png",
+      "out": "bamboo-dawn.webp",
+      "bytes": 276652,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "source": "frozen-qing-mao.png",
+      "out": "frozen-qing-mao.webp",
+      "bytes": 314188,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "source": "lotus-chamber.png",
+      "out": "lotus-chamber.webp",
+      "bytes": 260804,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "source": "reader-cicada.jpeg",
+      "out": "reader-cicada.webp",
+      "bytes": 90836,
+      "width": 1320,
+      "height": 1399
+    },
+    {
+      "source": "reader-cultivation.jpeg",
+      "out": "reader-cultivation.webp",
+      "bytes": 69826,
+      "width": 1302,
+      "height": 1212
+    },
+    {
+      "source": "reader-gu-room.jpeg",
+      "out": "reader-gu-room.webp",
+      "bytes": 201052,
+      "width": 1320,
+      "height": 2603
+    },
+    {
+      "source": "reader-hall-steps.jpeg",
+      "out": "reader-hall-steps.webp",
+      "bytes": 188342,
+      "width": 1302,
+      "height": 1354
+    },
+    {
+      "source": "reader-hall.jpeg",
+      "out": "reader-hall.webp",
+      "bytes": 148466,
+      "width": 1320,
+      "height": 977
+    },
+    {
+      "source": "reader-map.png",
+      "out": "reader-map.webp",
+      "bytes": 205214,
+      "width": 1408,
+      "height": 768
+    },
+    {
+      "source": "reader-red-storm.jpeg",
+      "out": "reader-red-storm.webp",
+      "bytes": 168724,
+      "width": 977,
+      "height": 1536
+    },
+    {
+      "source": "reader-touzi.jpeg",
+      "out": "reader-touzi.webp",
+      "bytes": 88104,
+      "width": 707,
+      "height": 1536
+    },
+    {
+      "source": "reader-white-robes.jpeg",
+      "out": "reader-white-robes.webp",
+      "bytes": 239656,
+      "width": 1320,
+      "height": 2601
+    },
+    {
+      "source": "stone-forest.png",
+      "out": "stone-forest.webp",
+      "bytes": 141050,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "source": "uneasy-alliance.png",
+      "out": "uneasy-alliance.webp",
+      "bytes": 212834,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "source": "yellow-dragon-river.png",
+      "out": "yellow-dragon-river.webp",
+      "bytes": 260324,
+      "width": 1536,
+      "height": 1024
+    }
+  ],
+  "sourceBytes": 24330498,
+  "outBytes": 3130416,
+  "ratio": 0.1287
+}

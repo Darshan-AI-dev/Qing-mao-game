@@ -1,0 +1,185 @@
+{
+  "id": "act2/065-hunter-map",
+  "beat": "act2.hunter.map",
+  "chapters": [
+    65,
+    69
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 65-69.",
+    "adaptation": "Restores the actual acquisition the old docs replaced with an abandoned camp. Coercion staged, violence cut away from."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "reader-map"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "wang-da",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 65,
+      "text": "Knowledge carried in bamboo"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The Wang family hunt this mountain and they keep their knowledge on a beast skin. Not a treasure — working notes. Working notes are worth more.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Restores the actual acquisition the old docs replaced with an abandoned camp. Coercion staged, violence cut away from.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "wang-da",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "wang-da",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 66,
+      "text": "Chapter 66"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Found the rest where they sleep between circuits. Cooking fire, two bowls, a portrait. One occupant, and he is proprietary about the mountain.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 67,
+      "text": "Chapter 67"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Took the map. I will not write more than that. The cost was an afternoon and a decision I had already made before I walked up.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 68,
+      "text": "Chapter 68"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Compared it against the copies the clan hands out. The circles on this one have been concealed on those. Somebody has been selling the mountain with pieces removed.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 69,
+      "text": "Chapter 69"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The map separates animal territory from trap lines. A boar trail to the northeast, a hideout I was not meant to find, and two red circles I will not walk into until I know why they are circled.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act2.hunter.map.method",
+      "prompt": "Choose the ground.",
+      "method": "hunter",
+      "options": [
+        {
+          "id": "lure-ravine",
+          "label": "The ravine. He will come.",
+          "method": "lure-ravine"
+        },
+        {
+          "id": "lure-grove",
+          "label": "The thick of the grove, where sightlines are short.",
+          "method": "lure-grove"
+        },
+        {
+          "id": "withdraw",
+          "label": "Go home and be seen going home.",
+          "method": "withdraw"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "item.beast-map"
+    },
+    {
+      "op": "flag",
+      "set": "secret.hunter-map"
+    },
+    {
+      "op": "evidence",
+      "add": "map.owner-missing"
+    },
+    {
+      "op": "evidence",
+      "add": "map.copy-mismatch"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

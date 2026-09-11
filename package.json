@@ -1,0 +1,26 @@
+{
+  "name": "qing-mao-rebirth",
+  "version": "5.0.0",
+  "private": true,
+  "description": "Qing Mao \u00b7 Rebirth \u2014 a Reverend Insanity chapters 1-200 story world. Engine and content are split so a sequel can reuse both.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run lint:content && tsc --noEmit && vite build && node tools/build-offline.mjs",
+    "preview": "vite preview --port 4173 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "lint:content": "node tools/lint-content.mjs",
+    "test": "node tests/verify.cjs",
+    "test:e2e": "playwright test",
+    "verify": "npm run lint:content && npm run typecheck && npm test",
+    "art:optimise": "node tools/optimise-art.mjs",
+    "vendor:three": "node tools/vendor-three.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/three": "^0.185.4",
+    "three": "^0.186.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
+}

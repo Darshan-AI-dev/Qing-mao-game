@@ -1,0 +1,122 @@
+{
+  "id": "act4/151-yao-le-rank-three",
+  "beat": "act4.yao-le.rank-three",
+  "chapters": [
+    151,
+    152
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 151-152.",
+    "adaptation": "The choice is on screen; the act is off screen; the breakthrough is a full ritual. Three pieces of evidence enter the world."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "yao-le",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 151,
+      "text": "A cost that cannot be undone"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "What I needed was in front of me and it had a name and it was glad to see me. I am not going to write the rest of it here. The ledger records cost, and the cost was a person who trusted the wrong face.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The choice is on screen; the act is off screen; the breakthrough is a full ritual. Three pieces of evidence enter the world.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "yao-le",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "yao-le",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 152,
+      "text": "Chapter 152"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Rank three. White silver. Genuine, verifiable, and the clan will examine the result long before it examines the route. The site is three things now: a location, an absence, and a last-seen.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "rank.3.initial"
+    },
+    {
+      "op": "flag",
+      "set": "secret.yao-le"
+    },
+    {
+      "op": "evidence",
+      "add": "yaole.absence"
+    },
+    {
+      "op": "evidence",
+      "add": "yaole.last-seen"
+    },
+    {
+      "op": "evidence",
+      "add": "yaole.ritual-site"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "id": "act2/088-winter-mission-brief",
+  "beat": "act2.winter.mission-brief",
+  "chapters": [
+    88,
+    90
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 88-90.",
+    "adaptation": "Clan obligations start competing with cultivation time. The calendar does the arguing."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "snow",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "jiao-san",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 88,
+      "text": "Permafrost and decayed soil"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Accepted a mission because refusing it would have been the remarkable choice. Permafrost, decayed soil, a week in the cold, and the pay will not cover the wine.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Clan obligations start competing with cultivation time. The calendar does the arguing.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "jiao-san",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "jiao-san",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 89,
+      "text": "Chapter 89"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Missions are how the clan spends its youths' time so that the time cannot be spent on anything else. I have been aware of this arrangement for five hundred years and I am still inside it.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 90,
+      "text": "Chapter 90"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Gathered the soil. Jiao San apologises when he gives orders. Noted the quantity, the pay, and the four days I will not get back.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "item.decayed-soil"
+    },
+    {
+      "op": "flag",
+      "set": "econ.mission-pay"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

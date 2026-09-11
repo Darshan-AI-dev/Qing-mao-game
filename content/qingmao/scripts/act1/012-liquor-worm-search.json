@@ -1,0 +1,130 @@
+{
+  "id": "act1/012-liquor-worm-search",
+  "beat": "act1.liquor-worm.search",
+  "chapters": [
+    12,
+    13
+  ],
+  "quality": "final",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 12-13.",
+    "adaptation": "The previous build compressed the search into one visit. Here it takes several nights, because the cost of the search is the point.",
+    "irony": "A reader already knows what the wine is for. A Recollection will say so, at no charge, whenever you want it."
+  },
+  "veteran": [
+    "The crevice this leads to matters again at chapter 60, long after the wall goes dark."
+  ],
+  "commands": [
+    {
+      "op": "timeOfDay",
+      "value": 0.88
+    },
+    {
+      "op": "weather",
+      "kind": "mist",
+      "intensity": 0.6
+    },
+    {
+      "op": "title",
+      "chapter": 12,
+      "text": "Nights with nothing in them"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        44
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        6,
+        54
+      ],
+      "look": [
+        0,
+        2,
+        36
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The jar is open on a flat stone. Bamboo, wet, and a cool smell going nowhere.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "A wine-loving Gu lives on this mountain. The memory is that specific and no more specific than that.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Five hundred years is a long time for a crevice to keep the same shape.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "wait",
+      "seconds": 1.4
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Nothing on the first night. Nothing on the second.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "know.liquor-worm"
+    },
+    {
+      "op": "title",
+      "chapter": 13,
+      "text": "A bead of snow"
+    },
+    {
+      "op": "timeOfDay",
+      "value": 0.91
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Fourth night. Something white comes out between the stems, drinks, and goes northeast fast enough to cost essence to follow.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "I have seen worse returns on two stones.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "camera",
+      "to": [
+        8,
+        4,
+        30
+      ],
+      "look": [
+        16,
+        1,
+        12
+      ],
+      "seconds": 2.6
+    }
+  ]
+}

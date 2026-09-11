@@ -1,0 +1,568 @@
+{
+  "act": "act3",
+  "note": "Beats are addressed by stable ID. legacyStep maps a pre-v5 save's step counter onto this graph; inserting a beat never renumbers another.",
+  "beats": [
+    {
+      "id": "act3.assets.petition",
+      "title": "What the ledger says is his",
+      "chapters": [
+        101,
+        104
+      ],
+      "coverage": "played",
+      "template": "petition",
+      "area": "mountain.affairs-hall",
+      "script": "act3/101-assets-petition.json",
+      "requires": [
+        "act2.refinement.white-jade"
+      ],
+      "sets": [
+        "know.asset-records",
+        "know.man-shi"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "fang-qiu",
+        "elder-bo",
+        "man-shi"
+      ],
+      "mustLand": 9,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 320,
+      "weather": "clear",
+      "legacyStep": 26,
+      "designNote": "The squeeze starts on paper. Spawn point sits beside the hall, not a hundred and ninety paces away."
+    },
+    {
+      "id": "act3.assets.witnesses",
+      "title": "People who remember the arrangement",
+      "chapters": [
+        105,
+        108
+      ],
+      "coverage": "played",
+      "template": "witness-gathering",
+      "area": "mountain.village",
+      "script": "act3/105-assets-witnesses.json",
+      "requires": [
+        "act3.assets.petition"
+      ],
+      "sets": [
+        "econ.witness-costs"
+      ],
+      "reads": [],
+      "evidence": [
+        "assets.pressure-witness"
+      ],
+      "cast": [
+        "fang-yuan",
+        "fang-qiu-wife",
+        "tavern-keeper"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 328,
+      "weather": "rain",
+      "legacyStep": 27,
+      "designNote": "Pressure, payment or patience. All three reach the same settlement at different prices."
+    },
+    {
+      "id": "act3.assets.council",
+      "title": "A matter for the council",
+      "chapters": [
+        109,
+        112
+      ],
+      "coverage": "staged",
+      "template": "council",
+      "area": "mountain.clan-hall",
+      "script": "act3/109-assets-council.json",
+      "requires": [
+        "act3.assets.witnesses"
+      ],
+      "sets": [
+        "flag.council-heard"
+      ],
+      "reads": [
+        "econ.witness-costs"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "fang-qiu",
+        "elder-bo"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-hall-steps",
+      "sfx": null,
+      "music": null,
+      "day": 338,
+      "weather": "clear",
+      "legacyStep": 29,
+      "designNote": null
+    },
+    {
+      "id": "act3.assets.settlement",
+      "title": "The property changes hands",
+      "chapters": [
+        113,
+        115
+      ],
+      "coverage": "played",
+      "template": "settlement",
+      "area": "mountain.affairs-hall",
+      "script": "act3/113-assets-settlement.json",
+      "requires": [
+        "act3.assets.council"
+      ],
+      "sets": [
+        "econ.property",
+        "flag.assets-won"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "fang-qiu",
+        "fang-zheng"
+      ],
+      "mustLand": 9,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 348,
+      "weather": "clear",
+      "legacyStep": 30,
+      "designNote": "Unlocks the tavern and property loop. Fang Zheng is in the room and says the wrong thing."
+    },
+    {
+      "id": "act3.bai.interlude",
+      "title": "A clan that keeps its own accounts",
+      "chapters": [
+        116,
+        116
+      ],
+      "coverage": "staged",
+      "template": "interlude",
+      "area": "bai.hall",
+      "script": "act3/116-bai-interlude.json",
+      "requires": [
+        "act3.assets.settlement"
+      ],
+      "sets": [
+        "know.bai-ning-bing"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "bai-ning-bing"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-white-robes",
+      "sfx": null,
+      "music": null,
+      "day": 352,
+      "weather": "clear",
+      "legacyStep": 30,
+      "designNote": "Viewpoint interlude. Bai's one-arm model ships here and stays until chapter 199."
+    },
+    {
+      "id": "act3.leaves.nine-leaf",
+      "title": "Nine leaves and a buyer",
+      "chapters": [
+        117,
+        118
+      ],
+      "coverage": "played",
+      "template": "farm-loop",
+      "area": "mountain.leaf-terraces",
+      "script": "act3/117-leaves-nine-leaf.json",
+      "requires": [
+        "act3.assets.settlement"
+      ],
+      "sets": [
+        "gu.nine-leaf",
+        "econ.leaf-income"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "jiang-ya"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 356,
+      "weather": "rain",
+      "legacyStep": 31,
+      "designNote": "The most reliable income in the game, and the only healing. Both facts matter at chapter 200."
+    },
+    {
+      "id": "act3.moonglow.failure",
+      "title": "A refinement that does not take",
+      "chapters": [
+        119,
+        121
+      ],
+      "coverage": "played",
+      "template": "refinement",
+      "area": "mountain.forge",
+      "script": "act3/119-moonglow-failure.json",
+      "requires": [
+        "act3.leaves.nine-leaf"
+      ],
+      "sets": [
+        "flag.moonglow-failed"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 4,
+      "weather": "clear",
+      "legacyStep": 32,
+      "designNote": "The scripted first failure stays. It costs days and stones, never the Gu."
+    },
+    {
+      "id": "act3.moonglow.success",
+      "title": "Moonglow",
+      "chapters": [
+        122,
+        124
+      ],
+      "coverage": "played",
+      "template": "refinement",
+      "area": "mountain.forge",
+      "script": "act3/122-moonglow-success.json",
+      "requires": [
+        "act3.moonglow.failure"
+      ],
+      "sets": [
+        "gu.moonglow"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 14,
+      "weather": "clear",
+      "legacyStep": 34,
+      "designNote": null
+    },
+    {
+      "id": "act3.tavern.property",
+      "title": "Staff, stock and troublemakers",
+      "chapters": [
+        125,
+        127
+      ],
+      "coverage": "played",
+      "template": "property-loop",
+      "area": "mountain.tavern",
+      "script": "act3/125-tavern-property.json",
+      "requires": [
+        "act3.assets.settlement"
+      ],
+      "sets": [
+        "econ.tavern-income"
+      ],
+      "reads": [
+        "know.man-shi"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "tavern-keeper",
+        "man-shi"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 20,
+      "weather": "clear",
+      "legacyStep": 35,
+      "designNote": "Two floors, a wage bill and Man Shi. Feeds the economy and the codex, never filler."
+    },
+    {
+      "id": "act3.four-flavours.refinement",
+      "title": "Four Flavours",
+      "chapters": [
+        128,
+        131
+      ],
+      "coverage": "played",
+      "template": "refinement",
+      "area": "mountain.forge",
+      "script": "act3/128-four-flavours-refinement.json",
+      "requires": [
+        "act3.tavern.property"
+      ],
+      "sets": [
+        "gu.four-flavours",
+        "gu.black-boar"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 28,
+      "weather": "clear",
+      "legacyStep": 36,
+      "designNote": "Needs a second Liquor worm. The upkeep after this is meant to hurt."
+    },
+    {
+      "id": "act3.stealth-scales",
+      "title": "Scales and an ear in the soil",
+      "chapters": [
+        132,
+        134
+      ],
+      "coverage": "played",
+      "template": "trade",
+      "area": "mountain.medicine-hall",
+      "script": "act3/132-stealth-scales.json",
+      "requires": [
+        "act3.four-flavours.refinement"
+      ],
+      "sets": [
+        "gu.stealth-scales",
+        "gu.earth-ear"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "jiang-ya"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 38,
+      "weather": "rain",
+      "legacyStep": 38,
+      "designNote": null
+    },
+    {
+      "id": "act3.wolf-tide.warnings",
+      "title": "The season nobody argues with",
+      "chapters": [
+        135,
+        138
+      ],
+      "coverage": "staged",
+      "template": "escalation",
+      "area": "mountain.village",
+      "script": "act3/135-wolf-tide-warnings.json",
+      "requires": [
+        "act3.stealth-scales"
+      ],
+      "sets": [
+        "know.wolf-tide",
+        "gu.water-shield"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "qing-shu",
+        "elder-bo"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 48,
+      "weather": "mist",
+      "legacyStep": 39,
+      "designNote": "Weather turns with the calendar. Qing Shu is established here so chapter 145 costs something."
+    },
+    {
+      "id": "act3.wolf-tide.forest",
+      "title": "Lightning in the undergrowth",
+      "chapters": [
+        139,
+        142
+      ],
+      "coverage": "played",
+      "template": "wolf-tide",
+      "area": "mountain.wolf-forest",
+      "script": "act3/139-wolf-tide-forest.json",
+      "requires": [
+        "act3.wolf-tide.warnings"
+      ],
+      "sets": [
+        "flag.tide-entered"
+      ],
+      "reads": [
+        "gu.stealth-scales",
+        "gu.earth-ear"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "narrator"
+      ],
+      "mustLand": 10,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-red-storm",
+      "sfx": null,
+      "music": null,
+      "day": 56,
+      "weather": "storm",
+      "legacyStep": 41,
+      "designNote": "Sub-types and pack behaviour. Concealment is the intended answer; fighting is the expensive one."
+    },
+    {
+      "id": "act3.qing-shu.last-stand",
+      "title": "A position that does not hold",
+      "chapters": [
+        143,
+        145
+      ],
+      "coverage": "played",
+      "template": "observer",
+      "area": "mountain.wolf-forest",
+      "script": "act3/143-qing-shu-last-stand.json",
+      "requires": [
+        "act3.wolf-tide.forest"
+      ],
+      "sets": [
+        "know.qing-shu-death"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "qing-shu",
+        "narrator"
+      ],
+      "mustLand": 10,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 62,
+      "weather": "storm",
+      "legacyStep": 42,
+      "designNote": "The observer framing is the scene. The player can leave at any moment and the game never asks them to stay."
+    },
+    {
+      "id": "act3.aftermath.tally",
+      "title": "The tally after the tide",
+      "chapters": [
+        146,
+        149
+      ],
+      "coverage": "ledger",
+      "template": "ledger-only",
+      "area": "mountain.village",
+      "script": "act3/146-aftermath-tally.json",
+      "requires": [
+        "act3.qing-shu.last-stand"
+      ],
+      "sets": [
+        "econ.tide-aftermath"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 70,
+      "weather": "mist",
+      "legacyStep": 44,
+      "designNote": null
+    },
+    {
+      "id": "act3.yao-le.encounter",
+      "title": "Someone who recognises him",
+      "chapters": [
+        150,
+        150
+      ],
+      "coverage": "played",
+      "template": "confrontation-choice",
+      "area": "mountain.wolf-forest",
+      "script": "act3/150-yao-le-encounter.json",
+      "requires": [
+        "act3.aftermath.tally"
+      ],
+      "sets": [
+        "know.yao-le"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "yao-le"
+      ],
+      "mustLand": 11,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 76,
+      "weather": "rain",
+      "legacyStep": 44,
+      "designNote": "Act III ends on the encounter, not on what follows. Give her enough lines to be a person first."
+    }
+  ]
+}

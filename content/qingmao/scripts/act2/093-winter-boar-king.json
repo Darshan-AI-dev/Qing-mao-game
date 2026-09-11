@@ -1,0 +1,142 @@
+{
+  "id": "act2/093-winter-boar-king",
+  "beat": "act2.winter.boar-king",
+  "chapters": [
+    93,
+    96
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 93-96.",
+    "adaptation": "The group losses are played, not summarised. Survival inside the carcass is the sequence, and it is cut away from at the right moment."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "snow",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "frozen-qing-mao"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "jiao-san",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 93,
+      "text": "Inside the boar king"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The crossing went wrong on the second day. A boar king and lightning wolves, and a group that was organised for soil-gathering.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The group losses are played, not summarised. Survival inside the carcass is the sequence, and it is cut away from at the right moment.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "jiao-san",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "jiao-san",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 94,
+      "text": "Chapter 94"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Jiao San put himself between the wolves and the youngest of them and kept doing it until he couldn't. I am recording that because it happened, not because it changed what I did.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 95,
+      "text": "Chapter 95"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Went into the carcass. It was warm and it was the only position on that field that the wolves had no interest in. Survival is frequently undignified and the dignity is never the part that kills you.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 96,
+      "text": "Chapter 96"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Came out with a snowy tusk and most of my essence. Of the group, a minority walked back down. The clan will hold an inquiry into the loss, because a clan is a thing that holds inquiries.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "item.snowy-tusk"
+    },
+    {
+      "op": "flag",
+      "set": "know.group-losses"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

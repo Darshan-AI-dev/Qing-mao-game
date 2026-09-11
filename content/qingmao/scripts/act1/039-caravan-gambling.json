@@ -1,0 +1,134 @@
+{
+  "id": "act1/039-caravan-gambling",
+  "beat": "act1.caravan.gambling",
+  "chapters": [
+    39,
+    42
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 39-42.",
+    "adaptation": "Stone gambling as a real mini-game with real losses. Its point is the next beat."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "caravan-merchant",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 39,
+      "text": "Inside the purple-gold shell"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The caravan is in. Unusual Gu, overpriced, and a gambling-stone stall that prices uncertainty better than most clans price certainty.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Stone gambling as a real mini-game with real losses. Its point is the next beat.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "caravan-merchant",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "caravan-merchant",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 40,
+      "text": "Chapter 40"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Lost four stones on two shells. The merchant is honest in the way a scale is honest: he does not cheat, he simply knows the odds he is selling.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 41,
+      "text": "Chapter 41"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Bought a Mudskin Toad Gu, mostly so that the rest of what I bought would look like an afterthought. Minor protection. Its real function is to be the thing I talk about.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 42,
+      "text": "Chapter 42"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Watched the stall long enough to learn which shells the merchant handles gently. A purple-gold shell is sealed, and a sealed shell can have contained anything.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "econ.gambling-open"
+    },
+    {
+      "op": "flag",
+      "set": "gu.mudskin-toad"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

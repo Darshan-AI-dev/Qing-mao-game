@@ -1,0 +1,166 @@
+{
+  "id": "act4/160-village-search",
+  "beat": "act4.village.search",
+  "chapters": [
+    160,
+    163
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 160-163.",
+    "adaptation": "Yao Ji asks everyone. Cleanup here is the last chance before Tie Ruo Nan arrives."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "mist",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "yao-ji",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "man-shi",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 160,
+      "text": "The same question, for weeks"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Yao Ji has been asking the same question, in the same words, for five weeks. The village has started avoiding her, which helps me and costs her.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Yao Ji asks everyone. Cleanup here is the last chance before Tie Ruo Nan arrives.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "yao-ji",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "yao-ji",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 161,
+      "text": "Chapter 161"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Walked the route back to see what I had left behind. A path that is used more than it should be, and two people who can date the afternoon.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 162,
+      "text": "Chapter 162"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Cleaned what could be cleaned. Two stones to a carter with a poor memory and a better one afterward. The third item cannot be cleaned, only contradicted, and contradictions need a second story to lean on.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 163,
+      "text": "Chapter 163"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Built the second story out of three true facts and one arrangement of them. That is the strongest kind, and it is the kind that survives an investigator.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act4.village.search.method",
+      "prompt": "Three people remember the arrangement.",
+      "method": "village",
+      "options": [
+        {
+          "id": "pay",
+          "label": "Pay them.",
+          "method": "pay"
+        },
+        {
+          "id": "persuade",
+          "label": "Give them a reason of their own.",
+          "method": "persuade"
+        },
+        {
+          "id": "leave",
+          "label": "Leave them out of it.",
+          "method": "leave"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "flag.search-pressure"
+    },
+    {
+      "op": "evidence",
+      "add": "search.inconsistency"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

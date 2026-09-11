@@ -1,0 +1,127 @@
+{
+  "id": "act3/125-tavern-property",
+  "beat": "act3.tavern.property",
+  "chapters": [
+    125,
+    127
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 125-127.",
+    "adaptation": "Two floors, a wage bill and Man Shi. Feeds the economy and the codex, never filler."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "tavern-keeper",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "man-shi",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 125,
+      "text": "Staff, stock and troublemakers"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The tavern has a wage bill, a supplier, a stock loss and a landlord, and as of this month the landlord is me. The arithmetic is the same arithmetic as the aperture: income, upkeep, margin.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Two floors, a wage bill and Man Shi. Feeds the economy and the codex, never filler.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "tavern-keeper",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "tavern-keeper",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 126,
+      "text": "Chapter 126"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Traded for a Black Boar Gu and kept the strength after the trade went through. Strength that survives the sale of its source is the closest thing to free money I have found on this mountain.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 127,
+      "text": "Chapter 127"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Man Shi broke a table and then repaired it badly. Put him on the door instead. A troublemaker pointed outward is a fixture.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "econ.tavern-income"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

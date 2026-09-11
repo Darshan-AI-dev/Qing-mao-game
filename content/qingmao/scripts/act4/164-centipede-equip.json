@@ -1,0 +1,92 @@
+{
+  "id": "act4/164-centipede-equip",
+  "beat": "act4.centipede.equip",
+  "chapters": [
+    164,
+    166
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 164-166.",
+    "adaptation": "Awaiting its authoring pass; the beat, flags and evidence are final, the staging is not."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 164,
+      "text": "Something for close range"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Added the Chainsaw Golden Centipede. Close range, expensive per swing. I do not intend to use it and I intend very much to have it.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 165,
+      "text": "Chapter 165"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Practised with it away from the village. Everything I equip now is chosen for a road rather than for a clan.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 166,
+      "text": "Chapter 166"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Priced the full inventory's upkeep at Rank three. It is roughly four times what it was in winter. Being an elder is a job with a subscription.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "gu.centipede"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

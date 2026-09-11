@@ -1,0 +1,177 @@
+{
+  "id": "act1/025-extortion-toll",
+  "beat": "act1.extortion.toll",
+  "chapters": [
+    25,
+    29
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 25-29.",
+    "adaptation": "Recurs over several in-game days. The player chooses the rate and how visible it is."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "mo-yan",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 25,
+      "text": "An after-class arrangement"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Stopped Mo Yan at the academy gate after class and explained what his continued comfort was worth. He paid. Not because he was frightened of me — because paying was cheaper than the conversation.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Recurs over several in-game days. The player chooses the rate and how visible it is.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "mo-yan",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "mo-yan",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 26,
+      "text": "Chapter 26"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Second collection. Same gate, same hour. Predictability is the whole product: he budgets for it, and a budgeted loss is one nobody complains about loudly.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 27,
+      "text": "Chapter 27"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Third collection. Two of his friends stayed to watch and then left without him, which told him more about his position than I did.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 28,
+      "text": "Chapter 28"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Raised the rate. Still inside what his allowance absorbs. The ceiling on extortion is not courage, it is household accounting.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 29,
+      "text": "Chapter 29"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Counted the week: enough for the worm's wine and a margin. Also counted witnesses. Four students can place me at that gate, and one of them takes notes for a living.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act1.extortion.toll.method",
+      "prompt": "How hard do you press at the gate?",
+      "method": "extortion",
+      "options": [
+        {
+          "id": "intimidate",
+          "label": "Make the threat explicit.",
+          "method": "intimidate"
+        },
+        {
+          "id": "budget",
+          "label": "Keep it small enough to be budgeted for.",
+          "method": "budget"
+        },
+        {
+          "id": "irregular",
+          "label": "Vary the hour so nobody can plan around it.",
+          "method": "irregular"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "econ.toll-income"
+    },
+    {
+      "op": "flag",
+      "set": "secret.extortion"
+    },
+    {
+      "op": "evidence",
+      "add": "toll.witnesses"
+    },
+    {
+      "op": "evidence",
+      "add": "toll.ledger-gap"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

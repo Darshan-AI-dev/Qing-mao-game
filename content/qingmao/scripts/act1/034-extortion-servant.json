@@ -1,0 +1,165 @@
+{
+  "id": "act1/034-extortion-servant",
+  "beat": "act1.extortion.servant",
+  "chapters": [
+    34,
+    37
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 34-37.",
+    "adaptation": "The choice is on screen; the blow is cut away from. Aftermath runs through guards, classroom whispers and changed NPC remarks."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "mist",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "mo-servant",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 34,
+      "text": "A man sent to settle it"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "They sent a servant with a cudgel to the bamboo path at dusk. He had no expectation of resistance, which is the only part of their planning I will describe as competent.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The choice is on screen; the blow is cut away from. Aftermath runs through guards, classroom whispers and changed NPC remarks.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "mo-servant",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "mo-servant",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 35,
+      "text": "Chapter 35"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Dealt with it. The decision took longer than the act. I will not write the act down; the ledger is for costs, and the cost here was time and one set of livery I had to account for.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 36,
+      "text": "Chapter 36"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Evidence on the path: a body that cannot stay there, livery with a household mark on it, and one cart driver who passed the junction four minutes too early. Three problems, three different prices.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 37,
+      "text": "Chapter 37"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The village has decided a servant ran off with something. I did not build that story. I simply did not interfere with it, which is usually cheaper than building one.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act1.extortion.servant.method",
+      "prompt": "Decide, and then do not look at it again.",
+      "method": "extortion",
+      "options": [
+        {
+          "id": "quiet",
+          "label": "Somewhere nobody walks.",
+          "method": "quiet"
+        },
+        {
+          "id": "quick",
+          "label": "Immediately, and badly.",
+          "method": "quick"
+        },
+        {
+          "id": "avoid",
+          "label": "Leave. There will be another evening.",
+          "method": "avoid"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "secret.mo-servant"
+    },
+    {
+      "op": "evidence",
+      "add": "servant.body"
+    },
+    {
+      "op": "evidence",
+      "add": "servant.livery"
+    },
+    {
+      "op": "evidence",
+      "add": "servant.witness"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "id": "act3/139-wolf-tide-forest",
+  "beat": "act3.wolf-tide.forest",
+  "chapters": [
+    139,
+    142
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 139-142.",
+    "adaptation": "Sub-types and pack behaviour. Concealment is the intended answer; fighting is the expensive one."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "storm",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "reader-red-storm"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 139,
+      "text": "Lightning in the undergrowth"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Into the forest. Lightning wolves, and not one kind of them — the small fast ones drive, the heavy ones arrive afterward. The pack is a structure, not a crowd.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Sub-types and pack behaviour. Concealment is the intended answer; fighting is the expensive one.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 140,
+      "text": "Chapter 140"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Concealed and moved. Two hours of crossing that would have been twenty minutes of fighting, and I finished with essence in hand.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 141,
+      "text": "Chapter 141"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Fought once, because a ravine gave me no alternative. Spent a third of the sea on four wolves. That exchange rate is the argument for never fighting.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 142,
+      "text": "Chapter 142"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Listened through the soil at the ridge and counted what was behind the first wave. There is no position on this mountain that holds against that number. Qing Shu's included.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act3.wolf-tide.forest.method",
+      "prompt": "The pack is a structure, not a crowd.",
+      "method": "wolf-tide",
+      "options": [
+        {
+          "id": "conceal",
+          "label": "Conceal and cross.",
+          "method": "conceal"
+        },
+        {
+          "id": "fight",
+          "label": "Hold the ravine and spend essence.",
+          "method": "fight"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "flag.tide-entered"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

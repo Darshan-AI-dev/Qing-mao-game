@@ -1,0 +1,79 @@
+{
+  "id": "act1/020-cultivation-first-weeks",
+  "beat": "act1.cultivation.first-weeks",
+  "chapters": [
+    20,
+    21
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 20-21.",
+    "adaptation": "The Liquor worm stops refining Rank two essence. Recorded, not played."
+  },
+  "commands": [
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 20,
+      "text": "Weeks of small sums"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The worm refines essence by a small stage while it is fed, and it is fed on wine, which costs stones, which I do not have. The cultivation is free. The appetite is not.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The Liquor worm stops refining Rank two essence. Recorded, not played.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 21,
+      "text": "Chapter 21"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Confirmed what I remembered: it will not raise Rank two essence. Whatever advantage this gives me has a ceiling, and the ceiling arrives before the danger does. Plan accordingly.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "know.liquor-worm-limits"
+    }
+  ]
+}

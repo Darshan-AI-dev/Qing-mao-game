@@ -1,0 +1,115 @@
+{
+  "id": "act2/070-boar-strength",
+  "beat": "act2.boar.strength",
+  "chapters": [
+    70,
+    73
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 70-73.",
+    "adaptation": "Hunting route from the map. Feeding White Boar Gu is also the cheapest diet in the game, which is the lesson."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 70,
+      "text": "Strength that stays"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Hunted the trail. Three boars over four days, and the Gu took its share of each. My arms are heavier than they were on Monday.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Hunting route from the map. Feeding White Boar Gu is also the cheapest diet in the game, which is the lesson.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 71,
+      "text": "Chapter 71"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Boar blood is the cheapest diet in my inventory, and the hunting that produces it also produces meat I can sell. The only Gu I own that pays for itself.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 72,
+      "text": "Chapter 72"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Fed it again. Strength is accumulating in a body that was a scholar's body a week ago. The clan will notice eventually; bodies are harder to hide than Gu.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 73,
+      "text": "Chapter 73"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Stopped counting the boars and started counting the days. Training has a rate, and the rate is what limits me, not the appetite.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "stat.strength"
+    },
+    {
+      "op": "flag",
+      "set": "econ.boar-blood"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

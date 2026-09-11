@@ -1,0 +1,140 @@
+{
+  "id": "act3/109-assets-council",
+  "beat": "act3.assets.council",
+  "chapters": [
+    109,
+    112
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 109-112.",
+    "adaptation": "Awaiting its authoring pass; the beat, flags and evidence are final, the staging is not."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "reader-hall-steps"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "fang-qiu",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "elder-bo",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 109,
+      "text": "A matter for the council"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The council heard it. My uncle spoke first and spoke too long, which is what a man does when his case is a feeling.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "fang-qiu",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "fang-qiu",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 110,
+      "text": "Chapter 110"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Elder Bo asked for the dates. I gave the dates. There is a particular silence a council makes when the tedious party turns out to be the correct one.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 111,
+      "text": "Chapter 111"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Adjourned for consideration. Consideration means the elders are counting who is owed what by whom, and I am not owed anything, which in this instance works in my favour.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 112,
+      "text": "Chapter 112"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Used the adjournment to settle the two witnesses properly and to leave my uncle entirely alone. A man with nothing to react to looks like a man with nothing.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "flag.council-heard"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

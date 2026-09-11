@@ -1,0 +1,175 @@
+{
+  "id": "act3/101-assets-petition",
+  "beat": "act3.assets.petition",
+  "chapters": [
+    101,
+    104
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 101-104.",
+    "adaptation": "The squeeze starts on paper. Spawn point sits beside the hall, not a hundred and ninety paces away."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "fang-qiu",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "elder-bo",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "man-shi",
+      "at": [
+        4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 101,
+      "text": "What the ledger says is his"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The application came back approved in principle, which is the clan's way of saying the argument has been moved to a room I am allowed into. Pulled the asset records myself rather than asking for a summary.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The squeeze starts on paper. Spawn point sits beside the hall, not a hundred and ninety paces away.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "fang-qiu",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "fang-qiu",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 102,
+      "text": "Chapter 102"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The records are clear and my uncle's position is not. He has been managing property he does not own and reporting the management as ownership for six years.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 103,
+      "text": "Chapter 103"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Filed the discrepancy. Not as an accusation — as a clerical question. A clerical question is answered by a clerk, and a clerk's answer becomes a document.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 104,
+      "text": "Chapter 104"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Man Shi carried the record boxes for me because I asked him to and nobody else ever has. He is a head taller than the room and entirely unaware of it. Useful, and not in the way people assume.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act3.assets.petition.method",
+      "prompt": "How do you make the case?",
+      "method": "assets",
+      "options": [
+        {
+          "id": "paper",
+          "label": "On the dates, and only the dates.",
+          "method": "paper"
+        },
+        {
+          "id": "pressure",
+          "label": "Through people who owe you.",
+          "method": "pressure"
+        },
+        {
+          "id": "patience",
+          "label": "File it and wait for the hall to be busy.",
+          "method": "patience"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "know.asset-records"
+    },
+    {
+      "op": "flag",
+      "set": "know.man-shi"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

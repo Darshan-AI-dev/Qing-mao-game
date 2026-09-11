@@ -1,0 +1,117 @@
+{
+  "id": "act3/119-moonglow-failure",
+  "beat": "act3.moonglow.failure",
+  "chapters": [
+    119,
+    121
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 119-121.",
+    "adaptation": "The scripted first failure stays. It costs days and stones, never the Gu."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 119,
+      "text": "A refinement that does not take"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Attempted Moonglow. The refinement did not take. Lost the materials and the better part of a week.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The scripted first failure stays. It costs days and stones, never the Gu.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 120,
+      "text": "Chapter 120"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Went back over the recipe. The error was not in the recipe. Some refinements fail because refinement is uncertain, and instructors who tell students otherwise are managing morale, not teaching.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 121,
+      "text": "Chapter 121"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Re-bought the materials out of leaf income. The failure cost eleven stones and nine days, and it did not cost me Moonlight Gu, which is the only line in that sentence that mattered.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act3.moonglow.failure.method",
+      "prompt": "The materials are laid out.",
+      "method": "moonglow",
+      "options": [
+        {
+          "id": "careful",
+          "label": "Measure twice. Lose the day.",
+          "method": "careful"
+        },
+        {
+          "id": "fast",
+          "label": "Now, and accept the odds.",
+          "method": "fast"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "flag.moonglow-failed"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

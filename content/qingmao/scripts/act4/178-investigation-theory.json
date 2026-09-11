@@ -1,0 +1,171 @@
+{
+  "id": "act4/178-investigation-theory",
+  "beat": "act4.investigation.theory",
+  "chapters": [
+    178,
+    181
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 178-181.",
+    "adaptation": "As in canon he is never caught. It should read as a near miss the player earned, not as a gift."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "tie-ruo-nan",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "tie-xue-leng",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "elder-bo",
+      "at": [
+        4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 178,
+      "text": "A theory that is wrong"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "She has a theory. It is coherent, it fits most of the evidence, and it is wrong, and it is wrong in a direction she chose herself.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "As in canon he is never caught. It should read as a near miss the player earned, not as a gift.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "tie-ruo-nan",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "tie-ruo-nan",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 179,
+      "text": "Chapter 179"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "It is wrong because of the two pieces I removed and the one I arranged. If I had left the first of those in place it would be right, and I would be finished.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 180,
+      "text": "Chapter 180"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Presented her theory to the council. They accepted it. Jia Fu did not, and Jia Fu has no standing and no evidence, which is where he has been since chapter fifty-nine.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 181,
+      "text": "Chapter 181"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Closed. I have recorded the exact margin by which this did not go the other way, because I intend to remember it as a near miss and not as a talent.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act4.investigation.theory.method",
+      "prompt": "She is waiting for an answer.",
+      "method": "investigation",
+      "options": [
+        {
+          "id": "consistent",
+          "label": "The same account, word for word.",
+          "method": "consistent"
+        },
+        {
+          "id": "fuller",
+          "label": "A fuller version, with one new detail.",
+          "method": "fuller"
+        },
+        {
+          "id": "redirect",
+          "label": "A true fact about somebody else.",
+          "method": "redirect"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "flag.investigation-closed"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

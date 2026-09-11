@@ -1,0 +1,143 @@
+{
+  "id": "act3/143-qing-shu-last-stand",
+  "beat": "act3.qing-shu.last-stand",
+  "chapters": [
+    143,
+    145
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 143-145.",
+    "adaptation": "The observer framing is the scene. The player can leave at any moment and the game never asks them to stay."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "storm",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "qing-shu",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 143,
+      "text": "A position that does not hold"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Found his position from above. He had it arranged properly — lines, reliefs, a fallback. It was competent and it was not going to be enough, and both of those things were visible from where I stood.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The observer framing is the scene. The player can leave at any moment and the game never asks them to stay.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "qing-shu",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "qing-shu",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 144,
+      "text": "Chapter 144"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Watched. I will not dress that word up. I was concealed, I had leaves, and I had the essence to intervene, and I chose the ridge.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 145,
+      "text": "Chapter 145"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "It fell at dusk. He was organising a relief that no longer existed when it stopped. I came down the other side of the ridge and arrived in the village with everybody else.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Nothing about that day requires explanation, and nobody has asked for one.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act3.qing-shu.last-stand.method",
+      "prompt": "The position below is not going to hold.",
+      "method": "qing-shu",
+      "options": [
+        {
+          "id": "watch",
+          "label": "Stay on the ridge.",
+          "method": "watch"
+        },
+        {
+          "id": "leave",
+          "label": "Go down the other side now.",
+          "method": "leave"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "know.qing-shu-death"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "id": "act4/200-escape-raft",
+  "beat": "act4.escape.raft",
+  "chapters": [
+    200,
+    200
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 200.",
+    "adaptation": "Rank one again, no healing Gu, the Southern Border ahead. Offers the Legacy export and the Unfinished business page."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "mist",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "yellow-dragon-river"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "bai-ning-bing",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 200,
+      "text": "The Yellow Dragon River"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "A raft on the Yellow Dragon River. Rank one, no healing Gu, one companion I control through a Gu I did not give away, and the Southern Border ahead of us. Qing Mao is finished.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "I have been here before — not this river, but this position — and last time it took five hundred years. I know several things now that I did not know then.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Rank one again, no healing Gu, the Southern Border ahead. Offers the Legacy export and the Unfinished business page.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "bai-ning-bing",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "bai-ning-bing",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "choice",
+      "id": "act4.escape.raft.method",
+      "prompt": "The raft, and a direction.",
+      "method": "escape",
+      "options": [
+        {
+          "id": "south",
+          "label": "South. The Southern Border.",
+          "method": "south"
+        },
+        {
+          "id": "wait",
+          "label": "Stay on the bank until the smoke stops.",
+          "method": "wait"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "rank.1.initial"
+    },
+    {
+      "op": "flag",
+      "set": "flag.ending"
+    },
+    {
+      "op": "flag",
+      "set": "legacy.available"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

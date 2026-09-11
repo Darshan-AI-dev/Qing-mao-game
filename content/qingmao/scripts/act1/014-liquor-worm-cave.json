@@ -1,0 +1,310 @@
+{
+  "id": "act1/014-liquor-worm-cave",
+  "beat": "act1.liquor-worm.cave",
+  "chapters": [
+    14,
+    19
+  ],
+  "quality": "final",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 14-19.",
+    "adaptation": "The image wall, the remains and the Cicada are given a set piece rather than one interaction. The cave is genuinely dark and the player carries the light.",
+    "irony": "The wall contradicts the clan before any character in the game says so out loud."
+  },
+  "veteran": [
+    "The Photo-audio Gu powering the wall is nearly spent. It will not be a working screen for long."
+  ],
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "timeOfDay",
+      "value": 0.0
+    },
+    {
+      "op": "weather",
+      "kind": "clear"
+    },
+    {
+      "op": "title",
+      "chapter": 14,
+      "text": "What the mountain keeps"
+    },
+    {
+      "op": "art",
+      "id": "lotus-chamber"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        32
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        40
+      ],
+      "look": [
+        0,
+        2,
+        18
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The crevice opens wider than it looked. Inside, the dark has a shape to it, and the shape is large.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Carry the light. Whatever is in here has been in here a long time and is in no hurry.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "evidence",
+      "add": "cave.entry-traces"
+    },
+    {
+      "op": "title",
+      "chapter": 15,
+      "text": "A witness in the wall"
+    },
+    {
+      "op": "camera",
+      "to": [
+        -5,
+        2.6,
+        10
+      ],
+      "look": [
+        0,
+        2.2,
+        -6
+      ],
+      "seconds": 2.8
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Remains, by the vessels: a monk, dead long enough for the clan to have built something over the top of him.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "And a wall that is still showing pictures.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "That is a Photo-audio Gu, and it is nearly finished.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "wait",
+      "seconds": 1.2
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "What the wall shows does not match what the village celebrates every spring.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Watch it three times. Be able to repeat it without an error, in case the chance to watch it goes away.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "know.image-wall"
+    },
+    {
+      "op": "title",
+      "chapter": 16,
+      "text": "What he left at the mouth"
+    },
+    {
+      "op": "camera",
+      "to": [
+        0,
+        3,
+        24
+      ],
+      "look": [
+        0,
+        1.6,
+        34
+      ],
+      "seconds": 2.2
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Crushed bamboo, a scuffed ledge, one print in wet clay. Ordinary on their own.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Together they are a direction, for anyone who thinks to look.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "cave.traces",
+      "prompt": "The approach you came in by.",
+      "method": "cave",
+      "options": [
+        {
+          "id": "brush-out",
+          "label": "Spend the evening making it look like weather.",
+          "method": "careful"
+        },
+        {
+          "id": "leave-it",
+          "label": "Leave it. Nobody comes up here.",
+          "method": "fast"
+        }
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 17,
+      "text": "It will not be taken by hand"
+    },
+    {
+      "op": "camera",
+      "to": [
+        4,
+        2.2,
+        -2
+      ],
+      "look": [
+        -2,
+        1,
+        -12
+      ],
+      "seconds": 2.4
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The worm is faster than he is, and it has no reason to trust a jar twice.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Two nights more than I wanted to spend on this.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 18,
+      "text": "Methods he will not use"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The clan has a procedure for this. The procedure requires telling the clan.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "An advantage announced is an advantage surrendered. So: the other thing.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 19,
+      "text": "Pressure"
+    },
+    {
+      "op": "camera",
+      "to": [
+        0,
+        2.4,
+        4
+      ],
+      "look": [
+        0,
+        1.2,
+        -8
+      ],
+      "seconds": 2.0
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Something very old turns over, without waking.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The resistance goes out of the worm like water out of a cracked jar.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Nobody on this mountain can explain what just happened. Including me, in any useful detail.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "gu.liquor-worm"
+    },
+    {
+      "op": "flag",
+      "set": "secret.liquor-worm-origin"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "What I have now: a Gu that refines essence, and a cave only I can find. The second one may outlast the first.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

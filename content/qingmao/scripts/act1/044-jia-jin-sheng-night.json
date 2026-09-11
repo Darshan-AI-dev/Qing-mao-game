@@ -1,0 +1,201 @@
+{
+  "id": "act1/044-jia-jin-sheng-night",
+  "beat": "act1.jia-jin-sheng.night",
+  "chapters": [
+    44,
+    49
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 44-49.",
+    "adaptation": "Notice the tail, choose where to lead him, then the cleanup. Every piece left behind is recorded for chapter 51."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "mist",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "reader-cicada"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "jia-jin-sheng",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 44,
+      "text": "Someone on the path behind you"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Someone followed me onto the mountain after dark. Jia Jin Sheng, armed, and confident in a way that only makes sense if he has already decided how the evening ends.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Notice the tail, choose where to lead him, then the cleanup. Every piece left behind is recorded for chapter 51.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "jia-jin-sheng",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "jia-jin-sheng",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 45,
+      "text": "Chapter 45"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Let him follow. A pursuer who believes he is hunting chooses the ground, and a pursuer who chooses the ground can be told which ground to choose.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 46,
+      "text": "Chapter 46"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Took the high path toward the ravine and he came, the way a man comes when he believes he is choosing. The useful thing about arrogance is that it is navigable.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 47,
+      "text": "Chapter 47"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "It is done. I will record what it cost instead of what it looked like: essence, most of one evening, and a margin of luck I do not intend to need again.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 48,
+      "text": "Chapter 48"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Cleanup. His trail up the mountain, one villager who saw him leave, residue from a Gu I did not use, and a disappearance that will be reported by morning. Cleaned what could be cleaned and priced the rest.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 49,
+      "text": "Chapter 49"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "He is a missing clan youth now, which is a category the clan has procedures for. Procedures are slower than suspicion and they leave a record. I would rather be in a record than in a rumour.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act1.jia-jin-sheng.night.method",
+      "prompt": "Choose the ground.",
+      "method": "jia-jin-sheng",
+      "options": [
+        {
+          "id": "lure-ravine",
+          "label": "The ravine. He will come.",
+          "method": "lure-ravine"
+        },
+        {
+          "id": "lure-grove",
+          "label": "The thick of the grove, where sightlines are short.",
+          "method": "lure-grove"
+        },
+        {
+          "id": "withdraw",
+          "label": "Go home and be seen going home.",
+          "method": "withdraw"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "secret.jjs"
+    },
+    {
+      "op": "evidence",
+      "add": "jjs.trail"
+    },
+    {
+      "op": "evidence",
+      "add": "jjs.witness"
+    },
+    {
+      "op": "evidence",
+      "add": "jjs.gu-residue"
+    },
+    {
+      "op": "evidence",
+      "add": "jjs.missing-report"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

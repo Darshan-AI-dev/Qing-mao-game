@@ -1,0 +1,115 @@
+{
+  "id": "act3/132-stealth-scales",
+  "beat": "act3.stealth-scales",
+  "chapters": [
+    132,
+    134
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 132-134.",
+    "adaptation": "Awaiting its authoring pass; the beat, flags and evidence are final, the staging is not."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "jiang-ya",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 132,
+      "text": "Scales and an ear in the soil"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Bought Stealth Scales from the medicine hall's back shelf. Ordinary wolves lose track of what wears it.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "jiang-ya",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "jiang-ya",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 133,
+      "text": "Chapter 133"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "And Earth Communication Ear Grass, which marks what is moving through the ground. Together they cost nineteen stones and they are the reason I expect to survive the season.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 134,
+      "text": "Chapter 134"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Tested both on the lower slopes. Concealment holds while I am walking and fails when I am fighting. Noted, because the failure mode is the whole design of this winter.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "gu.stealth-scales"
+    },
+    {
+      "op": "flag",
+      "set": "gu.earth-ear"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

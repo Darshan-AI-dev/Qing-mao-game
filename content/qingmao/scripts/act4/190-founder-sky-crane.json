@@ -1,0 +1,174 @@
+{
+  "id": "act4/190-founder-sky-crane",
+  "beat": "act4.founder.sky-crane",
+  "chapters": [
+    190,
+    193
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 190-193.",
+    "adaptation": "Staged so both read as out of the player's league. Fang Zheng is carried off, alive."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "storm",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "uneasy-alliance"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "gu-yue-founder",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "lord-sky-crane",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "fang-zheng",
+      "at": [
+        4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 190,
+      "text": "Two powers over one mountain"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The two of them began, and the scale of it put every fight I have had on this mountain into its proper category. Duels, examinations, wolves. Training.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Staged so both read as out of the player's league. Fang Zheng is carried off, alive.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "gu-yue-founder",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "gu-yue-founder",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 191,
+      "text": "Chapter 191"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Kept to the edges. There is no version of that fight in which I am a participant and a version in which I am a survivor, and only one of those is available.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 192,
+      "text": "Chapter 192"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Bai Ning Bing came down into it, which I did not arrange and did not prevent. There is a difference between those two and nobody down there was keeping score.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 193,
+      "text": "Chapter 193"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Fang Zheng was carried off toward Central Continent, unconscious and alive. Alive is the part that is going to cost somebody later. I am recording it so that I do not forget where he went.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act4.founder.sky-crane.method",
+      "prompt": "There is one decision left in this.",
+      "method": "founder",
+      "options": [
+        {
+          "id": "proceed",
+          "label": "Proceed.",
+          "method": "proceed"
+        },
+        {
+          "id": "wait",
+          "label": "Wait for the better moment.",
+          "method": "wait"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "know.fang-zheng-taken"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

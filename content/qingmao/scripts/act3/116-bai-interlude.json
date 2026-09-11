@@ -1,0 +1,102 @@
+{
+  "id": "act3/116-bai-interlude",
+  "beat": "act3.bai.interlude",
+  "chapters": [
+    116,
+    116
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 116.",
+    "adaptation": "Viewpoint interlude. Bai's one-arm model ships here and stays until chapter 199."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "reader-white-robes"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "bai-ning-bing",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 116,
+      "text": "A clan that keeps its own accounts"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Word from the Bai clan reached the village before the Bai did. A clan that keeps its own accounts and settles them late. Someone there has a grievance against their own house, and a grievance is a handle.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Viewpoint interlude. Bai's one-arm model ships here and stays until chapter 199.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "bai-ning-bing",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "bai-ning-bing",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "flag",
+      "set": "know.bai-ning-bing"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

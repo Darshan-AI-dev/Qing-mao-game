@@ -1,0 +1,661 @@
+{
+  "act": "act4",
+  "note": "Beats are addressed by stable ID. legacyStep maps a pre-v5 save's step counter onto this graph; inserting a beat never renumbers another.",
+  "beats": [
+    {
+      "id": "act4.yao-le.rank-three",
+      "title": "A cost that cannot be undone",
+      "chapters": [
+        151,
+        152
+      ],
+      "coverage": "played",
+      "template": "breakthrough-ritual",
+      "area": "mountain.wolf-forest",
+      "script": "act4/151-yao-le-rank-three.json",
+      "requires": [
+        "act3.yao-le.encounter"
+      ],
+      "sets": [
+        "rank.3.initial",
+        "secret.yao-le"
+      ],
+      "reads": [],
+      "evidence": [
+        "yaole.absence",
+        "yaole.last-seen",
+        "yaole.ritual-site"
+      ],
+      "cast": [
+        "fang-yuan",
+        "yao-le",
+        "narrator"
+      ],
+      "mustLand": 11,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 80,
+      "weather": "rain",
+      "legacyStep": 45,
+      "designNote": "The choice is on screen; the act is off screen; the breakthrough is a full ritual. Three pieces of evidence enter the world."
+    },
+    {
+      "id": "act4.council.elder",
+      "title": "An elder with a faction behind him",
+      "chapters": [
+        153,
+        154
+      ],
+      "coverage": "staged",
+      "template": "council",
+      "area": "mountain.clan-hall",
+      "script": "act4/153-council-elder.json",
+      "requires": [
+        "act4.yao-le.rank-three"
+      ],
+      "sets": [
+        "flag.elder-rank",
+        "know.chi-lian"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "elder-bo",
+        "chi-lian"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-hall",
+      "sfx": null,
+      "music": null,
+      "day": 84,
+      "weather": "clear",
+      "legacyStep": 47,
+      "designNote": "Yao Ji begins appearing in the village between beats from here on."
+    },
+    {
+      "id": "act4.forge.elder-tools",
+      "title": "Tools for leaving",
+      "chapters": [
+        155,
+        155
+      ],
+      "coverage": "played",
+      "template": "refinement",
+      "area": "mountain.forge",
+      "script": "act4/155-forge-elder-tools.json",
+      "requires": [
+        "act4.council.elder"
+      ],
+      "sets": [
+        "gu.sky-canopy",
+        "gu.thunderwings"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 88,
+      "weather": "clear",
+      "legacyStep": 47,
+      "designNote": "Sky Canopy replaces White Jade. The upkeep jump is the point of the promotion."
+    },
+    {
+      "id": "act4.forge.blood-moon",
+      "title": "A moon not bound to orchids",
+      "chapters": [
+        156,
+        157
+      ],
+      "coverage": "played",
+      "template": "refinement",
+      "area": "mountain.forge",
+      "script": "act4/156-forge-blood-moon.json",
+      "requires": [
+        "act4.forge.elder-tools"
+      ],
+      "sets": [
+        "gu.blood-moon"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-cultivation",
+      "sfx": null,
+      "music": null,
+      "day": 94,
+      "weather": "clear",
+      "legacyStep": 48,
+      "designNote": "Chosen because its diet does not chain him to clan supplies after he leaves."
+    },
+    {
+      "id": "act4.medicine.order",
+      "title": "An order from a younger man",
+      "chapters": [
+        158,
+        159
+      ],
+      "coverage": "staged",
+      "template": "council",
+      "area": "mountain.medicine-hall",
+      "script": "act4/158-medicine-order.json",
+      "requires": [
+        "act4.forge.blood-moon"
+      ],
+      "sets": [
+        "flag.medicine-pressure"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "chi-zhong"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 100,
+      "weather": "rain",
+      "legacyStep": 50,
+      "designNote": null
+    },
+    {
+      "id": "act4.village.search",
+      "title": "The same question, for weeks",
+      "chapters": [
+        160,
+        163
+      ],
+      "coverage": "played",
+      "template": "witness-gathering",
+      "area": "mountain.village",
+      "script": "act4/160-village-search.json",
+      "requires": [
+        "act4.medicine.order"
+      ],
+      "sets": [
+        "flag.search-pressure"
+      ],
+      "reads": [
+        "yaole.absence",
+        "yaole.last-seen"
+      ],
+      "evidence": [
+        "search.inconsistency"
+      ],
+      "cast": [
+        "fang-yuan",
+        "yao-ji",
+        "man-shi"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 110,
+      "weather": "mist",
+      "legacyStep": 52,
+      "designNote": "Yao Ji asks everyone. Cleanup here is the last chance before Tie Ruo Nan arrives."
+    },
+    {
+      "id": "act4.centipede.equip",
+      "title": "Something for close range",
+      "chapters": [
+        164,
+        166
+      ],
+      "coverage": "played",
+      "template": "trade",
+      "area": "mountain.forge",
+      "script": "act4/164-centipede-equip.json",
+      "requires": [
+        "act4.village.search"
+      ],
+      "sets": [
+        "gu.centipede"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 120,
+      "weather": "clear",
+      "legacyStep": 54,
+      "designNote": null
+    },
+    {
+      "id": "act4.supplies.tusita",
+      "title": "Packing for a road he has not named",
+      "chapters": [
+        167,
+        169
+      ],
+      "coverage": "played",
+      "template": "trade",
+      "area": "mountain.medicine-hall",
+      "script": "act4/167-supplies-tusita.json",
+      "requires": [
+        "act4.centipede.equip"
+      ],
+      "sets": [
+        "gu.tusita",
+        "flag.supplies-ready"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "chi-zhong"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 128,
+      "weather": "clear",
+      "legacyStep": 56,
+      "designNote": "He is provisioning for departure thirty chapters before he leaves. Readers should notice."
+    },
+    {
+      "id": "act4.investigation.arrival",
+      "title": "An investigator who expects to be lied to",
+      "chapters": [
+        170,
+        173
+      ],
+      "coverage": "played",
+      "template": "investigation",
+      "area": "mountain.clan-hall",
+      "script": "act4/170-investigation-arrival.json",
+      "requires": [
+        "act4.supplies.tusita"
+      ],
+      "sets": [
+        "know.tie-ruo-nan"
+      ],
+      "reads": [
+        "jjs.trail",
+        "jjs.witness",
+        "yaole.absence",
+        "search.inconsistency"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "tie-ruo-nan",
+        "jia-fu",
+        "elder-bo"
+      ],
+      "mustLand": 12,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-touzi",
+      "sfx": null,
+      "music": null,
+      "day": 136,
+      "weather": "clear",
+      "legacyStep": 59,
+      "designNote": "Exposure payoff two. She opens on whatever the player actually left, all the way back to chapter 44."
+    },
+    {
+      "id": "act4.investigation.trail",
+      "title": "Working the trail",
+      "chapters": [
+        174,
+        177
+      ],
+      "coverage": "played",
+      "template": "investigation",
+      "area": "mountain.village",
+      "script": "act4/174-investigation-trail.json",
+      "requires": [
+        "act4.investigation.arrival"
+      ],
+      "sets": [
+        "flag.trail-worked"
+      ],
+      "reads": [
+        "servant.witness",
+        "map.owner-missing",
+        "rank2.absence",
+        "yaole.ritual-site"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "tie-ruo-nan",
+        "tie-xue-leng"
+      ],
+      "mustLand": 12,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 144,
+      "weather": "rain",
+      "legacyStep": 61,
+      "designNote": "She visits the places. A clean trail is calm and cheap; a messy one costs lies, bribes and days."
+    },
+    {
+      "id": "act4.investigation.theory",
+      "title": "A theory that is wrong",
+      "chapters": [
+        178,
+        181
+      ],
+      "coverage": "played",
+      "template": "investigation",
+      "area": "mountain.clan-hall",
+      "script": "act4/178-investigation-theory.json",
+      "requires": [
+        "act4.investigation.trail"
+      ],
+      "sets": [
+        "flag.investigation-closed"
+      ],
+      "reads": [
+        "flag.trail-worked"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "tie-ruo-nan",
+        "tie-xue-leng",
+        "elder-bo"
+      ],
+      "mustLand": 12,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 152,
+      "weather": "clear",
+      "legacyStep": 64,
+      "designNote": "As in canon he is never caught. It should read as a near miss the player earned, not as a gift."
+    },
+    {
+      "id": "act4.deep-inheritance.founder",
+      "title": "Under the clan",
+      "chapters": [
+        182,
+        185
+      ],
+      "coverage": "played",
+      "template": "cave-inheritance",
+      "area": "mountain.deep-inheritance",
+      "script": "act4/182-deep-inheritance-founder.json",
+      "requires": [
+        "act4.investigation.theory"
+      ],
+      "sets": [
+        "gu.treasure-lotus",
+        "know.founder"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "gu-yue-founder",
+        "narrator"
+      ],
+      "mustLand": 13,
+      "recollection": null,
+      "foresight": null,
+      "art": "lotus-chamber",
+      "sfx": null,
+      "music": null,
+      "day": 160,
+      "weather": "clear",
+      "legacyStep": 66,
+      "designNote": "The room has to feel too large. Nothing here is a fight the player can win."
+    },
+    {
+      "id": "act4.blood-lake.stone-aperture",
+      "title": "What advancement costs",
+      "chapters": [
+        186,
+        189
+      ],
+      "coverage": "played",
+      "template": "cave-inheritance",
+      "area": "mountain.blood-lake",
+      "script": "act4/186-blood-lake-stone-aperture.json",
+      "requires": [
+        "act4.deep-inheritance.founder"
+      ],
+      "sets": [
+        "rank.3.peak",
+        "flag.aperture-spent"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "lord-sky-crane",
+        "narrator"
+      ],
+      "mustLand": 13,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 168,
+      "weather": "clear",
+      "legacyStep": 69,
+      "designNote": "Stone Aperture Gu is expended. Rank three peak, and the chance of anything beyond it spent."
+    },
+    {
+      "id": "act4.founder.sky-crane",
+      "title": "Two powers over one mountain",
+      "chapters": [
+        190,
+        193
+      ],
+      "coverage": "played",
+      "template": "cinematic",
+      "area": "mountain.blood-lake",
+      "script": "act4/190-founder-sky-crane.json",
+      "requires": [
+        "act4.blood-lake.stone-aperture"
+      ],
+      "sets": [
+        "know.fang-zheng-taken"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "gu-yue-founder",
+        "lord-sky-crane",
+        "fang-zheng",
+        "bai-ning-bing"
+      ],
+      "mustLand": 13,
+      "recollection": null,
+      "foresight": null,
+      "art": "uneasy-alliance",
+      "sfx": null,
+      "music": null,
+      "day": 176,
+      "weather": "storm",
+      "legacyStep": 72,
+      "designNote": "Staged so both read as out of the player's league. Fang Zheng is carried off, alive."
+    },
+    {
+      "id": "act4.blood-curtain.decision",
+      "title": "The curtain",
+      "chapters": [
+        194,
+        197
+      ],
+      "coverage": "played",
+      "template": "cinematic",
+      "area": "mountain.blood-lake",
+      "script": "act4/194-blood-curtain-decision.json",
+      "requires": [
+        "act4.founder.sky-crane"
+      ],
+      "sets": [
+        "flag.curtain-raised"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "bai-ning-bing",
+        "narrator"
+      ],
+      "mustLand": 14,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-red-storm",
+      "sfx": null,
+      "music": null,
+      "day": 179,
+      "weather": "storm",
+      "legacyStep": 74,
+      "designNote": "The decision is on screen. Mass death is staged through aftermath and reaction, never as a scoring mechanic."
+    },
+    {
+      "id": "act4.blood-curtain.cicada",
+      "title": "Spring, then autumn",
+      "chapters": [
+        198,
+        198
+      ],
+      "coverage": "played",
+      "template": "cinematic",
+      "area": "mountain.glacier",
+      "script": "act4/198-blood-curtain-cicada.json",
+      "requires": [
+        "act4.blood-curtain.decision"
+      ],
+      "sets": [
+        "flag.cicada-used"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "narrator"
+      ],
+      "mustLand": 14,
+      "recollection": null,
+      "foresight": null,
+      "art": "frozen-qing-mao",
+      "sfx": null,
+      "music": null,
+      "day": 181,
+      "weather": "snow",
+      "legacyStep": 75,
+      "designNote": "The one rewind, fixed. A cinematic sequence with a fixed outcome, not a combat arena."
+    },
+    {
+      "id": "act4.bai.transformation",
+      "title": "Yin, and what it changes",
+      "chapters": [
+        199,
+        199
+      ],
+      "coverage": "played",
+      "template": "cinematic",
+      "area": "mountain.glacier",
+      "script": "act4/199-bai-transformation.json",
+      "requires": [
+        "act4.blood-curtain.cicada"
+      ],
+      "sets": [
+        "gu.yang",
+        "flag.bai-restored",
+        "flag.no-healing-gu"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "bai-ning-bing"
+      ],
+      "mustLand": 15,
+      "recollection": null,
+      "foresight": null,
+      "art": "uneasy-alliance",
+      "sfx": null,
+      "music": null,
+      "day": 183,
+      "weather": "snow",
+      "legacyStep": 75,
+      "designNote": "Bai's model swaps to the restored variant here. The Yang Gu stays with Fang Yuan; that is the sequel's lever."
+    },
+    {
+      "id": "act4.escape.raft",
+      "title": "The Yellow Dragon River",
+      "chapters": [
+        200,
+        200
+      ],
+      "coverage": "played",
+      "template": "escape",
+      "area": "mountain.yellow-dragon-river",
+      "script": "act4/200-escape-raft.json",
+      "requires": [
+        "act4.bai.transformation"
+      ],
+      "sets": [
+        "rank.1.initial",
+        "flag.ending",
+        "legacy.available"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "bai-ning-bing",
+        "narrator"
+      ],
+      "mustLand": 15,
+      "recollection": null,
+      "foresight": null,
+      "art": "yellow-dragon-river",
+      "sfx": null,
+      "music": null,
+      "day": 184,
+      "weather": "mist",
+      "legacyStep": 76,
+      "designNote": "Rank one again, no healing Gu, the Southern Border ahead. Offers the Legacy export and the Unfinished business page."
+    }
+  ]
+}

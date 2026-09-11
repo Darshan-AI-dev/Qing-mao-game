@@ -1,0 +1,113 @@
+{
+  "id": "act4/156-forge-blood-moon",
+  "beat": "act4.forge.blood-moon",
+  "chapters": [
+    156,
+    157
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 156-157.",
+    "adaptation": "Chosen because its diet does not chain him to clan supplies after he leaves."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "reader-cultivation"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 156,
+      "text": "A moon not bound to orchids"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Reviewed the clan's Rank three recipes. Most of them bind the holder to clan supply lines through the diet. Convenient for the clan.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Chosen because its diet does not chain him to clan supplies after he leaves.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 157,
+      "text": "Chapter 157"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Chose Blood Moon and refined it without error. A red crescent with a second hit that lands late. Its diet is blood, which is available anywhere there are animals, which is everywhere I am going.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act4.forge.blood-moon.method",
+      "prompt": "The materials are laid out.",
+      "method": "forge",
+      "options": [
+        {
+          "id": "careful",
+          "label": "Measure twice. Lose the day.",
+          "method": "careful"
+        },
+        {
+          "id": "fast",
+          "label": "Now, and accept the odds.",
+          "method": "fast"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "gu.blood-moon"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

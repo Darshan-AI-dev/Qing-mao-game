@@ -1,0 +1,611 @@
+{
+  "act": "act2",
+  "note": "Beats are addressed by stable ID. legacyStep maps a pre-v5 save's step counter onto this graph; inserting a beat never renumbers another.",
+  "beats": [
+    {
+      "id": "act2.inquiry.jia-fu",
+      "title": "The question beneath the question",
+      "chapters": [
+        51,
+        59
+      ],
+      "coverage": "played",
+      "template": "inquiry",
+      "area": "mountain.clan-hall",
+      "script": "act2/051-inquiry-jia-fu.json",
+      "requires": [
+        "act1.breakthrough.middle-stage"
+      ],
+      "sets": [
+        "flag.inquiry-passed",
+        "know.tie-xue-leng"
+      ],
+      "reads": [
+        "jjs.trail",
+        "jjs.witness",
+        "jjs.gu-residue",
+        "jjs.missing-report",
+        "cover.liquor-worm"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "jia-fu",
+        "elder-bo"
+      ],
+      "mustLand": 5,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-hall",
+      "sfx": null,
+      "music": null,
+      "day": 104,
+      "weather": "clear",
+      "legacyStep": 11,
+      "designNote": "Exposure payoff one. A clean trail is a calm conversation; a messy one costs lies, stones and favours. He is never caught."
+    },
+    {
+      "id": "act2.inheritance.image-wall",
+      "title": "Beyond the recorded history",
+      "chapters": [
+        60,
+        61
+      ],
+      "coverage": "played",
+      "template": "wall-break",
+      "area": "mountain.flower-wine-cave",
+      "script": "act2/060-inheritance-image-wall.json",
+      "requires": [
+        "act2.inquiry.jia-fu"
+      ],
+      "sets": [
+        "flag.wall-open"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "narrator"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 118,
+      "weather": "clear",
+      "legacyStep": 12,
+      "designNote": "The Photo-audio Gu is exhausted; the wall becomes ordinary stone. Knowing where to look is what is left."
+    },
+    {
+      "id": "act2.academy.little-light",
+      "title": "A star beside the crescent",
+      "chapters": [
+        62,
+        63
+      ],
+      "coverage": "staged",
+      "template": "gu-selection",
+      "area": "mountain.gu-room",
+      "script": "act2/062-academy-little-light.json",
+      "requires": [
+        "act2.inheritance.image-wall"
+      ],
+      "sets": [
+        "gu.little-light"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "elder-gu-room"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 122,
+      "weather": "clear",
+      "legacyStep": 12,
+      "designNote": null
+    },
+    {
+      "id": "act2.inheritance.earth-treasury",
+      "title": "The seed of strength",
+      "chapters": [
+        64,
+        64
+      ],
+      "coverage": "played",
+      "template": "cave-inheritance",
+      "area": "mountain.earth-treasury",
+      "script": "act2/064-inheritance-earth-treasury.json",
+      "requires": [
+        "act2.inheritance.image-wall"
+      ],
+      "sets": [
+        "gu.white-boar"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "narrator"
+      ],
+      "mustLand": 6,
+      "recollection": null,
+      "foresight": null,
+      "art": "lotus-chamber",
+      "sfx": null,
+      "music": null,
+      "day": 124,
+      "weather": "clear",
+      "legacyStep": 12,
+      "designNote": "Each advantage the inheritance hands over answers the obstacle after it."
+    },
+    {
+      "id": "act2.hunter.map",
+      "title": "Knowledge carried in bamboo",
+      "chapters": [
+        65,
+        69
+      ],
+      "coverage": "played",
+      "template": "stealth-confrontation",
+      "area": "mountain.hunter-rest",
+      "script": "act2/065-hunter-map.json",
+      "requires": [
+        "act2.inheritance.earth-treasury"
+      ],
+      "sets": [
+        "item.beast-map",
+        "secret.hunter-map"
+      ],
+      "reads": [],
+      "evidence": [
+        "map.owner-missing",
+        "map.copy-mismatch"
+      ],
+      "cast": [
+        "fang-yuan",
+        "wang-da"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-map",
+      "sfx": null,
+      "music": null,
+      "day": 130,
+      "weather": "rain",
+      "legacyStep": 14,
+      "designNote": "Restores the actual acquisition the old docs replaced with an abandoned camp. Coercion staged, violence cut away from."
+    },
+    {
+      "id": "act2.boar.strength",
+      "title": "Strength that stays",
+      "chapters": [
+        70,
+        73
+      ],
+      "coverage": "played",
+      "template": "hunt-loop",
+      "area": "mountain.boar-trail",
+      "script": "act2/070-boar-strength.json",
+      "requires": [
+        "act2.hunter.map"
+      ],
+      "sets": [
+        "stat.strength",
+        "econ.boar-blood"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 138,
+      "weather": "clear",
+      "legacyStep": 15,
+      "designNote": "Hunting route from the map. Feeding White Boar Gu is also the cheapest diet in the game, which is the lesson."
+    },
+    {
+      "id": "act2.wang-da.inference",
+      "title": "The red circles",
+      "chapters": [
+        74,
+        77
+      ],
+      "coverage": "played",
+      "template": "inference",
+      "area": "mountain.wang-hideout",
+      "script": "act2/074-wang-da-inference.json",
+      "requires": [
+        "act2.boar.strength"
+      ],
+      "sets": [
+        "know.wang-da"
+      ],
+      "reads": [
+        "map.copy-mismatch"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 146,
+      "weather": "mist",
+      "legacyStep": 17,
+      "designNote": "A portrait, a cooking fire, concealed markings. He avoids the fight by knowing the mountain better."
+    },
+    {
+      "id": "act2.mission.roster",
+      "title": "Names on a roster",
+      "chapters": [
+        78,
+        78
+      ],
+      "coverage": "staged",
+      "template": "mission-brief",
+      "area": "mountain.affairs-hall",
+      "script": "act2/078-mission-roster.json",
+      "requires": [
+        "act2.wang-da.inference"
+      ],
+      "sets": [
+        "know.jiao-san"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "jiao-san",
+        "elder-bo"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 152,
+      "weather": "clear",
+      "legacyStep": 17,
+      "designNote": "Seeds the winter group so chapters 93-96 cost something."
+    },
+    {
+      "id": "act2.inheritance.boulder",
+      "title": "What strength is for",
+      "chapters": [
+        79,
+        79
+      ],
+      "coverage": "played",
+      "template": "boulder-push",
+      "area": "mountain.inheritance-passage",
+      "script": "act2/079-inheritance-boulder.json",
+      "requires": [
+        "act2.boar.strength"
+      ],
+      "sets": [
+        "gu.jade-skin",
+        "flag.boar-ceiling"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": 6,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 159,
+      "weather": "clear",
+      "legacyStep": 17,
+      "designNote": "White Boar Gu stops granting strength here. The boulder is the wall that proves it was enough."
+    },
+    {
+      "id": "act2.inheritance.stone-forest",
+      "title": "Eyes above the path",
+      "chapters": [
+        80,
+        81
+      ],
+      "coverage": "played",
+      "template": "stone-forest",
+      "area": "mountain.stone-forest",
+      "script": "act2/080-inheritance-stone-forest.json",
+      "requires": [
+        "act2.inheritance.boulder"
+      ],
+      "sets": [
+        "flag.monkeys-known"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": 6,
+      "recollection": null,
+      "foresight": null,
+      "art": "stone-forest",
+      "sfx": null,
+      "music": null,
+      "day": 164,
+      "weather": "clear",
+      "legacyStep": 18,
+      "designNote": "Ceiling, darkness, carried light. The jade-eye monkeys conceal themselves and their stone bodies come apart."
+    },
+    {
+      "id": "act2.duel.preparation",
+      "title": "Before the examination",
+      "chapters": [
+        82,
+        84
+      ],
+      "coverage": "staged",
+      "template": "escalation",
+      "area": "mountain.academy",
+      "script": "act2/082-duel-preparation.json",
+      "requires": [
+        "act2.inheritance.stone-forest"
+      ],
+      "sets": [
+        "know.fang-zheng-defences"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "fang-zheng",
+        "elder-gu-room"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 172,
+      "weather": "clear",
+      "legacyStep": 19,
+      "designNote": "The player is shown what to read during the duel. Readers get the dramatic irony for free."
+    },
+    {
+      "id": "act2.duel.fang-zheng",
+      "title": "The year-end duel",
+      "chapters": [
+        85,
+        87
+      ],
+      "coverage": "played",
+      "template": "duel",
+      "area": "mountain.arena",
+      "script": "act2/085-duel-fang-zheng.json",
+      "requires": [
+        "act2.duel.preparation"
+      ],
+      "sets": [
+        "flag.duel-won"
+      ],
+      "reads": [
+        "know.fang-zheng-defences"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "fang-zheng",
+        "elder-gu-room"
+      ],
+      "mustLand": 7,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 180,
+      "weather": "clear",
+      "legacyStep": 20,
+      "designNote": "Multi-phase. Each phase is a defence to read, not a vitality bar to out-damage."
+    },
+    {
+      "id": "act2.winter.mission-brief",
+      "title": "Permafrost and decayed soil",
+      "chapters": [
+        88,
+        90
+      ],
+      "coverage": "played",
+      "template": "mission-brief",
+      "area": "mountain.winter-grounds",
+      "script": "act2/088-winter-mission-brief.json",
+      "requires": [
+        "act2.duel.fang-zheng"
+      ],
+      "sets": [
+        "item.decayed-soil",
+        "econ.mission-pay"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "jiao-san"
+      ],
+      "mustLand": 8,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 278,
+      "weather": "snow",
+      "legacyStep": 21,
+      "designNote": "Clan obligations start competing with cultivation time. The calendar does the arguing."
+    },
+    {
+      "id": "act2.secret.rank-two",
+      "title": "Red steel, quietly",
+      "chapters": [
+        91,
+        92
+      ],
+      "coverage": "played",
+      "template": "secret-cultivation",
+      "area": "mountain.jiang-he-refuge",
+      "script": "act2/091-secret-rank-two.json",
+      "requires": [
+        "act2.winter.mission-brief"
+      ],
+      "sets": [
+        "rank.2.initial",
+        "secret.rank-two"
+      ],
+      "reads": [],
+      "evidence": [
+        "rank2.essence-colour",
+        "rank2.absence"
+      ],
+      "cast": [
+        "fang-yuan",
+        "jiang-he"
+      ],
+      "mustLand": 8,
+      "recollection": null,
+      "foresight": null,
+      "art": "reader-cultivation",
+      "sfx": null,
+      "music": null,
+      "day": 288,
+      "weather": "snow",
+      "legacyStep": 21,
+      "designNote": "A breakthrough ritual performed in secret. The secrecy is itself an exposure risk from here on."
+    },
+    {
+      "id": "act2.winter.boar-king",
+      "title": "Inside the boar king",
+      "chapters": [
+        93,
+        96
+      ],
+      "coverage": "played",
+      "template": "beast-crossing",
+      "area": "mountain.beast-crossing",
+      "script": "act2/093-winter-boar-king.json",
+      "requires": [
+        "act2.secret.rank-two"
+      ],
+      "sets": [
+        "item.snowy-tusk",
+        "know.group-losses"
+      ],
+      "reads": [],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "jiao-san",
+        "narrator"
+      ],
+      "mustLand": 8,
+      "recollection": null,
+      "foresight": null,
+      "art": "frozen-qing-mao",
+      "sfx": null,
+      "music": null,
+      "day": 298,
+      "weather": "snow",
+      "legacyStep": 23,
+      "designNote": "The group losses are played, not summarised. Survival inside the carcass is the sequence, and it is cut away from at the right moment."
+    },
+    {
+      "id": "act2.affairs.application",
+      "title": "An application, and an inquiry into a loss",
+      "chapters": [
+        97,
+        98
+      ],
+      "coverage": "staged",
+      "template": "petition",
+      "area": "mountain.affairs-hall",
+      "script": "act2/097-affairs-application.json",
+      "requires": [
+        "act2.winter.boar-king"
+      ],
+      "sets": [
+        "flag.assets-applied"
+      ],
+      "reads": [
+        "know.group-losses"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan",
+        "elder-bo"
+      ],
+      "mustLand": 9,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 306,
+      "weather": "snow",
+      "legacyStep": 23,
+      "designNote": "The family-asset mission opens here and is not settled until chapter 115."
+    },
+    {
+      "id": "act2.refinement.white-jade",
+      "title": "White Jade",
+      "chapters": [
+        99,
+        100
+      ],
+      "coverage": "played",
+      "template": "refinement",
+      "area": "mountain.forge",
+      "script": "act2/099-refinement-white-jade.json",
+      "requires": [
+        "act2.affairs.application"
+      ],
+      "sets": [
+        "gu.white-jade"
+      ],
+      "reads": [
+        "item.snowy-tusk"
+      ],
+      "evidence": [],
+      "cast": [
+        "fang-yuan"
+      ],
+      "mustLand": null,
+      "recollection": null,
+      "foresight": null,
+      "art": null,
+      "sfx": null,
+      "music": null,
+      "day": 312,
+      "weather": "snow",
+      "legacyStep": 24,
+      "designNote": "Canonical refinement: it cannot fail outright. Without the tusk it costs more days and more stones."
+    }
+  ]
+}

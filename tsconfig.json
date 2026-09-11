@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": false,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@engine/*": ["engine/*"],
+      "@canon/*": ["canon/*"],
+      "@content/*": ["content/qingmao/*"],
+      "three": ["node_modules/@types/three/index.d.ts"],
+      "three/addons/*": ["node_modules/@types/three/examples/jsm/*"]
+    }
+  },
+  "include": ["engine", "content", "canon", "tests/e2e", "tools/types"],
+  "exclude": ["node_modules", "vendor", "dist"]
+}

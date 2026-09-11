@@ -1,0 +1,234 @@
+{
+  "id": "act2/051-inquiry-jia-fu",
+  "beat": "act2.inquiry.jia-fu",
+  "chapters": [
+    51,
+    59
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 51-59.",
+    "adaptation": "Exposure payoff one. A clean trail is a calm conversation; a messy one costs lies, stones and favours. He is never caught."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "reader-hall"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "jia-fu",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "elder-bo",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 51,
+      "text": "The question beneath the question"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Jia Fu opened an inquiry. He is grieving and he is formal, and he has arranged the second to hold the first. I came with my fossil and my dates in order.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Exposure payoff one. A clean trail is a calm conversation; a messy one costs lies, stones and favours. He is never caught.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "jia-fu",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "jia-fu",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 52,
+      "text": "Chapter 52"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "He asked where the Liquor worm came from. I said the caravan, the purple-gold shell, the market, the witnesses. All of it is true and none of it is the answer.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 53,
+      "text": "Chapter 53"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "They brought out Bamboo Gentleman. It stays green while the speaker is telling the truth, and it stayed green. I will not pretend that was my doing.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 54,
+      "text": "Chapter 54"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Second session. He asked the same question with different words, which is what a man does when the evidence has run out and the certainty has not.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 55,
+      "text": "Chapter 55"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "He asked about the night itself. I accounted for my evening in the kind of detail nobody invents and nobody enjoys listening to.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 56,
+      "text": "Chapter 56"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "What he has: a missing cousin, a youth who was on the mountain, and an instinct. What he needs: one piece of anything. I spent the week making sure the cheapest piece was already gone.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 57,
+      "text": "Chapter 57"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Third session, shorter. The elders are tired of it. An inquiry that cannot produce a finding becomes an expense, and expenses end themselves.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 58,
+      "text": "Chapter 58"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Closed without a finding. I did not win this; I was not convicted, which is a different and more durable outcome.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 59,
+      "text": "Chapter 59"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Jia Fu said, in front of the council, that he intends to send for an investigator. He named Tie Xue Leng. I wrote the name down and left the page where I would see it again.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act2.inquiry.jia-fu.method",
+      "prompt": "Jia Fu asks where the Liquor worm came from.",
+      "method": "inquiry",
+      "options": [
+        {
+          "id": "fossil",
+          "label": "The caravan, the sealed shell, the witnesses.",
+          "method": "fossil"
+        },
+        {
+          "id": "vague",
+          "label": "Less than he asked for.",
+          "method": "vague"
+        },
+        {
+          "id": "offer",
+          "label": "Offer to have it examined.",
+          "method": "offer"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "flag.inquiry-passed"
+    },
+    {
+      "op": "flag",
+      "set": "know.tie-xue-leng"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

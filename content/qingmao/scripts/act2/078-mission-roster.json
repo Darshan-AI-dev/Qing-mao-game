@@ -1,0 +1,103 @@
+{
+  "id": "act2/078-mission-roster",
+  "beat": "act2.mission.roster",
+  "chapters": [
+    78,
+    78
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 78.",
+    "adaptation": "Seeds the winter group so chapters 93-96 cost something."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "jiao-san",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "elder-bo",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 78,
+      "text": "Names on a roster"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The affairs hall posted a winter roster. Jiao San leads it, and he carries the group's equipment himself, which tells me what kind of leader he is and what kind of loss it would be.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Seeds the winter group so chapters 93-96 cost something.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "jiao-san",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "jiao-san",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "flag",
+      "set": "know.jiao-san"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

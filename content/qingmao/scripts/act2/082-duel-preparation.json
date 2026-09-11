@@ -1,0 +1,127 @@
+{
+  "id": "act2/082-duel-preparation",
+  "beat": "act2.duel.preparation",
+  "chapters": [
+    82,
+    84
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 82-84.",
+    "adaptation": "The player is shown what to read during the duel. Readers get the dramatic irony for free."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "fang-zheng",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "elder-gu-room",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 82,
+      "text": "Before the examination"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The year-end examination is posted. My brother will be in it, funded, equipped and genuinely talented. The clan has already decided what the result means.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The player is shown what to read during the duel. Readers get the dramatic irony for free.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "fang-zheng",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "fang-zheng",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 83,
+      "text": "Chapter 83"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Watched him train for three afternoons. He layers his defences and he changes them in the same order every time, because nobody has ever made him improvise.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 84,
+      "text": "Chapter 84"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Wrote the order down. Shield, then the second shield, then the retreat. A sequence is not a defence; it is a schedule, and a schedule can be met early.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "know.fang-zheng-defences"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

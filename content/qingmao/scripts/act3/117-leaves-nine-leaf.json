@@ -1,0 +1,110 @@
+{
+  "id": "act3/117-leaves-nine-leaf",
+  "beat": "act3.leaves.nine-leaf",
+  "chapters": [
+    117,
+    118
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 117-118.",
+    "adaptation": "The most reliable income in the game, and the only healing. Both facts matter at chapter 200."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "jiang-ya",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 117,
+      "text": "Nine leaves and a buyer"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Nine Leaf Vitality Grass. It yields leaves on a cycle and a leaf restores vitality, which makes it the only healing I own and the only income I can predict.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The most reliable income in the game, and the only healing. Both facts matter at chapter 200.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "jiang-ya",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "jiang-ya",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 118,
+      "text": "Chapter 118"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Jiang Ya buys the leaves at five stones and does not ask where the terraces came from. Prices first, pleasantries after. My preferred kind of merchant.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "gu.nine-leaf"
+    },
+    {
+      "op": "flag",
+      "set": "econ.leaf-income"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

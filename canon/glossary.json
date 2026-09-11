@@ -1,0 +1,158 @@
+{
+  "note": "One chosen terminology set, applied everywhere. The content lint fails any string that uses a listed `avoid` form. Newcomer-facing definitions double as the codex's first-use explanations (§3.6).",
+  "terminologySet": "qingmao-en-v1",
+  "terms": [
+    {
+      "id": "gu",
+      "use": "Gu",
+      "avoid": [
+        "gu worm (lowercase g)",
+        "bug"
+      ],
+      "plural": "Gu",
+      "definition": "A living worm that performs one fixed effect. A Gu Master keeps Gu inside their aperture and spends primeval essence to activate them.",
+      "firstUse": 4
+    },
+    {
+      "id": "gu-master",
+      "use": "Gu Master",
+      "avoid": [
+        "gu master",
+        "Gumaster"
+      ],
+      "definition": "Someone with an opened aperture who can keep and use Gu.",
+      "firstUse": 4
+    },
+    {
+      "id": "aperture",
+      "use": "aperture",
+      "avoid": [
+        "dantian",
+        "core"
+      ],
+      "definition": "The space opened inside a Gu Master at awakening. It holds primeval essence and the Gu bound to it.",
+      "firstUse": 4
+    },
+    {
+      "id": "primeval-essence",
+      "use": "primeval essence",
+      "avoid": [
+        "primordial essence",
+        "qi",
+        "mana"
+      ],
+      "definition": "The fuel spent to activate a Gu. Every ability in this game shows its cost before you use it.",
+      "firstUse": 4
+    },
+    {
+      "id": "primeval-sea",
+      "use": "primeval sea",
+      "avoid": [
+        "primordial sea",
+        "essence pool"
+      ],
+      "definition": "How much essence an aperture can hold. Aptitude sets it as a percentage, and Fang Yuan's is forty-four.",
+      "firstUse": 5
+    },
+    {
+      "id": "primeval-stone",
+      "use": "primeval stone",
+      "avoid": [
+        "primordial stone",
+        "gold pieces",
+        "gold coins",
+        "coin"
+      ],
+      "plural": "primeval stones",
+      "definition": "The currency. Gu food, refinements and bribes are all paid in stones, and the game expects you to count them.",
+      "firstUse": 8
+    },
+    {
+      "id": "aptitude",
+      "use": "aptitude",
+      "avoid": [
+        "talent grade"
+      ],
+      "definition": "A grade from A to D read out at awakening. It sets the size of the primeval sea and, as far as the clan is concerned, the size of the person.",
+      "firstUse": 5
+    },
+    {
+      "id": "rank",
+      "use": "Rank one",
+      "avoid": [
+        "level 1",
+        "Tier 1"
+      ],
+      "definition": "Cultivation ranks run from one upward, each with four small stages: initial, middle, upper and peak.",
+      "firstUse": 4
+    },
+    {
+      "id": "small-realm",
+      "use": "small realm",
+      "avoid": [
+        "sub-stage"
+      ],
+      "definition": "One of the four stages inside a rank. Advancing one is a breakthrough, and this game stages breakthroughs as rituals.",
+      "firstUse": 50
+    },
+    {
+      "id": "refinement",
+      "use": "refinement",
+      "avoid": [
+        "crafting",
+        "fusion (as a noun)"
+      ],
+      "definition": "Combining Gu and ingredients into a stronger Gu. Canonical refinements always succeed eventually; optional recipes can fail outright.",
+      "firstUse": 99
+    },
+    {
+      "id": "inheritance",
+      "use": "inheritance",
+      "avoid": [
+        "dungeon",
+        "tomb"
+      ],
+      "definition": "A dead cultivator's hidden legacy, usually a sequence of tests that each hand you what the next one demands.",
+      "firstUse": 14
+    },
+    {
+      "id": "earth-treasury-flower",
+      "use": "Earth Treasury Flower",
+      "avoid": [
+        "treasure flower"
+      ],
+      "definition": "A flower grown to hold a Gu inside an inheritance.",
+      "firstUse": 61
+    },
+    {
+      "id": "demonic-path",
+      "use": "demonic path",
+      "avoid": [
+        "evil path",
+        "dark side"
+      ],
+      "definition": "Cultivation that refuses the righteous path's obligations. It is a description of method, not an insult, and Fang Yuan treats it as neither.",
+      "firstUse": 1
+    },
+    {
+      "id": "vitality",
+      "use": "vitality",
+      "avoid": [
+        "health",
+        "HP"
+      ],
+      "definition": "What a body has left. The Nine Leaf Vitality Grass is the only thing that restores it, and it is gone before the end.",
+      "firstUse": 117
+    },
+    {
+      "id": "qing-mao",
+      "use": "Qing Mao Mountain",
+      "avoid": [
+        "Qingmao",
+        "Green Mao"
+      ],
+      "definition": "The mountain the Gu Yue clan holds, named for its straight, spear-tipped bamboo.",
+      "firstUse": 1
+    }
+  ]
+}

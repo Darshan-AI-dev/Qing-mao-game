@@ -1,0 +1,95 @@
+{
+  "id": "act2/080-inheritance-stone-forest",
+  "beat": "act2.inheritance.stone-forest",
+  "chapters": [
+    80,
+    81
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 80-81.",
+    "adaptation": "Ceiling, darkness, carried light. The jade-eye monkeys conceal themselves and their stone bodies come apart."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "stone-forest"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 80,
+      "text": "Eyes above the path"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Below the passage the cave opens into a stone forest. I could not see the ceiling from the floor. I went back for a light before I went in, which is the whole lesson of this place.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Ceiling, darkness, carried light. The jade-eye monkeys conceal themselves and their stone bodies come apart.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 81,
+      "text": "Chapter 81"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Jade-eye monkeys. They conceal themselves against the pillars and their bodies come apart into stone when they are finished. Jade Skin held. Went in twice more to learn the pillars rather than the monkeys.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "flag.monkeys-known"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

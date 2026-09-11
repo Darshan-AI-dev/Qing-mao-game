@@ -1,0 +1,16 @@
+{
+  "name": "Qing Mao · Rebirth",
+  "short_name": "Qing Mao",
+  "description": "Live the Qing Mao arc of Reverend Insanity, chapters 1 to 200.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d1b1f",
+  "theme_color": "#12282e",
+  "categories": ["games"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

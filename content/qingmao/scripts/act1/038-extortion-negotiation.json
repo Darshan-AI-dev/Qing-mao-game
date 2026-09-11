@@ -1,0 +1,130 @@
+{
+  "id": "act1/038-extortion-negotiation",
+  "beat": "act1.extortion.negotiation",
+  "chapters": [
+    38,
+    38
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 38.",
+    "adaptation": "No combat. What the player left behind sets how much he has to concede."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "mo-bei",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "place",
+      "actor": "academy-elder-mo",
+      "at": [
+        0,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 38,
+      "text": "Composure as the weapon"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Mo Bei came to terms in a classroom with the elder present. I said very little. The advantage in that room was not strength and it was not leverage — it was being the only person in it who was not afraid of how the conversation looked.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "No combat. What the player left behind sets how much he has to concede.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "mo-bei",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "mo-bei",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "choice",
+      "id": "act1.extortion.negotiation.method",
+      "prompt": "What do you put on the table?",
+      "method": "extortion",
+      "options": [
+        {
+          "id": "composure",
+          "label": "Nothing. Let the silence do it.",
+          "method": "composure"
+        },
+        {
+          "id": "concede",
+          "label": "A number, slightly too generous.",
+          "method": "concede"
+        },
+        {
+          "id": "leverage",
+          "label": "What you know about their household.",
+          "method": "leverage"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "econ.mo-settlement"
+    },
+    {
+      "op": "flag",
+      "set": "flag.extortion-closed"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

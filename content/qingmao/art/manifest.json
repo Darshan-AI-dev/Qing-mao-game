@@ -1,0 +1,507 @@
+{
+  "note": "Illustration manifest. `status` is honest about what exists: `present` ships today, `planned` has a written prompt and a slot reserved. Each act gets an opener and each must-land moment a key illustration, per the art plan.",
+  "styleGuide": "docs/ART-STYLE-GUIDE.md",
+  "format": {
+    "ship": "webp",
+    "fallback": "png",
+    "note": "Source PNG and JPEG are converted by tools/optimise-art.py. The measured result for the current set is 24.33 MB of source art down to 3.13 MB of WebP at a 1600 px cap."
+  },
+  "illustrations": [
+    {
+      "id": "bamboo-dawn",
+      "status": "present",
+      "src": "art/bamboo-dawn.webp",
+      "title": "Rain over the bamboo village",
+      "chapters": [
+        1,
+        6
+      ],
+      "alt": "Green bamboo dwellings on wooden stilts above misty mountain ground after rain.",
+      "note": "Pale-green two-storey bamboo and wood houses; wooden stakes below the living floor."
+    },
+    {
+      "id": "awakening",
+      "status": "present",
+      "src": "art/awakening.webp",
+      "title": "Forty-four percent",
+      "chapters": [
+        4,
+        6
+      ],
+      "alt": "Hope Gu gathering above moon orchids beside an underground river.",
+      "note": "A clear, faintly blue river; moon orchids with jade stems and pearl-bright centres on the far bank."
+    },
+    {
+      "id": "lotus-chamber",
+      "status": "present",
+      "src": "art/lotus-chamber.webp",
+      "title": "What the mountain keeps",
+      "chapters": [
+        14,
+        19
+      ],
+      "alt": "A dark inheritance chamber lit from one carried source.",
+      "note": "Used for the Flower Wine cave and again for the deep inheritance."
+    },
+    {
+      "id": "stone-forest",
+      "status": "present",
+      "src": "art/stone-forest.webp",
+      "title": "Eyes above the path",
+      "chapters": [
+        79,
+        81
+      ],
+      "alt": "An immense underground stone forest with jade-eyed shapes watching from the pillars.",
+      "note": "Must read as enclosed: the vault overhead is the point."
+    },
+    {
+      "id": "frozen-qing-mao",
+      "status": "present",
+      "src": "art/frozen-qing-mao.webp",
+      "title": "The winter crossing",
+      "chapters": [
+        93,
+        96
+      ],
+      "alt": "A snowbound mountain crossing under heavy cloud.",
+      "note": "Also used for the glacier at chapter 198."
+    },
+    {
+      "id": "uneasy-alliance",
+      "status": "present",
+      "src": "art/uneasy-alliance.webp",
+      "title": "An arrangement, not a friendship",
+      "chapters": [
+        190,
+        199
+      ],
+      "alt": "Two figures on broken ground, neither looking at the other.",
+      "note": "Bai must appear with one arm before chapter 199 and restored after it."
+    },
+    {
+      "id": "yellow-dragon-river",
+      "status": "present",
+      "src": "art/yellow-dragon-river.webp",
+      "title": "The Yellow Dragon River",
+      "chapters": [
+        199,
+        200
+      ],
+      "alt": "A raft on a wide river, a burning mountain behind.",
+      "note": "The last image in the game and the hand-off to the sequel."
+    },
+    {
+      "id": "reader-cicada",
+      "status": "present",
+      "src": "art/reader-cicada.webp",
+      "title": "Spring, then autumn",
+      "chapters": [
+        44,
+        49
+      ],
+      "alt": "An interpretive illustration of the Spring Autumn Cicada."
+    },
+    {
+      "id": "reader-cultivation",
+      "status": "present",
+      "src": "art/reader-cultivation.webp",
+      "title": "Seated",
+      "chapters": [
+        91,
+        157
+      ],
+      "alt": "A figure cultivating by lamplight."
+    },
+    {
+      "id": "reader-hall",
+      "status": "present",
+      "src": "art/reader-hall.webp",
+      "title": "The council",
+      "chapters": [
+        51,
+        154
+      ],
+      "alt": "A clan council pavilion interior."
+    },
+    {
+      "id": "reader-hall-steps",
+      "status": "present",
+      "src": "art/reader-hall-steps.webp",
+      "title": "Steps to the hall",
+      "chapters": [
+        109,
+        112
+      ],
+      "alt": "Steps up to a clan hall."
+    },
+    {
+      "id": "reader-map",
+      "status": "present",
+      "src": "art/reader-map.webp",
+      "title": "The beast-skin map",
+      "chapters": [
+        65,
+        69
+      ],
+      "alt": "An interpretive map of Qing Mao Mountain."
+    },
+    {
+      "id": "reader-red-storm",
+      "status": "present",
+      "src": "art/reader-red-storm.webp",
+      "title": "The curtain",
+      "chapters": [
+        139,
+        197
+      ],
+      "alt": "A red storm over a mountain."
+    },
+    {
+      "id": "reader-touzi",
+      "status": "present",
+      "src": "art/reader-touzi.webp",
+      "title": "The investigator",
+      "chapters": [
+        170,
+        181
+      ],
+      "alt": "A figure with a notebook."
+    },
+    {
+      "id": "reader-white-robes",
+      "status": "present",
+      "src": "art/reader-white-robes.webp",
+      "title": "Bai",
+      "chapters": [
+        116,
+        138
+      ],
+      "alt": "A pale-robed figure."
+    },
+    {
+      "id": "reader-gu-room",
+      "status": "present",
+      "src": "art/reader-gu-room.webp",
+      "title": "The Gu room",
+      "chapters": [
+        7,
+        63
+      ],
+      "alt": "Shelves of containers in a clan Gu room."
+    },
+    {
+      "id": "prologue-last-stand",
+      "status": "planned",
+      "title": "The last stand of the first life",
+      "chapters": [
+        1,
+        2
+      ],
+      "alt": "A cornered figure at full power in a ruined hall.",
+      "prompt": "Act opener. Stylised low-poly wuxia, hand-painted atlas feel, soft cel lighting. Night, storm, one doorway, eight silhouettes that have not come through it. The cornered figure is calm. Cool blue-green key, one warm lantern. No gore."
+    },
+    {
+      "id": "act1-opener",
+      "status": "planned",
+      "title": "Act I · Awakening",
+      "chapters": [
+        1,
+        50
+      ],
+      "alt": "The mountain at dawn from above the village.",
+      "prompt": "Act I opener. Spear bamboo straight and sharp-tipped, stilted houses, rain clearing. Wide, quiet, a little too large for the figure in it."
+    },
+    {
+      "id": "act1-night-path",
+      "status": "planned",
+      "title": "Someone on the path behind you",
+      "chapters": [
+        44,
+        49
+      ],
+      "alt": "A night path through bamboo with two sets of prints.",
+      "prompt": "Night, mist, a narrow path, prints in wet clay going one way. Tension without violence. Cool palette, no figures."
+    },
+    {
+      "id": "act1-academy-gate",
+      "status": "planned",
+      "title": "After class",
+      "chapters": [
+        25,
+        38
+      ],
+      "alt": "An academy gate at the end of a school day.",
+      "prompt": "Late afternoon, students leaving, one pair standing slightly apart. Warm low light. The composition should make the waiting figure the calm one."
+    },
+    {
+      "id": "act2-opener",
+      "status": "planned",
+      "title": "Act II · Inheritance",
+      "chapters": [
+        51,
+        100
+      ],
+      "alt": "An inheritance passage descending out of daylight.",
+      "prompt": "Act II opener. A sloping stone passage, a round boulder, light behind and darkness ahead."
+    },
+    {
+      "id": "act2-duel",
+      "status": "planned",
+      "title": "The year-end duel",
+      "chapters": [
+        85,
+        87
+      ],
+      "alt": "Two youths across an examination arena with a crowd behind.",
+      "prompt": "Layered wards around one figure, nothing around the other. Daylight, dust, a watching crowd. Readable as a test, not a war."
+    },
+    {
+      "id": "act3-opener",
+      "status": "planned",
+      "title": "Act III · Assets and the wolf tide",
+      "chapters": [
+        101,
+        150
+      ],
+      "alt": "A tavern's upper floor over a village street.",
+      "prompt": "Act III opener. Commerce and weather. Two-storey tavern, lanterns, a sky that is about to turn."
+    },
+    {
+      "id": "act3-qing-shu",
+      "status": "planned",
+      "title": "A position that does not hold",
+      "chapters": [
+        143,
+        145
+      ],
+      "alt": "A defended forest position seen from a ridge above.",
+      "prompt": "From above and far away, deliberately. The viewer is on the ridge, not in the line. Storm light, lightning in the undergrowth."
+    },
+    {
+      "id": "act4-opener",
+      "status": "planned",
+      "title": "Act IV · The mountain falls",
+      "chapters": [
+        151,
+        200
+      ],
+      "alt": "A vast chamber beneath a clan's foundations.",
+      "prompt": "Act IV opener. Scale first: the room must feel built for something other than people."
+    },
+    {
+      "id": "act4-investigation",
+      "status": "planned",
+      "title": "A theory that is wrong",
+      "chapters": [
+        178,
+        181
+      ],
+      "alt": "A council hall with a notebook open on a table.",
+      "prompt": "Quiet, institutional, tense. The notebook is the subject of the picture."
+    },
+    {
+      "id": "act1-hostel-room",
+      "status": "planned",
+      "title": "Rain on the upper floor",
+      "chapters": [
+        3,
+        3
+      ],
+      "alt": "A small bamboo room with an open window and rain outside.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. The first thing the player sees after the prologue. Intimate, poor, specific: stakes below the floor, a thin blanket, a broken latch."
+    },
+    {
+      "id": "act1-caravan",
+      "status": "planned",
+      "title": "Inside the purple-gold shell",
+      "chapters": [
+        39,
+        43
+      ],
+      "alt": "A travelling market stall of sealed gambling stones.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Road-worn finery, rings, lamplight on sealed shells. Sell uncertainty in the composition."
+    },
+    {
+      "id": "act1-breakthrough",
+      "status": "planned",
+      "title": "Rank one, middle stage",
+      "chapters": [
+        50,
+        50
+      ],
+      "alt": "A seated figure at night as something settles.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. A ritual, not a pop-up. Stillness, one light source, no spectacle."
+    },
+    {
+      "id": "act2-inquiry",
+      "status": "planned",
+      "title": "The question beneath the question",
+      "chapters": [
+        51,
+        59
+      ],
+      "alt": "A council pavilion interior with one youth standing.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Formal, grieving, out of evidence. The room should be larger than the matter."
+    },
+    {
+      "id": "act2-hunter-rest",
+      "status": "planned",
+      "title": "Knowledge carried in bamboo",
+      "chapters": [
+        65,
+        69
+      ],
+      "alt": "A hunter's camp with a beast-skin map spread out.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Working notes, not treasure. Two bowls, a cooking fire, a portrait on the wall."
+    },
+    {
+      "id": "act2-boulder",
+      "status": "planned",
+      "title": "What strength is for",
+      "chapters": [
+        79,
+        79
+      ],
+      "alt": "A round boulder in a sloping stone passage.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Physical problem, physical answer. Light from behind, darkness ahead."
+    },
+    {
+      "id": "act2-secret-rank-two",
+      "status": "planned",
+      "title": "Red steel, quietly",
+      "chapters": [
+        91,
+        92
+      ],
+      "alt": "A lamplit back room with one seated figure.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Secrecy as composition: no witnesses in frame, and nowhere in frame to hide one."
+    },
+    {
+      "id": "act2-boar-king",
+      "status": "planned",
+      "title": "Inside the boar king",
+      "chapters": [
+        93,
+        96
+      ],
+      "alt": "A snowfield after a beast crossing.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Aftermath only. Tracks, equipment, snow filling in. Nothing anatomical."
+    },
+    {
+      "id": "act3-assets",
+      "status": "planned",
+      "title": "The property changes hands",
+      "chapters": [
+        113,
+        115
+      ],
+      "alt": "An affairs hall table with ledgers and a seal.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. The political squeeze rendered as paperwork. Make the documents the protagonist."
+    },
+    {
+      "id": "act3-leaf-terraces",
+      "status": "planned",
+      "title": "Nine leaves and a buyer",
+      "chapters": [
+        117,
+        118
+      ],
+      "alt": "Terraced beds of pale vitality grass at dusk.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. The most reliable income in the game, and the only healing. Quiet, cultivated, valuable."
+    },
+    {
+      "id": "act3-tavern-floor",
+      "status": "planned",
+      "title": "Staff, stock and troublemakers",
+      "chapters": [
+        125,
+        127
+      ],
+      "alt": "The lower floor of a two-storey tavern, full.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Warm, crowded, working. A very large man on the door."
+    },
+    {
+      "id": "act3-four-flavours",
+      "status": "planned",
+      "title": "Four Flavours",
+      "chapters": [
+        128,
+        131
+      ],
+      "alt": "A refinement bench with two worms and a wine jar.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Expense made visible. The materials cost more than the room."
+    },
+    {
+      "id": "act4-yao-le",
+      "status": "planned",
+      "title": "Someone who recognises him",
+      "chapters": [
+        150,
+        151
+      ],
+      "alt": "A rain-soaked forest path past a ridge.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Her relief is the whole picture, and she must be a person in it. No violence, no aftermath, nothing implied in frame."
+    },
+    {
+      "id": "act4-rank-three",
+      "status": "planned",
+      "title": "White silver",
+      "chapters": [
+        152,
+        152
+      ],
+      "alt": "A breakthrough at night in deep forest.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. A full ritual. Cold light, no triumph in the staging."
+    },
+    {
+      "id": "act4-founder",
+      "status": "planned",
+      "title": "Under the clan",
+      "chapters": [
+        182,
+        185
+      ],
+      "alt": "An enormous chamber beneath a clan's foundations.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Scale first. The figure should be hard to find."
+    },
+    {
+      "id": "act4-sky-crane",
+      "status": "planned",
+      "title": "Two powers over one mountain",
+      "chapters": [
+        190,
+        193
+      ],
+      "alt": "Two distant figures above a burning mountain.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. Both must read as out of the player's league. The viewpoint is at the edge, not between them."
+    },
+    {
+      "id": "act4-cicada",
+      "status": "planned",
+      "title": "Spring, then autumn",
+      "chapters": [
+        195,
+        198
+      ],
+      "alt": "A glacier under a red sky, time out of joint.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. The one rewind. Fixed outcome; render it as a cost, not a power."
+    },
+    {
+      "id": "act4-bai-restored",
+      "status": "planned",
+      "title": "Yin, and what it changes",
+      "chapters": [
+        199,
+        199
+      ],
+      "alt": "Two figures on ice, one newly two-armed.",
+      "prompt": "Stylised low-poly wuxia, hand-painted texture-atlas feel, soft cel lighting. The arm is back and something else is different. Neither of them is discussing it."
+    }
+  ],
+  "characterSheets": {
+    "note": "One model sheet per named character, built from the appearance notes in canon/characters.json with their chapter references. Rigs must expose the shared animation set in engine/render/actors.ts.",
+    "target": "about 30 rigged characters at 3-5k triangles with LODs",
+    "status": "procedural stand-ins ship today; the actor API swaps a glTF rig in without touching scene data"
+  }
+}

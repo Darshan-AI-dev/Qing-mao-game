@@ -1,0 +1,261 @@
+{
+  "id": "act1/009-household-brothers",
+  "beat": "act1.household.brothers",
+  "chapters": [
+    9,
+    11
+  ],
+  "quality": "final",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 9-11.",
+    "adaptation": "An arc the previous build skipped entirely. It seeds the asset dispute that does not settle until chapter 115, and it is where the brothers start to diverge.",
+    "irony": "The transfer date Aunt Cui cannot produce is the thing that decides chapter 113."
+  },
+  "commands": [
+    {
+      "op": "timeOfDay",
+      "value": 0.35
+    },
+    {
+      "op": "weather",
+      "kind": "rain",
+      "intensity": 0.5
+    },
+    {
+      "op": "title",
+      "chapter": 9,
+      "text": "A house that is not his"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        7
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "fang-qiu",
+      "at": [
+        -3,
+        -1
+      ],
+      "facing": 0.3
+    },
+    {
+      "op": "place",
+      "actor": "fang-qiu-wife",
+      "at": [
+        3,
+        -1
+      ],
+      "facing": -0.3
+    },
+    {
+      "op": "place",
+      "actor": "fang-zheng",
+      "at": [
+        0,
+        4
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        3.2,
+        13
+      ],
+      "look": [
+        0,
+        1.8,
+        1
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "fang-qiu",
+      "text": "Nephew. Sit, sit. There is tea.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Fourth time he has said nephew. Three more than the sentence needed.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-qiu-wife",
+      "text": "We have kept the accounts in good order all these years. Nobody can say otherwise.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Nobody has asked.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 10,
+      "text": "An itemised kindness"
+    },
+    {
+      "op": "gesture",
+      "actor": "fang-qiu-wife",
+      "gesture": "talk-cross-arms"
+    },
+    {
+      "op": "line",
+      "actor": "fang-qiu-wife",
+      "text": "The roof, the rice, the academy fees. Two boys is not a small thing to carry.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-qiu",
+      "text": "She means it kindly.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "She means it as an invoice. He means it as a receipt.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "household.records",
+      "prompt": "The accounts are on the table.",
+      "method": "household",
+      "options": [
+        {
+          "id": "ask-date",
+          "label": "Ask which year the transfer was recorded in.",
+          "sets": "know.asset-records",
+          "method": "paper"
+        },
+        {
+          "id": "say-nothing",
+          "label": "Let them finish and take the tea.",
+          "method": "patient"
+        },
+        {
+          "id": "push",
+          "label": "Say the property was your father's.",
+          "method": "direct"
+        }
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "fang-qiu",
+      "text": "That is — we will find the year. It will be written somewhere.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "It is written nowhere. That is worth more than an argument tonight.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "know.assets-dispute"
+    },
+    {
+      "op": "title",
+      "chapter": 11,
+      "text": "What his brother asks"
+    },
+    {
+      "op": "camera",
+      "to": [
+        2,
+        2.2,
+        7
+      ],
+      "look": [
+        0,
+        1.7,
+        4
+      ],
+      "seconds": 2.0
+    },
+    {
+      "op": "face",
+      "actor": "fang-zheng",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "line",
+      "actor": "fang-zheng",
+      "text": "Are you angry about the grades? You have barely said anything since the river.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "He wants to be told no. It would cost nothing to tell him no.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "household.brother",
+      "prompt": "Answer him.",
+      "method": "brother",
+      "options": [
+        {
+          "id": "accurate",
+          "label": "\"The grades were accurate.\"",
+          "method": "cold"
+        },
+        {
+          "id": "reassure",
+          "label": "\"No. Go and train.\"",
+          "method": "managed"
+        },
+        {
+          "id": "warn",
+          "label": "\"Be careful what the clan spends on you.\"",
+          "method": "oblique"
+        }
+      ]
+    },
+    {
+      "op": "line",
+      "actor": "fang-zheng",
+      "text": "You always say things like that as if they were answers.",
+      "kind": "spoken",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "He accepted it. He will keep accepting it, for about a hundred chapters.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "know.uncle"
+    }
+  ]
+}

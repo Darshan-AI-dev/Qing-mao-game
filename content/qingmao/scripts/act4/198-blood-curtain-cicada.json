@@ -1,0 +1,101 @@
+{
+  "id": "act4/198-blood-curtain-cicada",
+  "beat": "act4.blood-curtain.cicada",
+  "chapters": [
+    198,
+    198
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapter 198.",
+    "adaptation": "The one rewind, fixed. A cinematic sequence with a fixed outcome, not a combat arena."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "snow",
+      "intensity": 0.6
+    },
+    {
+      "op": "art",
+      "id": "frozen-qing-mao"
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 198,
+      "text": "Spring, then autumn"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Out across the glacier, with the mountain behind me doing what mountains do when something that old finishes with them. I did not look back at it, and not for any reason worth recording.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "The one rewind, fixed. A cinematic sequence with a fixed outcome, not a combat arena.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "choice",
+      "id": "act4.blood-curtain.cicada.method",
+      "prompt": "There is one decision left in this.",
+      "method": "blood-curtain",
+      "options": [
+        {
+          "id": "proceed",
+          "label": "Proceed.",
+          "method": "proceed"
+        },
+        {
+          "id": "wait",
+          "label": "Wait for the better moment.",
+          "method": "wait"
+        }
+      ]
+    },
+    {
+      "op": "flag",
+      "set": "flag.cicada-used"
+    },
+    {
+      "op": "art",
+      "id": null
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "note": "Clans and factions the game depicts or names. `scope` marks how much of each is playable in this game versus held for the sequel.",
+  "clans": [
+    {
+      "id": "gu-yue",
+      "name": "Gu Yue clan",
+      "seat": "qing-mao-mountain",
+      "scope": "playable",
+      "chapters": [1, 200],
+      "signatureGu": ["moonlight-gu"],
+      "structure": ["Council of elders", "Academy for clan youths", "Internal affairs hall", "Medical administration", "Earth treasury inheritances"],
+      "note": "The clan controls Moonlight Gu's breeding method, which makes a signature Gu an economic asset as much as a weapon. Its founder is buried under its own history (ch 182-193)."
+    },
+    { "id": "mo", "name": "Mo family", "seat": "qing-mao-mountain", "scope": "playable", "chapters": [25, 38], "note": "Wealthy within Gu Yue. Its weight is social and financial, which is what makes the extortion arc a political problem rather than a fight." },
+    { "id": "bai", "name": "Bai clan", "seat": "neighbouring-territory", "scope": "interlude", "chapters": [116, 200], "note": "Visited as a viewpoint interlude. Bai Ning Bing's grievance against their own clan is the lever Fang Yuan holds." },
+    { "id": "tie", "name": "Tie clan", "seat": "elsewhere", "scope": "antagonist", "chapters": [59, 181], "note": "Supplies investigators. Tie Xue Leng is named long before Tie Ruo Nan arrives, which is what makes chapter 170 land." },
+    { "id": "wang", "name": "Wang family", "seat": "qing-mao-mountain", "scope": "playable", "chapters": [65, 77], "note": "Hunters. The beast-skin map is their working knowledge of the mountain, not a treasure." },
+    { "id": "chi", "name": "Chi faction", "seat": "qing-mao-mountain", "scope": "playable", "chapters": [153, 181], "note": "A faction inside Gu Yue. Chi Lian's apparent backing is private leverage presented as long-standing alliance." },
+    { "id": "yao", "name": "Yao family", "seat": "qing-mao-mountain", "scope": "playable", "chapters": [150, 181], "note": "Yao Le and Yao Ji. The search for a missing girl is the pressure under the whole of Act IV." },
+    { "id": "central-continent", "name": "Central Continent powers", "seat": "central-continent", "scope": "sequel", "chapters": [186, 200], "note": "Lord Sky Crane arrives from here, and Fang Zheng is carried toward it. Deliberately left unexplored." },
+    { "id": "southern-border", "name": "Southern Border", "seat": "southern-border", "scope": "sequel", "chapters": [200], "note": "Where Fang Yuan is heading at chapter 200. Game 2's content package, not this one's." }
+  ]
+}

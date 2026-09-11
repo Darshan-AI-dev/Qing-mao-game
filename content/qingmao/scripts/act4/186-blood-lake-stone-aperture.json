@@ -1,0 +1,134 @@
+{
+  "id": "act4/186-blood-lake-stone-aperture",
+  "beat": "act4.blood-lake.stone-aperture",
+  "chapters": [
+    186,
+    189
+  ],
+  "quality": "scaffold",
+  "sfx": null,
+  "music": null,
+  "lens": {
+    "anchor": "Chapters 186-189.",
+    "adaptation": "Stone Aperture Gu is expended. Rank three peak, and the chance of anything beyond it spent."
+  },
+  "commands": [
+    {
+      "op": "letterbox",
+      "on": true
+    },
+    {
+      "op": "weather",
+      "kind": "clear",
+      "intensity": 0.6
+    },
+    {
+      "op": "place",
+      "actor": "fang-yuan",
+      "at": [
+        0,
+        8
+      ],
+      "facing": 3.14
+    },
+    {
+      "op": "place",
+      "actor": "lord-sky-crane",
+      "at": [
+        -4,
+        0
+      ],
+      "facing": 0.0
+    },
+    {
+      "op": "cut",
+      "to": [
+        0,
+        4,
+        15
+      ],
+      "look": [
+        0,
+        1.8,
+        2
+      ]
+    },
+    {
+      "op": "title",
+      "chapter": 186,
+      "text": "What advancement costs"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Lord Sky Crane came over the mountain from Central Continent with a grudge that predates everyone now standing on it. The clan is furniture to him.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "line",
+      "actor": "narrator",
+      "text": "Stone Aperture Gu is expended. Rank three peak, and the chance of anything beyond it spent.",
+      "kind": "narration",
+      "sfx": null
+    },
+    {
+      "op": "face",
+      "actor": "lord-sky-crane",
+      "target": "fang-yuan"
+    },
+    {
+      "op": "gesture",
+      "actor": "lord-sky-crane",
+      "gesture": "talk-point"
+    },
+    {
+      "op": "title",
+      "chapter": 187,
+      "text": "Chapter 187"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "Used the Stone Aperture Gu. Rank three peak, inside a quarter of an hour, in a chamber that was built to make exactly that offer.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 188,
+      "text": "Chapter 188"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "It is expended, and with it the chance of anything beyond this rank. I traded my ceiling for my survival and I would do it again, and I am writing it down as a loss because that is what it is.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "title",
+      "chapter": 189,
+      "text": "Chapter 189"
+    },
+    {
+      "op": "line",
+      "actor": "fang-yuan",
+      "text": "The blood lake is not a lake. Stood at the edge of it and understood, finally, what the founder's history was an advertisement for.",
+      "kind": "thought",
+      "sfx": null
+    },
+    {
+      "op": "flag",
+      "set": "rank.3.peak"
+    },
+    {
+      "op": "flag",
+      "set": "flag.aperture-spent"
+    },
+    {
+      "op": "letterbox",
+      "on": false
+    }
+  ]
+}
