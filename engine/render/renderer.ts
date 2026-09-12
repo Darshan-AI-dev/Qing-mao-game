@@ -17,6 +17,7 @@ import {
 } from 'three';
 import { Sky } from './sky';
 import { setSurfaceTier, usesEnvironment } from './surfaces';
+import { Post } from './post';
 import { AdaptiveQuality, BUDGETS, type TierName } from './quality';
 
 export interface Chunk {
@@ -57,6 +58,8 @@ export class Renderer {
   /** Follows the player through dark areas. See `setCarriedLight`. */
   private carried: PointLight | null = null;
   private sky: Sky;
+  /** Bloom, on the high tier only. Null everywhere else. */
+  private post: Post | null = null;
   private lastFrame = performance.now();
   private fps = 60;
   private chunksVisible = 0;
@@ -107,6 +110,11 @@ export class Renderer {
     this.ambient = new AmbientLight(0xffffff, 0.18);
     this.scene.add(this.hemi, this.sun, this.ambient);
     this.scene.fog = new Fog(0x184048, budget.viewDistance * 0.35, budget.viewDistance);
+
+    // Bloom is the one effect worth its cost, and only where there is cost to spare: a
+    // phone that benchmarks to high can afford it, nothing below can. Built here
+    // because the chain needs the camera, which is set up above, and sized by resize().
+    if (tier === 'high') this.post = new Post(this.renderer, this.scene, this.camera);
 
     this.resize();
   }
@@ -265,6 +273,7 @@ export class Renderer {
     const height = canvas.clientHeight || window.innerHeight;
     this.renderer.setPixelRatio(dpr);
     this.renderer.setSize(width, height, false);
+    this.post?.resize(width, height, dpr);
     const aspect = width / Math.max(1, height);
     this.camera.aspect = aspect;
     // Widen the lens in portrait.
@@ -304,8 +313,15 @@ export class Renderer {
       if (visible) this.chunksVisible++;
     }
 
+    // `info` resets itself at the start of every `render()` call, and the composer makes
+    // one per pass — so with bloom on, the frame's numbers described the final fullscreen
+    // quad and nothing else: one draw call, one triangle, and a frame budget test that
+    // could never fail. Resetting by hand once a frame accumulates the whole frame
+    // instead, scene and postprocessing together, which is the real cost anyway.
+    this.renderer.info.autoReset = false;
     this.renderer.info.reset();
-    this.renderer.render(this.scene, this.camera);
+    if (this.post) this.post.render();
+    else this.renderer.render(this.scene, this.camera);
   }
 
   stats(): RendererStats {

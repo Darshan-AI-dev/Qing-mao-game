@@ -18,7 +18,20 @@ const ADDONS = [
   // GLTFLoader imports these; vendoring is only honest if the graph closes.
   'utils/SkeletonUtils.js',
   'libs/ktx-parse.module.js',
-  'libs/zstddec.module.js'
+  'libs/zstddec.module.js',
+  // Postprocessing, for the high tier's bloom. EffectComposer pulls in the pass base
+  // class and the copy shader; UnrealBloomPass pulls in the luminosity shader and its
+  // own; the output pass is what applies tone mapping once the chain has run.
+  'postprocessing/EffectComposer.js',
+  'postprocessing/Pass.js',
+  'postprocessing/RenderPass.js',
+  'postprocessing/ShaderPass.js',
+  'postprocessing/MaskPass.js',
+  'postprocessing/OutputPass.js',
+  'postprocessing/UnrealBloomPass.js',
+  'shaders/CopyShader.js',
+  'shaders/OutputShader.js',
+  'shaders/LuminosityHighPassShader.js'
 ];
 
 await rm(out, { recursive: true, force: true });

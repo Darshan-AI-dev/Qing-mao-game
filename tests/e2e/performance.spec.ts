@@ -38,6 +38,50 @@ test('the frame stays inside the tier budget', async ({ page }, testInfo) => {
   expect(stats.chunksVisible).toBeLessThanOrEqual(stats.chunksTotal);
 });
 
+test('the high tier renders through its postprocessing chain', async ({ page }, testInfo) => {
+  // Everything that runs these tests detects software rendering and pins itself to the
+  // low tier, so the high path — bloom, normal maps, the environment — is never
+  // exercised unless a test asks for it. It went out once reporting one draw call and
+  // one triangle a frame, because `renderer.info` resets on every internal render and
+  // the composer makes one per pass, which left the frame budget assertion below
+  // measuring a fullscreen quad and unable to fail.
+  test.setTimeout(180_000);
+  const thrown: string[] = [];
+  page.on('pageerror', (error) => thrown.push(error.message));
+
+  await openGame(page);
+  await page.evaluate(async () => {
+    const save = JSON.parse(JSON.stringify(window.qingMao.save));
+    save.settings.tier = 'high';
+    const open = indexedDB.open('qing-mao', 1);
+    const db: IDBDatabase = await new Promise((resolve, reject) => {
+      open.onsuccess = () => resolve(open.result);
+      open.onerror = () => reject(open.error);
+    });
+    await new Promise<void>((resolve) => {
+      const put = db.transaction('saves', 'readwrite').objectStore('saves').put(JSON.stringify(save), 'auto');
+      put.onsuccess = () => resolve();
+      put.onerror = () => resolve();
+    });
+  });
+  await page.reload();
+  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 30_000 });
+  await page.locator('#begin').click().catch(() => {});
+  await page.waitForFunction(() => window.qingMao.frameStats().drawCalls > 0, null, { timeout: 60_000 });
+  await page.waitForTimeout(2500);
+
+  const stats = await page.evaluate(() => window.qingMao.frameStats());
+  testInfo.annotations.push({ type: 'high-tier', description: JSON.stringify(stats) });
+  expect(stats.tier, 'the seeded tier did not take').toBe('high');
+  // A whole scene, not the composer's output quad.
+  expect(stats.drawCalls, 'the frame is only the postprocessing quad').toBeGreaterThan(20);
+  expect(stats.triangles, 'the frame drew no world').toBeGreaterThan(2000);
+  const budget = BUDGETS.high;
+  expect(stats.drawCalls, 'draw calls on high').toBeLessThanOrEqual(budget.drawCalls);
+  expect(stats.triangles, 'visible triangles on high').toBeLessThanOrEqual(budget.triangles);
+  expect(thrown, 'the postprocessing chain threw').toEqual([]);
+});
+
 test('frustum culling removes chunks the camera cannot see', async ({ page }, testInfo) => {
   await openGame(page);
   await page.waitForFunction(() => window.qingMao.frameStats().drawCalls > 0, null, { timeout: 30_000 });

@@ -12,7 +12,7 @@
 import {
   BoxGeometry, BufferAttribute, CircleGeometry, Color, ConeGeometry, CylinderGeometry, DoubleSide,
   Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, SphereGeometry,
-  PlaneGeometry, Quaternion, RingGeometry, Vector3, type BufferGeometry, type Material
+  BufferGeometry, PlaneGeometry, Quaternion, RingGeometry, Vector3, type Material
 } from 'three';
 import { detailLevel, surface, type Detail, type Surface, type SurfaceOptions } from './surfaces';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
@@ -269,6 +269,63 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     shell.add(strip);
   }
 
+  // --- ground scatter: tufts and pebbles, one instanced mesh each for the whole area
+  if (!description.enclosed) {
+    const detail = detailLevel();
+    const scatterRng = new Rng(hash(`${description.id}:scatter`));
+    const onPath = (x: number, z: number): boolean =>
+      (description.paths ?? []).some((path) => {
+        const [ax, az] = path.from;
+        const [bx, bz] = path.to;
+        const dx = bx - ax;
+        const dz = bz - az;
+        const length2 = dx * dx + dz * dz || 1;
+        // Distance from the point to the segment, so nothing sprouts through a road.
+        const t = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / length2));
+        return Math.hypot(x - (ax + dx * t), z - (az + dz * t)) < (path.width ?? 4) * 0.62;
+      });
+
+    // Scattered across a disc around the middle rather than the whole area, and sized
+    // for a density rather than a count. Four hundred tufts spread over a 180 metre
+    // village is one every fifty-seven square metres, which is invisible — the first
+    // attempt rendered twenty thousand triangles of grass that could not be seen.
+    const reach = Math.min(46, Math.max(description.size.x, description.size.z) / 2);
+    for (const [kind, geometry, perSquareMetre, cap, lift] of [
+      ['grass', grassGeometry(), 0.28, detail === 'low' ? 420 : 1900, 0],
+      ['pebble', pebbleGeometry(), 0.02, detail === 'low' ? 40 : 150, 0.04]
+    ] as const) {
+      const count = Math.min(cap, Math.round(Math.PI * reach * reach * perSquareMetre));
+      const places: { x: number; z: number }[] = [];
+      // Twice as many attempts as places wanted: rejected ones fell on a path.
+      for (let i = 0; i < count * 2 && places.length < count; i++) {
+        // sqrt keeps the disc evenly covered instead of crowding the middle.
+        const radius = Math.sqrt(scatterRng.next()) * reach;
+        const angle = scatterRng.next() * Math.PI * 2;
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+        if (!onPath(x, z)) places.push({ x, z });
+      }
+      if (!places.length) continue;
+      const scatter = new InstancedMesh(
+        geometry,
+        surface(kind === 'grass' ? 'foliage' : 'stone', 0xffffff, { vertexColors: true }),
+        places.length
+      );
+      scatter.receiveShadow = castShadow;
+      const matrix = new Matrix4();
+      for (const [i, place] of places.entries()) {
+        const scale = 0.7 + scatterRng.next() * 0.75;
+        matrix.makeRotationY(scatterRng.next() * Math.PI * 2);
+        matrix.scale(new Vector3(scale, scale * (0.8 + scatterRng.next() * 0.5), scale));
+        matrix.setPosition(place.x, lift, place.z);
+        scatter.setMatrixAt(i, matrix);
+      }
+      scatter.instanceMatrix.needsUpdate = true;
+      scatter.frustumCulled = false;
+      shell.add(scatter);
+    }
+  }
+
   // --- water
   for (const pool of description.water ?? []) {
     const pond = new Mesh(new PlaneGeometry(pool.w, pool.d), mat('stone', pool.color, { roughness: 0.06, metalness: 0.1 }));
@@ -277,10 +334,23 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     shell.add(pond);
   }
 
-  // --- buildings: pale-green two-storey bamboo on wooden stakes over uneven ground
+  // --- buildings: timber-framed houses on stakes, all of them merged into two meshes
+  const houseBody: BufferGeometry[] = [];
+  const houseRoof: BufferGeometry[] = [];
   for (const building of description.buildings ?? []) {
-    buildingGroup.add(buildHouse(building, castShadow));
+    const parts = houseParts(building);
+    houseBody.push(...parts.body);
+    houseRoof.push(...parts.roof);
     blockers.push({ x: building.x, z: building.z, w: building.w / 2 + 0.7, d: building.d / 2 + 0.7 });
+  }
+  for (const [parts, kind, hex] of [[houseBody, 'wood', 0xffffff], [houseRoof, 'thatch', 0xffffff]] as const) {
+    if (!parts.length) continue;
+    const merged = mergeGeometries(parts, false);
+    if (!merged) continue;
+    const mesh = new Mesh(merged, surface(kind, hex, { vertexColors: true }));
+    mesh.castShadow = castShadow;
+    mesh.receiveShadow = castShadow;
+    buildingGroup.add(mesh);
   }
 
   // --- instanced props, bucketed into chunks first
@@ -394,6 +464,43 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   }
 
   return { group: root, chunks, blockers, lanterns };
+}
+
+/**
+ * A tuft of grass: three blades crossed so it reads from any angle.
+ *
+ * The ground was a bare coloured plane, which is most of what a phone player is looking
+ * at — the camera sits low and close, so the nearest few metres of floor fill a third
+ * of the screen. Scatter is the cheapest thing that fixes that: one instanced mesh for
+ * the whole area, a few hundred tufts, and the ground stops being a painted surface.
+ */
+function grassGeometry(): BufferGeometry {
+  const parts: BufferGeometry[] = [];
+  for (let i = 0; i < 3; i++) {
+    const blade = new BoxGeometry(0.055, 0.5, 0.012);
+    // Leaning, and tapering by scaling the top: a vertical rectangle reads as a fence
+    // post at this size however small it is.
+    blade.translate(0, 0.25, 0);
+    blade.rotateZ((i - 1) * 0.34);
+    blade.rotateY((i / 3) * Math.PI);
+    parts.push(tinted(blade, i === 1 ? 0x5c8f4a : 0x4a7c3e));
+  }
+  return mergeGeometries(parts, false) ?? parts[0]!;
+}
+
+/** A pebble. Lumpy, flattened, and never the same twice thanks to per-instance scale. */
+function pebbleGeometry(): BufferGeometry {
+  const geometry = new SphereGeometry(0.17, 6, 4);
+  const position = geometry.attributes['position'] as BufferAttribute;
+  for (let i = 0; i < position.count; i++) {
+    const x = position.getX(i);
+    const y = position.getY(i);
+    const z = position.getZ(i);
+    const push = 1 + Math.sin(x * 9 + z * 5) * 0.22;
+    position.setXYZ(i, x * push, y * 0.55, z * push);
+  }
+  geometry.computeVertexNormals();
+  return tinted(geometry, 0x6d6a60);
 }
 
 /**
@@ -587,34 +694,167 @@ function heightOffset(kind: PropKind): number {
   }
 }
 
-function buildHouse(b: { x: number; z: number; w: number; d: number; h: number; stilts?: boolean; floors?: number }, castShadow: boolean): Group {
-  const house = new Group();
+/**
+ * A hipped roof with the concave sweep and upturned corners the architecture is known
+ * for, built as a height field rather than as a cone.
+ *
+ * The old roof was `ConeGeometry(..., 4)` — a four-sided pyramid with dead straight
+ * slopes, which is the one silhouette a Chinese roof never has. The profile here is
+ * concave: steep at the ridge, flattening as it falls, then flicking up over the last
+ * fifth so the eave lifts at the corners. It overhangs the walls, which is what casts
+ * the deep shadow line under the eaves.
+ */
+function curvedRoofGeometry(width: number, depth: number, peak: number, overhang: number): BufferGeometry {
+  const n = 12;
+  const halfX = width / 2 + overhang;
+  const halfZ = depth / 2 + overhang;
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  const indices: number[] = [];
+
+  const heightAt = (u: number, v: number): number => {
+    // Distance to the eave as a square ring, which is what makes it a hip roof.
+    const t = Math.max(Math.abs(u), Math.abs(v));
+    // Concave fall from the ridge.
+    let y = peak * Math.pow(1 - t, 0.62);
+    // The flying eave: the last stretch turns back upwards.
+    if (t > 0.8) y += peak * 0.16 * Math.pow((t - 0.8) / 0.2, 2);
+    return y;
+  };
+
+  for (let i = 0; i <= n; i++) {
+    for (let j = 0; j <= n; j++) {
+      const u = (i / n) * 2 - 1;
+      const v = (j / n) * 2 - 1;
+      positions.push(u * halfX, heightAt(u, v), v * halfZ);
+      uvs.push(i / n, j / n);
+    }
+  }
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      const a = i * (n + 1) + j;
+      const b = a + 1;
+      const c = a + (n + 1);
+      const d = c + 1;
+      indices.push(a, c, b, b, c, d);
+    }
+  }
+  const geometry = new BufferGeometry();
+  geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
+  geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+/**
+ * A house, as geometry rather than as a scene graph.
+ *
+ * It used to be a box, four stakes and a cone — seven separate meshes per building and
+ * seven draw calls, which in the village was 49 of the 137 the low tier allows. Nothing
+ * could be added to it without paying another call per piece.
+ *
+ * Returning parts instead lets every building in an area merge into two meshes, one for
+ * the timber and one for the tiles. The whole village costs two draw calls now, so the
+ * posts, the plinth, the balcony spindles, the door, the shutters and the hip ridges
+ * are all free — a house has about forty pieces in it and still draws as half a house.
+ */
+function houseParts(b: {
+  x: number; z: number; w: number; d: number; h: number; stilts?: boolean; floors?: number;
+}): { body: BufferGeometry[]; roof: BufferGeometry[] } {
+  const body: BufferGeometry[] = [];
+  const roof: BufferGeometry[] = [];
+  const at = (geometry: BufferGeometry, x: number, y: number, z: number, hex: number, target = body) => {
+    geometry.translate(b.x + x, y, b.z + z);
+    target.push(tinted(geometry, hex));
+  };
+
   const base = b.stilts === false ? 0 : 2.2;
+  const floors = b.floors ?? 1;
+  const top = base + b.h * floors;
+
+  // A stone plinth. Even a stilted house sits on something.
+  at(new BoxGeometry(b.w + 0.7, 0.5, b.d + 0.7), 0, 0.25, 0, 0x6a6a63);
+
   if (base > 0) {
     for (const sx of [-b.w / 2 + 0.5, b.w / 2 - 0.5]) {
       for (const sz of [-b.d / 2 + 0.5, b.d / 2 - 0.5]) {
-        const stake = new Mesh(new CylinderGeometry(0.26, 0.3, base, 8), mat('wood', PALETTE.wood));
-        stake.position.set(b.x + sx, base / 2, b.z + sz);
-        stake.castShadow = castShadow;
-        house.add(stake);
+        at(new CylinderGeometry(0.24, 0.3, base, 8), sx, base / 2, sz, 0x4a3524);
       }
     }
+    // Cross-bracing between the stilts, which is what stops them reading as stilts on
+    // a model and starts them reading as a house standing over wet ground.
+    at(new BoxGeometry(b.w - 0.6, 0.16, 0.16), 0, base * 0.55, -b.d / 2 + 0.5, 0x4a3524);
+    at(new BoxGeometry(b.w - 0.6, 0.16, 0.16), 0, base * 0.55, b.d / 2 - 0.5, 0x4a3524);
   }
-  const floors = b.floors ?? 1;
+
   for (let floor = 0; floor < floors; floor++) {
-    const storey = new Mesh(new BoxGeometry(b.w, b.h, b.d), mat('stone', PALETTE.wall));
-    storey.position.set(b.x, base + b.h / 2 + floor * b.h, b.z);
-    storey.castShadow = castShadow;
-    storey.receiveShadow = castShadow;
-    house.add(storey);
+    const y = base + floor * b.h;
+    // Walls, inset so the corner posts stand proud of them.
+    at(new BoxGeometry(b.w - 0.3, b.h, b.d - 0.3), 0, y + b.h / 2, 0, PALETTE.wall);
+    // Exposed timber frame: four corner posts and a beam at each floor line.
+    for (const sx of [-b.w / 2, b.w / 2]) {
+      for (const sz of [-b.d / 2, b.d / 2]) {
+        at(new BoxGeometry(0.28, b.h, 0.28), sx, y + b.h / 2, sz, 0x4a3524);
+      }
+    }
+    at(new BoxGeometry(b.w + 0.2, 0.26, b.d + 0.2), 0, y + b.h, 0, 0x53381f);
+
+    // Shutters: a recessed dark panel with a lattice over it, two to a face.
+    for (const sx of [-b.w * 0.26, b.w * 0.26]) {
+      const face = b.d / 2 - 0.14;
+      at(new BoxGeometry(1.25, 1.05, 0.1), sx, y + b.h * 0.62, face, 0x2b2118);
+      for (let k = -1; k <= 1; k++) {
+        at(new BoxGeometry(0.07, 1.05, 0.06), sx + k * 0.36, y + b.h * 0.62, face + 0.06, 0x6b4c2c);
+      }
+      at(new BoxGeometry(1.25, 0.07, 0.06), sx, y + b.h * 0.62, face + 0.06, 0x6b4c2c);
+    }
   }
-  const roof = new Mesh(new ConeGeometry(Math.max(b.w, b.d) * 0.78, 2.6, 4), mat('thatch', PALETTE.roof));
-  roof.rotation.y = Math.PI / 4;
-  roof.position.set(b.x, base + b.h * floors + 1.3, b.z);
-  roof.castShadow = castShadow;
-  house.add(roof);
-  return house;
+
+  // A door on the front, with its frame and a step.
+  at(new BoxGeometry(1.5, 2.05, 0.12), 0, base + 1.02, b.d / 2 - 0.1, 0x33251a);
+  at(new BoxGeometry(1.75, 0.16, 0.2), 0, base + 2.1, b.d / 2 - 0.08, 0x6b4c2c);
+  at(new BoxGeometry(1.9, 0.18, 0.7), 0, base + 0.09, b.d / 2 + 0.3, 0x6a6a63);
+
+  // Balcony railing around the upper floor.
+  if (floors > 1) {
+    const y = base + b.h;
+    const rail = (length: number, x: number, z: number, along: 'x' | 'z') => {
+      const geometry = along === 'x' ? new BoxGeometry(length, 0.12, 0.14) : new BoxGeometry(0.14, 0.12, length);
+      at(geometry, x, y + 0.95, z, 0x6b4c2c);
+      const count = Math.max(3, Math.round(length / 0.75));
+      for (let k = 0; k < count; k++) {
+        const along01 = (k / (count - 1) - 0.5) * length;
+        at(
+          new BoxGeometry(0.08, 0.85, 0.08),
+          along === 'x' ? x + along01 : x,
+          y + 0.52,
+          along === 'z' ? z + along01 : z,
+          0x6b4c2c
+        );
+      }
+    };
+    rail(b.w + 0.2, 0, b.d / 2 + 0.1, 'x');
+    rail(b.w + 0.2, 0, -b.d / 2 - 0.1, 'x');
+    rail(b.d + 0.2, b.w / 2 + 0.1, 0, 'z');
+    rail(b.d + 0.2, -b.w / 2 - 0.1, 0, 'z');
+  }
+
+  // The roof, and the ridges that run from the apex down to each corner.
+  const peak = 2.1 + Math.max(b.w, b.d) * 0.16;
+  at(curvedRoofGeometry(b.w, b.d, peak, 1.15), 0, top, 0, PALETTE.roof, roof);
+  at(new BoxGeometry(0.42, 0.42, 0.42), 0, top + peak + 0.1, 0, 0x1d3536, roof);
+  const halfX = b.w / 2 + 1.15;
+  const halfZ = b.d / 2 + 1.15;
+  for (const [sx, sz] of [[1, 1], [1, -1], [-1, 1], [-1, -1]] as const) {
+    const ridge = new BoxGeometry(Math.hypot(halfX, halfZ) * 1.02, 0.17, 0.22);
+    ridge.rotateZ(-Math.atan2(peak, Math.hypot(halfX, halfZ)) * sx * (sz > 0 ? 1 : 1));
+    ridge.rotateY(-Math.atan2(sz * halfZ, sx * halfX));
+    at(ridge, (sx * halfX) / 2, top + peak / 2 + 0.12, (sz * halfZ) / 2, 0x1d3536, roof);
+  }
+  return { body, roof };
 }
+
 
 function hash(value: string): number {
   let h = 2166136261;

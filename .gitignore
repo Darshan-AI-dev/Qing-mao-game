@@ -18,3 +18,7 @@ sheet-wide*.png
 # Throwaway visual captures. These belong in the session scratchpad, not the repo:
 # six of them were committed by an `add -A` during the rendering pass.
 scratchpad-shots/
+
+# Local visual probes: throwaway specs used to shoot the game while iterating.
+tests/e2e/zz-*.spec.ts
+shots-tmp/
