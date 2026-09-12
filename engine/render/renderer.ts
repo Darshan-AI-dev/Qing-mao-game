@@ -16,7 +16,7 @@ import {
   PointLight, Scene, Sphere, Vector3, WebGLRenderer
 } from 'three';
 import { Sky } from './sky';
-import { setSurfaceTier, usesEnvironment } from './surfaces';
+import { advanceWater, setSurfaceTier, usesEnvironment } from './surfaces';
 import { Post } from './post';
 import { Motes } from './motes';
 import { AdaptiveQuality, BUDGETS, type TierName } from './quality';
@@ -332,7 +332,9 @@ export class Renderer {
     // quad and nothing else: one draw call, one triangle, and a frame budget test that
     // could never fail. Resetting by hand once a frame accumulates the whole frame
     // instead, scene and postprocessing together, which is the real cost anyway.
-    this.motes.update(Math.min(0.05, dt / 1000), this.camera.position.x, this.camera.position.z);
+    const step = Math.min(0.05, dt / 1000);
+    this.motes.update(step, this.camera.position.x, this.camera.position.z);
+    advanceWater(step);
     this.renderer.info.autoReset = false;
     this.renderer.info.reset();
     if (this.post) this.post.render();

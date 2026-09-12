@@ -23,7 +23,8 @@ import {
 import type { TierName } from './quality';
 
 export type Surface =
-  | 'stone' | 'wood' | 'cloth' | 'foliage' | 'thatch' | 'earth' | 'metal' | 'skin' | 'paper';
+  | 'stone' | 'wood' | 'cloth' | 'foliage' | 'thatch' | 'earth' | 'metal' | 'skin' | 'paper'
+  | 'water';
 
 interface Recipe {
   /** How rough the surface is, 0 mirror to 1 chalk. */
@@ -59,7 +60,10 @@ const RECIPES: Record<Surface, Recipe> = {
   // Skin needs almost nothing: a little roughness variation, no visible grain.
   skin:    { roughness: 0.62, metalness: 0.0, grain: 0.05, relief: 0.12, scale: 28, stretch: 1,  repeat: 1.6 },
   // Lanterns, screens, scrolls. Slightly translucent-looking, very smooth.
-  paper:   { roughness: 0.55, metalness: 0.0, grain: 0.09, relief: 0.20, scale: 20, stretch: 3,  repeat: 1.3 }
+  paper:   { roughness: 0.55, metalness: 0.0, grain: 0.09, relief: 0.20, scale: 20, stretch: 3,  repeat: 1.3 },
+  // Water. Almost mirror-smooth, and its normal map is the ripple — the relief is
+  // doing the visible work here, not the grain, so the grain is nearly nothing.
+  water:   { roughness: 0.08, metalness: 0.1, grain: 0.04, relief: 0.55, scale: 14, stretch: 2.4, repeat: 0.16 }
 };
 
 let tier: TierName = 'medium';
@@ -335,7 +339,28 @@ export function surface(
     material.normalScale.set(recipe.relief, recipe.relief);
   }
   MATERIALS.set(key, material);
+  if (kind === 'water' && material instanceof MeshStandardMaterial) WATER.push(material);
   return material;
+}
+
+/**
+ * Water surfaces, kept so their ripple can be scrolled.
+ *
+ * A pond was a flat plane with a low roughness: a mirror, which is exactly what still
+ * water is and exactly what makes it read as a sheet of glass laid on the ground. The
+ * awakening river is where the aperture opens and it looked like lino. Scrolling the
+ * normal map is the cheapest thing that makes a surface look wet, and because the map
+ * is a clone per material, moving it disturbs nothing else.
+ */
+const WATER: MeshStandardMaterial[] = [];
+
+export function advanceWater(seconds: number): void {
+  for (const material of WATER) {
+    if (!material.normalMap) continue;
+    // Two axes at different rates, so the ripple never repeats visibly.
+    material.normalMap.offset.x = (material.normalMap.offset.x + seconds * 0.014) % 1;
+    material.normalMap.offset.y = (material.normalMap.offset.y + seconds * 0.021) % 1;
+  }
 }
 
 /** Frees every generated map and material. Called when the quality tier changes. */
@@ -346,6 +371,7 @@ export function disposeSurfaces(): void {
     material.dispose();
   }
   MATERIALS.clear();
+  WATER.length = 0;
   for (const maps of MAPS.values()) {
     maps.grain?.dispose();
     maps.normal?.dispose();

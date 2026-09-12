@@ -143,8 +143,13 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
     case 'dais': return { geometry: new BoxGeometry(7, 0.5, 4), material: mat('wood', 0x5a4a30), blocker: { x: 0, z: 0, w: 3.4, d: 2 } };
     case 'desk': return { geometry: new BoxGeometry(1.9, 0.12, 0.7), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 1, d: 0.4 } };
     case 'banner': return { geometry: new BoxGeometry(1.1, 3.2, 0.08), material: mat('cloth', 0x6d3630) };
-    case 'furnace': return { geometry: new CylinderGeometry(1.25, 1.5, 2.6, 8), material: mat('stone', 0x3a2b22), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
-    case 'brazier': return { geometry: new CylinderGeometry(0.5, 0.34, 0.7, 8), material: mat('metal', 0x6b3a22, { emissive: 0x4a2008, emissiveIntensity: 1 }) };
+    // A working furnace is hot enough to see. Enough emission to warm the stone and
+    // catch the bloom without turning the whole vessel into a lamp.
+    case 'furnace': return { geometry: new CylinderGeometry(1.25, 1.5, 2.6, 8), material: mat('stone', 0x4a2f22, { emissive: 0xc4400c, emissiveIntensity: 0.3 }), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
+    // Burning coals, not a bucket. The old emissive was so dim it never cleared the
+    // bloom threshold, so a brazier in a forge was a dull red cylinder standing next to
+    // a fire that existed only as a point light.
+    case 'brazier': return { geometry: new CylinderGeometry(0.5, 0.34, 0.7, 8), material: mat('metal', 0x8a3b16, { emissive: 0xff5a12, emissiveIntensity: 1.1, roughness: 0.7 }) };
     // --- market
     case 'stall': return { geometry: new BoxGeometry(2.6, 1.05, 1.5), material: mat('wood', 0x6a5230), blocker: { x: 0, z: 0, w: 1.4, d: 0.9 } };
     case 'awning': return { geometry: new BoxGeometry(3.2, 0.1, 2.2), material: mat('cloth', 0x8a4a3a) };
@@ -354,7 +359,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
 
   // --- water
   for (const pool of description.water ?? []) {
-    const pond = new Mesh(new PlaneGeometry(pool.w, pool.d), mat('stone', pool.color, { roughness: 0.06, metalness: 0.1 }));
+    const pond = new Mesh(new PlaneGeometry(pool.w, pool.d), mat('water', pool.color));
     pond.rotation.x = -Math.PI / 2;
     pond.position.set(pool.x, 0.05, pool.z);
     shell.add(pond);

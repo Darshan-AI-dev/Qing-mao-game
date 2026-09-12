@@ -33,7 +33,11 @@ export class Post {
     this.composer.addPass(new RenderPass(scene, camera));
     // strength, radius, threshold. The threshold is the important one: at 0.85 only a
     // lantern flame or an ability's flash clears it, not a pale wall in sunlight.
-    this.bloom = new UnrealBloomPass(new Vector2(1, 1), 0.42, 0.5, 0.85);
+    // Eased from 0.42. At night the lanterns are the brightest thing on screen by a
+    // wide margin, and at full strength the one standing behind the player threw a halo
+    // that swallowed him — the character is centre-frame in every shot and must not be
+    // the thing the lighting eats.
+    this.bloom = new UnrealBloomPass(new Vector2(1, 1), 0.3, 0.45, 0.85);
     this.composer.addPass(this.bloom);
     this.composer.addPass(new OutputPass());
   }
