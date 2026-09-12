@@ -1873,7 +1873,18 @@ async function boot(): Promise<void> {
     return;
   }
 
-  await store.requestPersistence();
+  // Asked for, never waited on.
+  //
+  // `navigator.storage.persist()` raises a permission prompt in Firefox, and a prompt
+  // nobody answers is a promise that never settles — so awaiting it here meant boot
+  // stopped before the title screen and the player sat looking at an empty page.
+  // Firefox under a virtual display reproduced it exactly: WebGL2 fine, document
+  // complete, title dialog present but never opened, nothing thrown.
+  //
+  // Nothing needed the answer in the first place: the result was discarded, and the
+  // eviction warning below is decided by `atEvictionRisk()`, which is synchronous. So
+  // the request goes out and boot carries on without it.
+  void store.requestPersistence();
   if (store.atEvictionRisk()) byId('iosStorageWarning').hidden = false;
 
   const raw = (await store.read('auto')) ?? store.readLegacyBuildSave();

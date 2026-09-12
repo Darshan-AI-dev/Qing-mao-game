@@ -72,6 +72,23 @@ test('a startup failure says so instead of leaving an empty page', async ({ page
   await expect(panel.locator('pre')).toContainText('storage is unavailable');
 });
 
+test('the title screen does not wait on a storage permission prompt', async ({ page }) => {
+  // Firefox raises a prompt for persistent storage, and an unanswered prompt is a
+  // promise that never settles. Boot used to await it, so the game stopped before the
+  // title screen with nothing on the page and nothing thrown — no WebGL problem, no
+  // error, just a permanent wait. Any engine can be put in that state on purpose.
+  await page.addInitScript(() => {
+    const storage = navigator.storage as unknown as Record<string, unknown>;
+    storage.persist = () => new Promise(() => {});
+    storage.persisted = () => new Promise(() => {});
+  });
+  await page.goto('/');
+  // Fifteen seconds is far longer than boot needs and far shorter than forever.
+  await expect(page.locator('#begin')).toBeVisible({ timeout: 15_000 });
+  await page.locator('#begin').click();
+  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
+});
+
 test('the intro copy has no missing words', async ({ page }) => {
   await openTitle(page);
   const text = (await page.locator('#intro').innerText()).replace(/\s+/g, ' ');
