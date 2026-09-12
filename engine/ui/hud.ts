@@ -34,6 +34,8 @@ export interface HudModel {
   /** Context button label: Interact, Strike or Cultivate depending on what is near. */
   context: { intent: Intent; label: string } | null;
   sluggish: string[];
+  /** Gu about to need feeding, soonest first, with whether the food is in hand. */
+  due: { gu: string; days: number; has: boolean }[];
   recollectionAvailable: boolean;
   /** Null when nothing is fighting. */
   fight: {
@@ -89,11 +91,22 @@ export class Hud {
     const recollect = byId('recollectButton');
     recollect.hidden = !model.recollectionAvailable;
 
+    // Hungry first, then what is about to be. Upkeep the player can see coming is a
+    // plan; upkeep they cannot is a bill.
     const sluggish = byId('sluggishRow');
     clear(sluggish);
-    sluggish.hidden = model.sluggish.length === 0;
+    sluggish.hidden = model.sluggish.length === 0 && model.due.length === 0;
     for (const id of model.sluggish) {
       sluggish.append(el('span', { class: 'sluggishTag', text: `${guById.get(id)?.name ?? id} · hungry` }));
+    }
+    for (const row of model.due) {
+      if (model.sluggish.includes(row.gu)) continue;
+      const name = guById.get(row.gu)?.name ?? row.gu;
+      const when = row.days === 0 ? 'today' : row.days === 1 ? 'tomorrow' : `${row.days} days`;
+      sluggish.append(el('span', {
+        class: `dueTag${row.has ? ' fed' : ''}`,
+        text: `${name} · eats ${when}${row.has ? '' : ' · nothing to feed it'}`
+      }));
     }
 
     if (model.context) {

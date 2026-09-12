@@ -35,9 +35,16 @@ export class Combat {
 
   constructor(private save: SaveGameV5, private cultivation: Cultivation, private upkeep: Upkeep) {}
 
-  /** Only unlocked, relevant abilities. The phone HUD shows nothing else. */
+  /**
+   * Only unlocked, carried, relevant abilities. The phone HUD shows nothing else.
+   *
+   * A Gu sitting in reserve is not on him, so its ability is not on the bar. Without
+   * this the carrying limit would only be an upkeep discount, and the loadout would
+   * not be a decision at all.
+   */
   availableAbilities(flags: ReadonlySet<string>): Ability[] {
-    const rows = ABILITIES.filter((a) => flags.has(a.requiresFlag));
+    const stored = new Set(this.upkeep.stored().map((g) => g.id));
+    const rows = ABILITIES.filter((a) => flags.has(a.requiresFlag) && !stored.has(a.gu));
     // Later guards replace earlier ones rather than stacking up as separate buttons.
     const byKey = new Map<string, Ability>();
     for (const ability of rows) byKey.set(`${ability.key}:${ability.kind}`, ability);

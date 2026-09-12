@@ -6,7 +6,7 @@
  * supplies the beat graph, the scenes and the areas; `/canon` is shared with the
  * sequel. Swapping the content import is the whole of what game 2 has to do here.
  */
-import { Vector3, type Object3D } from 'three';
+import { Vector3, type Mesh, type Object3D } from 'three';
 import { areasById, charactersById, actForChapter } from '../canon/index';
 import { graph, illustrationsById, loadScript, t } from '../content/qingmao/index';
 import { AREAS, areaDescription } from '../content/qingmao/world/areas';
@@ -25,7 +25,7 @@ import { Upkeep } from './systems/upkeep';
 import { Calendar } from './systems/calendar';
 import { Cultivation } from './systems/cultivation';
 import { Exposure } from './systems/exposure';
-import { Refinement } from './systems/refinement';
+import { Refinement, type RefinementOutcome } from './systems/refinement';
 import { Memory } from './systems/memory';
 import { ABILITIES, BOSSES, Combat, type Ability } from './systems/combat';
 import { freshSave, type SaveGameV5 } from './save/schema';
@@ -38,6 +38,7 @@ import { Hud, attachToasts } from './ui/hud';
 import { Panels } from './ui/panels';
 import { Feedback } from './ui/feedback';
 import { Encounter, type EncounterView } from './systems/encounter';
+import { Forage, GATHER_RANGE, nodesFor, type ForageNode } from './systems/forage';
 import { Foe, FOE_BODIES } from './render/foe';
 import { DevOverlay } from './dev/overlay';
 import { byId, closeDialog, el, maybe, openDialog } from './ui/dom';
@@ -69,6 +70,7 @@ class Game implements TimelineHost {
   private refinement: Refinement;
   private memory: Memory;
   private combat: Combat;
+  private forage: Forage;
 
   private encounter: Encounter | null = null;
   private foe: Foe | null = null;
@@ -89,6 +91,7 @@ class Game implements TimelineHost {
   /** The beat waiting to be started, if the player is between beats. */
   private awaiting: Beat | null = null;
   private objective: Object3D | null = null;
+  private gatherMarker: Mesh | null = null;
   private lastMove = { x: 0, z: 0 };
   private lastHeld: ReadonlySet<Intent> = new Set();
   private fadeNode: HTMLElement;
@@ -111,6 +114,7 @@ class Game implements TimelineHost {
     this.refinement = new Refinement(save, this.economy, this.calendar, this.upkeep, this.rng);
     this.memory = new Memory(save, graph);
     this.combat = new Combat(save, this.cultivation, this.upkeep);
+    this.forage = new Forage(save, this.economy);
 
     this.hud = new Hud(this.input);
     this.feedback = new Feedback(canvas, () => this.save.settings.reducedMotion, () => this.save.settings.haptics);
@@ -120,6 +124,8 @@ class Game implements TimelineHost {
       graph,
       economy: this.economy,
       upkeep: this.upkeep,
+      refinement: this.refinement,
+      attemptRefinement: (recipeId) => this.attemptRefinement(recipeId),
       replay: (beatId) => void this.replayScene(beatId),
       travel: (areaId) => this.enterArea(areaId),
       unlockedAreas: () => this.unlockedAreas(),
@@ -235,6 +241,43 @@ class Game implements TimelineHost {
     ring.name = `objective:${beat.id}`;
     this.objective = ring;
     this.renderer.scene.add(ring);
+  }
+
+  /**
+   * A small ring on the nearest thing worth picking, when it is close enough to see.
+   *
+   * One mesh that moves, rather than a marker per node: there can be sixty orchids in
+   * an area and only one of them matters, which is the one you are walking towards.
+   * Jade rather than the objective's gold, so it never reads as "the story is here".
+   */
+  private updateGatherMarker(): void {
+    const found =
+      this.inScene || this.encounter
+        ? null
+        : this.forage.nearest(
+            this.currentArea,
+            areaDescription(this.currentArea),
+            this.save.calendar.day,
+            this.player
+          );
+    const show = found && found.distance <= 13;
+    if (!show) {
+      if (this.gatherMarker) this.gatherMarker.visible = false;
+      return;
+    }
+    if (!this.gatherMarker) {
+      this.gatherMarker = marker(0, 0, 0.8, 0x63b794);
+      this.gatherMarker.name = 'gather';
+      this.renderer.scene.add(this.gatherMarker);
+    }
+    this.gatherMarker.visible = true;
+    this.gatherMarker.position.set(found.node.x, 0.06, found.node.z);
+    // Taught once, the first time he stands near something he can pick. After that
+    // the ring and the context button are enough.
+    if (!this.save.reader.codex.includes('codex.gathering') && found.distance <= GATHER_RANGE * 1.6) {
+      this.save.reader.codex.push('codex.gathering');
+      bus.emit('toast', { text: 'Moon orchids grow here. The Moonlight Gu eats the petals.' });
+    }
   }
 
   private clearObjective(): void {
@@ -415,9 +458,14 @@ class Game implements TimelineHost {
     const walkable = clear;
     // Never further out than asked for: a small room's spawn radius is already most of
     // the way to its wall, and pushing past it put the player inside one.
+    // Never inside the objective's own range. A crowded room — the forge, with a
+    // furnace, benches, shelves and chests in it — pushed the search inward until the
+    // player spawned four paces from the marker, which makes the context button read
+    // "Begin" from the first frame and puts everything else in that room out of reach.
+    const floor = OBJECTIVE_RANGE + 1.5;
     for (let ring = 0; ring < 5; ring++) {
       const distance = radius - ring * Math.max(1, radius / 6);
-      if (distance < 3) break;
+      if (distance < floor) break;
       // Straight back first, then alternating to either side in fifteen-degree steps,
       // so the usual case keeps the framing the scenes were laid out for.
       for (let i = 0; i < 24; i++) {
@@ -431,7 +479,7 @@ class Game implements TimelineHost {
     // can get out of, rather than dropping the player into the one spot it cannot.
     for (let ring = 0; ring < 5; ring++) {
       const distance = radius - ring * Math.max(1, radius / 6);
-      if (distance < 3) break;
+      if (distance < floor) break;
       for (let i = 0; i < 24; i++) {
         const angle = (i % 2 === 0 ? 1 : -1) * Math.ceil(i / 2) * (Math.PI / 12);
         const x = Math.sin(angle) * distance;
@@ -439,7 +487,7 @@ class Game implements TimelineHost {
         if (!this.blocked(x, z) && this.objectiveReachable(x, z)) return { x, z };
       }
     }
-    return { x: 0, z: radius };
+    return { x: 0, z: Math.max(floor, radius) };
   }
 
   /** Is the straight line from here to the objective free of scenery? */
@@ -562,7 +610,7 @@ class Game implements TimelineHost {
     const encounter = new Encounter(boss, this.save, this.combat, this.cultivation, {
       playerPosition: () => ({ x: this.player.x, z: this.player.z }),
       moveFoe: (x, z, facing) => this.placeFoe(x, z, facing),
-      recalled: () => this.memory.viewed(boss.beat),
+      recalled: () => (this.save.settings.fightHints ?? false) || this.memory.viewed(boss.beat),
       concealed: (now) => this.combat.concealed(now),
       guarding: (now) => this.combat.guarding(now)
     });
@@ -782,7 +830,11 @@ class Game implements TimelineHost {
     state[flag] = true;
     // Gu flags are the inventory's source of truth, so acquisition happens here.
     const guFlag = GU_BY_FLAG[flag];
-    if (guFlag) this.upkeep.acquire(guFlag, this.save.calendar.day);
+    if (guFlag) {
+      const taken = this.upkeep.acquire(guFlag, this.save.calendar.day);
+      // A Gu that arrived in reserve is not on the action bar, so say where it went.
+      if (taken?.stored) bus.emit('toast', { text: 'Open the Gu wheel to choose what you carry.' });
+    }
     const rank = RANK_BY_FLAG[flag];
     if (rank) this.cultivation.completeBreakthrough(rank.rank, rank.stage);
     if (flag.startsWith('codex.')) bus.emit('codex.unlock', { entry: flag.slice(6) });
@@ -846,6 +898,7 @@ class Game implements TimelineHost {
     }
     for (const actor of this.actors.values()) actor.update(dt, now);
     if (this.renderer.hasCarriedLight) this.renderer.moveCarriedLight(this.player.x, 2.4, this.player.z);
+    this.updateGatherMarker();
     if (this.objective) {
       // Fades out as you arrive, so it never sits on top of the scene it points at.
       const distance = this.distanceToObjective() ?? Infinity;
@@ -872,6 +925,18 @@ class Game implements TimelineHost {
     if (pressed.has('recollect')) this.viewRecollection();
     if (this.inScene && (pressed.has('interact') || pressed.has('attack'))) this.dialogue.advance();
     if (this.inScene) return;
+    if (pressed.has('interact') && this.atForge() && (this.distanceToObjective() ?? Infinity) > OBJECTIVE_RANGE) {
+      this.panels.openRefinery();
+      return;
+    }
+    if (pressed.has('interact')) {
+      const node = this.gatherable();
+      if (node && (this.distanceToObjective() ?? Infinity) > OBJECTIVE_RANGE) {
+        this.forage.gather(this.currentArea, node, this.save.calendar.day);
+        void this.write('auto');
+        return;
+      }
+    }
     if (pressed.has('interact') && this.awaiting) {
       const distance = this.distanceToObjective() ?? Infinity;
       if (distance <= OBJECTIVE_RANGE) {
@@ -949,6 +1014,103 @@ class Game implements TimelineHost {
       // A half-pushed stick walks; only a firm push runs.
       actor.play(running && Math.hypot(dx, dz) > 0.7 ? 'run' : 'walk');
     }
+  }
+
+  /** What he carries, what is in reserve, and how much he can hold. */
+  guLoadout(): { rank: number; capacity: number; carried: string[]; stored: string[] } {
+    return {
+      rank: this.save.aperture.rank,
+      capacity: this.upkeep.capacity(),
+      carried: this.upkeep.carried().map((g) => g.id),
+      stored: this.upkeep.stored().map((g) => g.id)
+    };
+  }
+
+  /** Dev and tests: hands over a Gu through the ordinary acquisition path. */
+  giveGu(id: string): boolean {
+    return !!this.upkeep.acquire(id, this.save.calendar.day);
+  }
+
+  /**
+   * Runs a refinement, spending essence through the aperture as the system expects.
+   *
+   * The only caller the refinement system has ever had is the scene runner, which is
+   * why the player could never make anything. This is the other door.
+   */
+  attemptRefinement(recipeId: string): RefinementOutcome {
+    const outcome = this.refinement.attempt(recipeId, (amount, gu) => this.cultivation.spend(amount, gu));
+    void this.write('auto');
+    return outcome;
+  }
+
+  /** Which areas have anything to gather, for the dev console and the sweep. */
+  forageSummary(): { area: string; nodes: number; items: string[] }[] {
+    const rows: { area: string; nodes: number; items: string[] }[] = [];
+    for (const id of AREAS.keys()) {
+      const nodes = nodesFor(areaDescription(id));
+      if (nodes.length) rows.push({ area: id, nodes: nodes.length, items: [...new Set(nodes.map((n) => n.item))] });
+    }
+    return rows;
+  }
+
+  /** What is pickable here and now, and what is in the bag. */
+  forageState(): { ready: number; nearest: number | null; carrying: Record<string, number> } {
+    const area = areaDescription(this.currentArea);
+    const day = this.save.calendar.day;
+    const found = this.forage.nearest(this.currentArea, area, day, this.player);
+    return {
+      ready: this.forage.available(this.currentArea, area, day).length,
+      nearest: found ? Math.round(found.distance * 10) / 10 : null,
+      carrying: { ...this.save.economy.items }
+    };
+  }
+
+  /** Walks to the nearest gatherable, the way `walkToObjective` walks to a marker. */
+  walkToGather(): boolean {
+    const area = areaDescription(this.currentArea);
+    const found = this.forage.nearest(this.currentArea, area, this.save.calendar.day, this.player);
+    if (!found) return false;
+    for (let step = 0; step < 900; step++) {
+      const gap = Math.hypot(found.node.x - this.player.x, found.node.z - this.player.z);
+      if (gap <= GATHER_RANGE * 0.8) return true;
+      const towards = Math.atan2(found.node.x - this.player.x, found.node.z - this.player.z);
+      let moved = false;
+      for (let turn = 0; turn < 9 && !moved; turn++) {
+        const angle = towards + (turn % 2 === 0 ? 1 : -1) * Math.ceil(turn / 2) * (Math.PI / 9);
+        const nextX = this.player.x + Math.sin(angle) * 0.9;
+        const nextZ = this.player.z + Math.cos(angle) * 0.9;
+        if (this.blocked(nextX, nextZ)) continue;
+        this.player.x = nextX;
+        this.player.z = nextZ;
+        this.player.facing = angle;
+        moved = true;
+      }
+      if (!moved) return false;
+      // Move the body too, as `walkToObjective` does. A walk that moves the logical
+      // position and leaves the model behind puts the camera somewhere the player is
+      // not, which is its own bug and hides others.
+      const actor = this.actors.get('fang-yuan');
+      actor?.setPosition(this.player.x, 0, this.player.z);
+      actor?.setFacing(this.player.facing);
+    }
+    return false;
+  }
+
+  /** Is there a refinement bench here? Forges have one; nothing else does. */
+  private atForge(): boolean {
+    return !this.inScene && !this.encounter && this.currentArea.includes('forge');
+  }
+
+  /** The node under the player's feet, if anything is ready there. */
+  private gatherable(): ForageNode | null {
+    if (this.inScene || this.encounter) return null;
+    const found = this.forage.nearest(
+      this.currentArea,
+      areaDescription(this.currentArea),
+      this.save.calendar.day,
+      this.player
+    );
+    return found && found.distance <= GATHER_RANGE ? found.node : null;
   }
 
   private blocked(x: number, z: number): boolean {
@@ -1114,6 +1276,7 @@ class Game implements TimelineHost {
         distance: this.distanceToObjective(),
         context: this.contextAction(),
         sluggish: this.save.gu.filter((g) => g.sluggish).map((g) => g.id),
+        due: this.upkeep.due(this.save.calendar.day),
         recollectionAvailable: !!beat && !!this.memory.available(beat.id) && !this.memory.viewed(beat.id),
         fight: this.fightView()
       },
@@ -1127,6 +1290,11 @@ class Game implements TimelineHost {
     if (this.inScene) return { intent: 'interact', label: 'Continue' };
     const distance = this.distanceToObjective();
     if (distance !== null && distance <= OBJECTIVE_RANGE) return { intent: 'interact', label: 'Begin' };
+    // Standing over something worth picking. Offered before cultivating, because it is
+    // the more specific thing to be doing in that spot.
+    if (this.gatherable()) return { intent: 'interact', label: 'Gather' };
+    // A forge has a bench in it. Nowhere else does.
+    if (this.atForge()) return { intent: 'interact', label: 'Refine' };
     if (this.cultivation.essence < this.cultivation.essenceMax * 0.5) {
       return { intent: 'cultivate', label: t('hud.cultivate') };
     }
@@ -1211,6 +1379,7 @@ class Game implements TimelineHost {
     setCheck('holdToRun', settings.holdToRun);
     setCheck('refinementFailure', settings.refinementFailure);
     setCheck('guUpkeep', settings.guUpkeep);
+    setCheck('fightHints', settings.fightHints ?? false);
     setCheck('invertLookX', settings.invertLookX);
     setCheck('invertLookY', settings.invertLookY);
     const sensitivity = maybe<HTMLInputElement>('lookSensitivity');
@@ -1234,7 +1403,8 @@ class Game implements TimelineHost {
     const sensitivity = maybe<HTMLInputElement>('lookSensitivity');
     if (sensitivity) settings.lookSensitivity = Math.max(0.2, Number(sensitivity.value) / 100);
     for (const id of ['reducedMotion', 'manualAim', 'aimAssist', 'haptics',
-                      'holdToGuard', 'holdToRun', 'refinementFailure', 'guUpkeep'] as const) {
+                      'holdToGuard', 'holdToRun', 'refinementFailure', 'guUpkeep',
+                      'fightHints'] as const) {
       const node = maybe<HTMLInputElement>(id);
       if (node) (settings as unknown as Record<string, unknown>)[id] = node.checked;
     }
@@ -1576,6 +1746,12 @@ async function boot(): Promise<void> {
       cameraBasis: () => game.cameraBasis(),
       fightView: () => game.fightView(),
       tryStrike: (abilityId: string) => game.tryStrike(abilityId),
+      forageSummary: () => game.forageSummary(),
+      forageState: () => game.forageState(),
+      walkToGather: () => game.walkToGather(),
+      guLoadout: () => game.guLoadout(),
+      refine: (recipeId: string) => game.attemptRefinement(recipeId),
+      giveGu: (id: string) => game.giveGu(id),
       areaIds: () => game.areaIds(),
       setCameraDistance: (d: number) => game.setCameraDistance(d),
       setInspectionDistance: (d: number | null) => game.setInspectionDistance(d),

@@ -32,6 +32,23 @@ have a beat and are tagged.
 | Playwright matrix | Done | 3 engines × 5 viewports, plus the performance budget in the same pass |
 | Looking at the game | Done | `npm run sweep` photographs all 36 areas twice and prints mean and spread; `npm run sweep:play` plays the opening chapters and fails on a fade, letterbox or panel left over a scene. See `docs/ARCHITECTURE.md` |
 
+## Play, not just presentation
+
+The design review's §5 asked for canon-safe systems and got them as *state*: an economy,
+upkeep, exposure, refinement, cultivation, a calendar and a combat module. What it did
+not get was the player's hands on any of them. Three gaps, now closed.
+
+| Gap | What it is now |
+| --- | --- |
+| **`BOSSES` was never instantiated.** Five multi-phase bosses with telegraphs and a per-phase answer sat in data; `Combat.bossFor()` had no callers, the HUD's telegraph renderer had no caller, and an ability press spent essence into the void. Every must-land fight, the prologue included, was a dialogue scene | Fights run. A phase is a rule, not a health bar: strike in the gap after its guard drops, get inside the reach it cannot raise that layer at, stand on the ground it retreats to, let the screen pass over you, do not repeat an opening it has answered. The rule is earned — recall the memory and Fang Yuan tells you, or work it out and keep it |
+| **Gu accumulated without limit**, so upkeep was a bill rather than a decision | The source caps a mortal Gu Master at five or six. Past that a Gu arrives in reserve: no upkeep, no place on the action bar, and a journal tab to swap. Nothing is destroyed and every swap is reversible, so a loadout cannot strand a save |
+| **Nothing could be gathered.** The canon item list says of the moon orchid petals, "gathered near the awakening river, or bought" — only the buying half existed, and walking through a field of orchids did nothing | Scenery is the resource. Nodes come from the props an area already places, capped at a dozen and limited to three things worth having: the petals a Gu eats, the leaves that are the only healing in the game, and the soil the winter mission is about. They regrow on the calendar, so a route is worth walking twice |
+
+What this changes about the shape of the game: the loop between beats used to be *walk to
+the marker*. It is now *walk to the marker, and decide on the way whether the detour to
+the orchid bank is worth the day it costs, because the Gu you chose to carry eats in two
+days and the stones say no.*
+
 ## Phase 2 · Vertical slice, chapters 1–19 — done for the slice
 
 | Item | Status | Notes |

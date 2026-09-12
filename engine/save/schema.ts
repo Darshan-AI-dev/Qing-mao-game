@@ -21,6 +21,15 @@ export interface GuState {
   fedOn: number;
   /** Set when upkeep lapsed: higher costs, weaker effects, optional content locked. */
   sluggish: boolean;
+  /**
+   * Kept in reserve rather than carried.
+   *
+   * A mortal Gu Master can only raise five or six at a time, so past that limit a new
+   * Gu arrives stored. Stored Gu cost no upkeep and cannot be used; nothing is ever
+   * destroyed and any swap is reversible, so a loadout can never dead-end a save.
+   * Absent on saves from before the limit existed, which means carried.
+   */
+  stored?: boolean;
 }
 
 export interface LedgerLine {
@@ -82,6 +91,14 @@ export interface SettingsState {
   lookSensitivity: number;
   refinementFailure: boolean;
   guUpkeep: boolean;
+  /**
+   * Print a boss phase's answer without recalling or discovering it.
+   *
+   * Off by default, because the earning of it is the point: the premise of the game is
+   * that he remembers, so remembering has to be worth something. On for players who
+   * would rather not be asked to read a fight.
+   */
+  fightHints?: boolean;
   keymap: Record<string, string>;
   /** Reserved so a later sound pack needs no schema change. */
   audio: { master: number; music: number; sfx: number; muted: boolean };
@@ -104,6 +121,11 @@ export interface SaveGameV5 {
   vitality: number;
   vitalityMax: number;
   gu: GuState[];
+  /**
+   * What has been picked, and when: area id, then node index, then the calendar day.
+   * Sparse and absent on older saves, which means nothing has been gathered yet.
+   */
+  forage?: Record<string, Record<string, number>>;
   strength: number;
   economy: EconomyState;
   exposure: ExposureState;

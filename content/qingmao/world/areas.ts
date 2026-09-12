@@ -148,6 +148,9 @@ const village: AreaDescription = {
 /** A clear, faintly blue river; moon orchids with jade stems on the far bank. */
 const awakeningRiver: AreaDescription = {
   id: 'mountain.awakening-river',
+  // "Gathered near the awakening river, or bought" — canon/gu.json, on the petals. It
+  // is enclosed, being underground, but it is a river bank rather than a room.
+  gathering: true,
   size: { x: 84, z: 84 },
   ground: 0x3c4a4e,
   sky: 0x20333a,

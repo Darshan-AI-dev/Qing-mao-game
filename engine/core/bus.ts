@@ -43,6 +43,8 @@ export interface GameEvents {
   'fight.miss': { boss: string; reason: string };
   /** The player worked a phase out without calling the memory up. */
   'fight.read': { boss: string; phase: number; hint: string };
+  'gu.carry': { gu: string; carried: boolean };
+  'forage.gather': { item: string; count: number; area: string };
   'fight.end': { boss: string; won: boolean };
   'enemy.telegraph': { target: string; shape: string; pattern: string; seconds: number };
   'enemy.phase': { target: string; phase: number; of: number };

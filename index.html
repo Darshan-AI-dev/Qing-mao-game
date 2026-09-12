@@ -142,6 +142,20 @@
   <button id="previouslyClose" type="button" class="primary">Continue</button>
 </dialog>
 
+<!--
+  The refinement bench.
+  
+  The system behind this was complete and had no caller: the player could never refine
+  anything, which is the one thing that turns gathered materials into an ability. Open
+  from the context button at a forge.
+-->
+<dialog id="refinery">
+  <h2>Refinement</h2>
+  <p class="fine" id="refineryNote"></p>
+  <div id="refineryList"></div>
+  <menu><button type="button" id="closeRefinery">Close</button></menu>
+</dialog>
+
 <dialog id="journal">
   <div class="dialogHead">
     <h2>Field journal</h2>
@@ -149,6 +163,7 @@
   </div>
   <nav class="tabs" aria-label="Journal sections">
     <button type="button" data-journal-tab="chapters" class="active">Chapters</button>
+    <button type="button" data-journal-tab="gu">Gu</button>
     <button type="button" data-journal-tab="ledger">Stones</button>
     <button type="button" data-journal-tab="codex">Codex</button>
     <button type="button" data-journal-tab="moments">Moments</button>
@@ -189,9 +204,9 @@
     <legend>Story</legend>
     <label>Challenge
       <select id="difficulty">
-        <option value="story">Story · less incoming damage</option>
+        <option value="story">Story · slower telegraphs, less incoming damage</option>
         <option value="standard">Standard</option>
-        <option value="hard">Hard · more incoming damage</option>
+        <option value="hard">Hard · faster telegraphs, more incoming damage</option>
       </select>
     </label>
     <label>Intensity
@@ -220,6 +235,9 @@
   <fieldset>
     <legend>Systems</legend>
     <label class="inlineCheck"><input id="guUpkeep" type="checkbox" checked> Gu need feeding</label>
+    <p class="fine">A mortal Gu Master carries five or six at a time, as in the source. Anything past that waits in reserve — nothing is ever lost, and the Gu tab of the journal swaps them over.</p>
+    <label class="inlineCheck"><input id="fightHints" type="checkbox"> Always show what beats a boss phase</label>
+    <p class="fine">Off by default: calling a Recollection up tells you how a fight goes, and working it out yourself earns the Foresight recognition. Turn this on to have the answer printed either way.</p>
     <label class="inlineCheck"><input id="refinementFailure" type="checkbox" checked> Refinements can fail</label>
     <p class="fine">Canonical refinements can never fail outright either way — a bad attempt costs days and stones. Turning this off removes the roll from optional recipes too.</p>
   </fieldset>

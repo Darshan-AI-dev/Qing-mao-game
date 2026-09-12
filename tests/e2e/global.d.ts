@@ -40,6 +40,12 @@ declare global {
           vitality: number; vitalityMax: number; state: string; openNow: boolean;
         } | null;
         tryStrike(abilityId: string): { landed: boolean; reason: string; damage: number } | null;
+        forageSummary(): { area: string; nodes: number; items: string[] }[];
+        forageState(): { ready: number; nearest: number | null; carrying: Record<string, number> };
+        walkToGather(): boolean;
+        guLoadout(): { rank: number; capacity: number; carried: string[]; stored: string[] };
+        refine(recipeId: string): { kind: string; gu?: string; stones?: number; days?: number; reason?: string };
+        giveGu(id: string): boolean;
         areaIds(): string[];
         setCameraDistance(distance: number): void;
         setInspectionDistance(distance: number | null): void;

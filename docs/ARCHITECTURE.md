@@ -94,6 +94,30 @@ writes it to site storage. The `canon` block is identical for every player, and
 can never change what the sequel treats as canon. The `player` block only changes
 texture. `defaultLegacy()` is what game 2 uses when there is no file at all.
 
+## Fights
+
+`systems/bosses.ts` is the data — abilities, phases, telegraph shapes and the sentence
+each phase's defence is beaten by. `systems/phases.ts` turns each of those sentences
+into a rule and is kept pure and unit-tested, for the same reason `core/movement.ts` is:
+it is hard to see wrong by reading. `systems/encounter.ts` is the runtime, and
+`render/foe.ts` the bodies for the beasts, one merged geometry each so a foe costs a
+single draw call.
+
+Two things are load-bearing and easy to undo by accident.
+
+**Damage is a share of the player's maximum, not a flat number.** The game spans a Rank
+one's forty-four points of vitality and the prologue's nine hundred; any flat figure is
+lethal at one end and invisible at the other.
+
+**The phase's rule is not shown for free.** Calling the Recollection up prints it,
+because Fang Yuan has fought this before. Working it out unprompted keeps it and fires
+the Foresight recognition. That is the premise of the game as a combat mechanic, and
+printing the hint unconditionally would quietly delete it.
+
+A `fight` command in a scene hands control over and waits. Losing is not a game over —
+it restores a quarter of vitality and lets the scene continue — because the story of
+this character is not one a player can fail out of.
+
 ## Looking at the game
 
 Data-level tests said the world was fine while it was rendering a black room, an

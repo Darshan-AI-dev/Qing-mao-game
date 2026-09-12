@@ -141,6 +141,22 @@ viewport now — and it turned up three more things.
 | **That fix did not fix it**, and the second run came back with the identical numbers. The measuring code only ran when a message arrived; before the first toast the element sits wherever the stylesheet put it, and that fallback — 9rem, less a 0.4rem transform — is 137.6px, exactly the number both runs reported. I had spent a run and a half improving the half of the code that was never executing | The toast is placed on load and again whenever anything above it changes size, via a `ResizeObserver` on the quest panel and the region name, which also covers the case that matters in play: the quest panel reflowing while a toast is on screen. The fallback moved down as well, for the frame before the observer fires. The test now checks **both** paths — at rest and with a message showing — because only checking one is what let this hide |
 | **Four movement tests asserted a distance after holding a key for 350ms.** Movement is `speed * dt` with `dt` clamped at 50ms so a stall cannot teleport anyone, so distance depends on how many frames ran — and under a throttled `requestAnimationFrame` 350ms bought exactly one frame, 0.35 paces, every time. The clamp is right; the assumption was not | The tests hold the key until the player has walked a pace, then measure. What they are really asserting is the direction of travel, and that is now checked at any frame rate |
 
+### Systems that had no door
+
+Four systems were complete, correct, and unreachable. They were all built during the
+systems pass, all covered by data-level checks, and a player could not touch any of
+them. That is a pattern worth naming: a system with no caller passes every test you
+write about its data and does nothing at all in the game.
+
+| Issue | Fix |
+| --- | --- |
+| **`BOSSES` was never instantiated.** Five multi-phase bosses with telegraph shapes, reaction windows and a per-phase answer. `Combat.bossFor()` had no callers. The HUD's telegraph renderer had no callers. Pressing an ability spent essence into the void. Every must-land fight in the game — the prologue included — was a dialogue scene | Fights run, as an encounter runtime with the phase rules kept pure and unit-tested. A phase is a rule, not a health bar |
+| **`Refinement` had no callers outside the scene runner**, so the player could never make anything and gathered materials led nowhere. It was the only item progression in the game | A bench, at any forge and permanently in the journal. Every recipe states its materials, stones, essence, days and odds, and whether it can be lost |
+| **Nothing in the world could be gathered**, although the canon item list says of the moon orchid petals: "gathered near the awakening river, or bought" | Nodes derived from the props an area already places, capped at a dozen, three resources worth having, regrowing on the calendar |
+| **Gu accumulated without limit**, so upkeep was a bill that arrived rather than a decision | The source's cap of five or six for a mortal master, with a reserve that costs no upkeep and grants no abilities. Reversible, so no loadout can strand a save |
+| Upkeep was invisible until something went hungry | The HUD strip shows what eats in the next few days and whether there is anything in the bag to feed it, so the detour to the orchid bank is a decision rather than a surprise |
+| A crowded interior pushed the spawn search inward until the player started four paces from the objective marker, which makes the context button read "Begin" from the first frame and puts everything else in that room out of reach | The search will not go inside the objective's own range |
+
 ### A note on the frustum-culling test
 
 Making the prologue an enclosed hall broke it, and the break was informative. Every

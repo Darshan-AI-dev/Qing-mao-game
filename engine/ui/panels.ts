@@ -13,6 +13,7 @@ import type { BeatGraph, Coverage } from '../core/beats';
 import type { SaveGameV5 } from '../save/schema';
 import type { Economy } from '../systems/economy';
 import type { Upkeep } from '../systems/upkeep';
+import { RECIPES, Refinement, type RefinementOutcome } from '../systems/refinement';
 import { buildLegacy, storeLegacy } from '../save/legacy';
 import { byId, clear, closeDialog, el, openDialog } from './dom';
 
@@ -27,6 +28,9 @@ export interface PanelHost {
   graph: BeatGraph;
   economy: Economy;
   upkeep: Upkeep;
+  refinement: Refinement;
+  /** Runs a refinement and returns what happened, so the panel can say so. */
+  attemptRefinement(recipeId: string): RefinementOutcome;
   replay(beatId: string): void;
   travel(areaId: string): void;
   unlockedAreas(): { id: string; name: string }[];
@@ -65,12 +69,138 @@ export class Panels {
     }
     switch (tab) {
       case 'chapters': body.append(this.chaptersView()); break;
+      case 'gu': body.append(this.guView()); break;
       case 'ledger': body.append(this.ledgerView()); break;
       case 'codex': body.append(this.codexView()); break;
       case 'threads': body.append(this.threadsView()); break;
       case 'moments': body.append(this.momentsView()); break;
     }
     openDialog(dialog);
+  }
+
+  /**
+   * The refinement bench.
+   *
+   * Every recipe he knows, whether its materials are in hand, what it costs in stones,
+   * essence and days, and the odds. The system behind it had been complete since the
+   * systems pass and had no caller anywhere: there was no way for a player to refine
+   * anything, so gathered materials led nowhere and the one piece of item progression
+   * in the game was script-only.
+   *
+   * Canonical recipes say plainly that they cannot be lost, because a player who has
+   * just watched Moonglow fail at chapter 119 needs to know that is the chapter and
+   * not their save.
+   */
+  openRefinery(): void {
+    const dialog = byId<HTMLDialogElement>('refinery');
+    const list = byId('refineryList');
+    clear(list);
+    byId('refineryNote').textContent =
+      `${this.host.economy.stones} stones on hand. A refinement costs days as well as materials.`;
+
+    for (const recipe of RECIPES) {
+      const preview = this.host.refinement.preview(recipe.id);
+      if (!preview) continue;
+
+      const row = el('div', { class: 'refineRow' });
+      const made = this.host.save.gu.some((g) => g.id === recipe.produces);
+      row.append(el('strong', { text: guById.get(recipe.produces)?.name ?? recipe.produces }));
+
+      const needs = recipe.from.map((id) => guById.get(id)?.name ?? id);
+      const improves = recipe.improvedBy.map(
+        (id) => `${itemsById.get(id)?.name ?? id}${(this.host.save.economy.items[id] ?? 0) > 0 ? '' : ' (none)'}`
+      );
+      row.append(el('small', {
+        text: [
+          needs.length ? `From ${needs.join(' + ')}` : 'From materials only',
+          improves.length ? `Better with ${improves.join(', ')}` : '',
+          `${preview.stones} stones · ${preview.essence} essence · ${Math.round(preview.chance * 100)}%`,
+          preview.canFailOutright
+            ? 'Can fail outright and consume its materials.'
+            : 'Cannot be lost — a bad attempt costs days and stones.'
+        ].filter(Boolean).join(' · ')
+      }));
+
+      const button = el('button', { type: 'button', class: 'refineGo', text: made ? 'Already refined' : 'Attempt' });
+      if (made) button.setAttribute('disabled', 'true');
+      else {
+        button.addEventListener('click', () => {
+          bus.emit('toast', { text: describeOutcome(this.host.attemptRefinement(recipe.id)) });
+          this.openRefinery();
+        });
+      }
+      row.append(button);
+      list.append(row);
+    }
+
+    if (!list.childElementCount) {
+      list.append(el('p', { class: 'guEmpty', text: 'Nothing you know how to make yet.' }));
+    }
+    openDialog(dialog);
+  }
+
+  /**
+   * What he is carrying, and what is in reserve.
+   *
+   * A mortal Gu Master raises five or six at a time, so this is where the loadout
+   * decision gets made. Every row states its diet and interval, because that is what
+   * carrying it costs — the upkeep bill and this screen are the same decision seen
+   * from two sides. The Spring Autumn Cicada cannot be put away: it is the reason
+   * there is a story.
+   */
+  private guView(): HTMLElement {
+    const upkeep = this.host.upkeep;
+    const wrap = el('div', { class: 'guView' });
+    const carried = upkeep.carried();
+    const stored = upkeep.stored();
+    wrap.append(
+      el('p', { class: 'guCount', text: `Carrying ${carried.length} of ${upkeep.capacity()}. Upkeep runs about ${upkeep.dailyBurn()} stones a day.` })
+    );
+
+    const section = (title: string, rows: typeof carried, action: string | null): HTMLElement => {
+      const box = el('section', { class: 'guSection' }, el('h3', { text: title }));
+      if (!rows.length) {
+        box.append(el('p', { class: 'guEmpty', text: 'Nothing here.' }));
+        return box;
+      }
+      for (const state of rows) {
+        const canon = guById.get(state.id);
+        const row = el('div', { class: `guRow${state.sluggish ? ' sluggish' : ''}` });
+        row.append(el('strong', { text: canon?.name ?? state.id }));
+        const diet = canon?.feedDays
+          ? `${canon.dietItem ? itemsById.get(canon.dietItem)?.name ?? canon.dietItem : 'primeval stones'} every ${canon.feedDays} days`
+          : 'needs no feeding';
+        row.append(el('small', { text: state.sluggish ? `${diet} · sluggish, feed it` : diet }));
+        if (action && state.id !== 'spring-autumn-cicada') {
+          const button = el('button', { type: 'button', class: 'guSwap', text: action });
+          button.addEventListener('click', () => {
+            const moved = action === 'Carry' ? upkeep.carry(state.id) : upkeep.store(state.id);
+            if (!moved) {
+              bus.emit('toast', { text: `No room — you can carry ${upkeep.capacity()}.` });
+              return;
+            }
+            this.openJournal('gu');
+          });
+          row.append(button);
+        }
+        box.append(row);
+      }
+      return box;
+    };
+
+    wrap.append(section('Carried', carried, 'Put away'));
+    wrap.append(section('In reserve', stored, 'Carry'));
+
+    // A door to the bench that is always here. The context button at a forge offers it
+    // too, but that button also carries "Begin" when a beat is waiting on the same
+    // ground, and a door that is sometimes missing is one players stop looking for.
+    const bench = el('button', { type: 'button', class: 'guSwap benchLink', text: 'Refinement bench' });
+    bench.addEventListener('click', () => {
+      closeDialog(byId<HTMLDialogElement>('journal'));
+      this.openRefinery();
+    });
+    wrap.append(el('p', { class: 'guEmpty' }, bench));
+    return wrap;
   }
 
   /** All 200 chapters, their coverage and a replay link for anything already reached. */
@@ -354,4 +484,22 @@ export class Panels {
   }
 }
 
-export type JournalTab = 'chapters' | 'ledger' | 'codex' | 'threads' | 'moments';
+export type JournalTab = 'chapters' | 'gu' | 'ledger' | 'codex' | 'threads' | 'moments';
+
+/** One sentence for each way a refinement can land. */
+function describeOutcome(outcome: RefinementOutcome): string {
+  switch (outcome.kind) {
+    case 'success':
+      return `Refined. ${outcome.days} days and ${outcome.stones} stones.`;
+    case 'delay':
+      return `It did not take. ${outcome.days} days and ${outcome.stones} stones gone; the materials are still yours.`;
+    case 'failure':
+      return `Lost it. ${outcome.days} days, ${outcome.stones} stones and the materials.`;
+    case 'blocked':
+      return outcome.reason === 'materials'
+        ? 'You do not have what it needs.'
+        : outcome.reason === 'stones'
+          ? 'Not enough stones.'
+          : 'Not enough essence.';
+  }
+}

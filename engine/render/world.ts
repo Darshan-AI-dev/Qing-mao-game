@@ -65,6 +65,15 @@ export interface AreaDescription {
    * else the moment you walk in, so the shell has to be able to change with it.
    */
   interior?: { floor?: number; wall?: number; ceiling?: number };
+  /**
+   * Whether anything here can be picked. Defaults to true outdoors, false inside.
+   *
+   * The default gets the Bai clan's audience hall and the Gu room's orchid trays right
+   * — those are furnishings — and the underground awakening river wrong, because the
+   * canon item list says the moon orchid petals are "gathered near the awakening
+   * river, or bought". Enclosed is not the same as built, so the content says which.
+   */
+  gathering?: boolean;
   /** Hand-placed interior details: blankets, window mullions, a bag of stones. */
   dressing?: InteriorDressing[];
   blockers?: Blocker[];

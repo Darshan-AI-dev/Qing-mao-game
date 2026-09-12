@@ -386,19 +386,137 @@ test('a strike only lands when the phase says it does', async ({ page }) => {
 });
 
 test('a fight ends and gives the scene back', async ({ page }) => {
+  // A fight takes as long as it takes. The open windows the player strikes in are
+  // produced by the frame loop, so under five projects in parallel there are fewer of
+  // them per second — and a fixed count of two hundred iterations was the same mistake
+  // as timing a walk by the clock instead of by the distance walked.
+  test.setTimeout(180_000);
   await reachPrologueFight(page);
+
   // Strike whenever the window is open. Ability recovery is what stops this being a
   // click-race, so this is also a check that a fight is winnable at a human rate.
-  for (let i = 0; i < 200; i++) {
+  const deadline = Date.now() + 120_000;
+  while (Date.now() < deadline) {
     if (!(await page.locator('#fightPanel').isVisible())) break;
     if (await page.evaluate(() => !document.getElementById('foeOpen')!.hidden)) {
       await page.keyboard.press('Space');
     }
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(100);
   }
   await expect(page.locator('#fightPanel')).toBeHidden();
   // The prologue's fight is the last thing in its scene, so what the fight hands back
   // is the world: control returns and the next beat is offered.
   await page.waitForFunction(() => window.qingMao.debug.isExploring(), null, { timeout: 30_000 });
   expect(await page.evaluate(() => window.qingMao.debug.awaitingBeat())).not.toBeNull();
+});
+
+test('there is something to gather, and gathering it puts it in the bag', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+
+  // Gathering is the half of upkeep the player was never part of: the Moonlight Gu
+  // eats moon orchid petals every six days, the bill was paid silently out of stones,
+  // and walking through a field of orchids did nothing.
+  const areas = await page.evaluate(() => window.qingMao.debug.forageSummary());
+  expect(areas.length, 'nowhere in the game has anything to gather').toBeGreaterThan(2);
+  // Not a field of free money either: a hundred and twenty-six nodes in one area is
+  // not scarcity, and the whole economy leans on scarcity.
+  for (const area of areas) expect(area.nodes, `${area.area} has ${area.nodes} nodes`).toBeLessThanOrEqual(12);
+
+  await page.evaluate(() => window.qingMao.debug.visitArea('mountain.awakening-river'));
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => window.qingMao.debug.forageState().ready)).toBeGreaterThan(0);
+
+  expect(await page.evaluate(() => window.qingMao.debug.walkToGather())).toBe(true);
+  await page.waitForTimeout(300);
+  await expect(page.locator('#contextButton')).toHaveText(/Gather/);
+
+  const before = await page.evaluate(() => window.qingMao.debug.forageState());
+  await page.keyboard.press('KeyE');
+  await page.waitForFunction(
+    (was) => window.qingMao.debug.forageState().ready < was,
+    before.ready,
+    { timeout: 5000 }
+  );
+  const after = await page.evaluate(() => window.qingMao.debug.forageState());
+  expect(after.carrying['moon-orchid-petal'], 'nothing went into the bag').toBeGreaterThan(0);
+});
+
+test('a mortal Gu Master carries only what canon allows', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+  const state = await page.evaluate(() => window.qingMao.debug.guLoadout());
+  // "Mortal Gu Masters ranked one to five would usually only raise at most five to six
+  // mortal Gu at the same time." Accumulating without limit made upkeep a bill rather
+  // than a decision, and the loadout no decision at all.
+  //
+  // Asserted as the rule rather than as a number: control comes back before chapter 3
+  // has taken the prologue's Rank eight away from him, so a flat "expect five or six"
+  // was checking the wrong character.
+  const mortal = state.rank >= 1 && state.rank <= 5;
+  if (mortal) {
+    expect(state.capacity, `rank ${state.rank} should carry five or six`).toBeGreaterThanOrEqual(5);
+    expect(state.capacity, `rank ${state.rank} should carry five or six`).toBeLessThanOrEqual(6);
+  } else {
+    // He has not woken up yet, and a Rank eight is not a mortal Gu Master.
+    expect(state.capacity).toBeGreaterThan(6);
+  }
+  expect(state.carried.length).toBeLessThanOrEqual(state.capacity);
+
+  // Past the limit a Gu goes into reserve rather than being refused: refusing it could
+  // lose a canonical Gu the story needs later, and nothing may strand a save.
+  // Overfilled relative to whatever the capacity is, so this holds at any rank.
+  const overfilled = await page.evaluate(() => {
+    const debug = window.qingMao.debug;
+    const room = debug.guLoadout().capacity + 4;
+    const canon = [
+      'hope-gu', 'moonlight-gu', 'liquor-worm', 'little-light-gu', 'white-boar-gu',
+      'jade-skin-gu', 'white-jade-gu', 'moonglow-gu', 'four-flavours-liquor-worm',
+      'stealth-scales-gu', 'earth-ear-grass', 'nine-leaf-vitality-grass',
+      'water-shield-gu', 'sky-canopy-gu', 'thunderwings-gu', 'blood-moon-gu',
+      'chainsaw-golden-centipede', 'tusita-flower'
+    ];
+    for (const id of canon.slice(0, room)) debug.giveGu(id);
+    return debug.guLoadout();
+  });
+  expect(overfilled.carried.length).toBe(overfilled.capacity);
+  expect(overfilled.stored.length, 'the surplus was destroyed rather than stored').toBeGreaterThan(0);
+  // And the Cicada is never put away: it is the reason there is a story.
+  expect(overfilled.carried).toContain('spring-autumn-cicada');
+});
+
+test('a player can refine, which until now only scripts could do', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+  // The refinement system was complete and had no caller anywhere outside the scene
+  // runner, so gathered materials led nowhere and the one piece of item progression in
+  // the game was unreachable. A forge has a bench in it now.
+  await page.evaluate(() => window.qingMao.debug.visitArea('mountain.forge'));
+  await page.waitForTimeout(400);
+  await expect(page.locator('#contextButton')).toHaveText(/Refine/);
+  await page.keyboard.press('KeyE');
+  await expect(page.locator('#refinery')).toBeVisible();
+
+  const rows = await page.locator('.refineRow').count();
+  expect(rows, 'the bench is empty').toBeGreaterThan(3);
+  // Canonical recipes have to say they cannot be lost. A player who has just watched
+  // Moonglow fail at chapter 119 needs to know that is the chapter, not their save.
+  const detail = await page.locator('.refineRow', { hasText: 'Moonglow' }).locator('small').textContent();
+  expect(detail).toContain('Cannot be lost');
+
+  // And it actually does something: days and stones move.
+  const before = await page.evaluate(() => ({
+    day: window.qingMao.save.calendar.day,
+    stones: window.qingMao.save.economy.stones
+  }));
+  const outcome = await page.evaluate(() => window.qingMao.debug.refine('ledger-moth'));
+  expect(['success', 'failure', 'delay', 'blocked']).toContain(outcome.kind);
+  if (outcome.kind !== 'blocked') {
+    const after = await page.evaluate(() => ({
+      day: window.qingMao.save.calendar.day,
+      stones: window.qingMao.save.economy.stones
+    }));
+    expect(after.day, 'a refinement costs days').toBeGreaterThan(before.day);
+    expect(after.stones, 'a refinement costs stones').toBeLessThan(before.stones);
+  }
 });
