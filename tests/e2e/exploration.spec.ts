@@ -331,9 +331,16 @@ async function reachPrologueFight(page: Page): Promise<void> {
     if ((await choice.count()) && (await choice.isVisible())) {
       await choice.click();
     } else {
-      // Short, because a miss here is the normal case — the line is still typing — and
-      // a long wait per miss is what ate the budget.
-      await page.locator('#dialogueContinue').click({ timeout: 600 }).catch(() => {});
+      // The keyboard, not the button.
+      //
+      // Under software WebGL a desktop viewport runs at five to eight frames a second,
+      // and Playwright will not click an element until its box has held still across
+      // two frames. The dialogue panel resizes as the line types, so at that frame rate
+      // it is never stable for long enough: a 600 ms click timeout landed zero clicks
+      // in ninety seconds, and the 2500 ms one it replaced spent the whole test budget
+      // waiting. Interact is bound to E and goes through the same handler the button
+      // does, with no actionability check to lose the race against.
+      await page.keyboard.press('KeyE');
     }
     await page.waitForTimeout(150);
   }

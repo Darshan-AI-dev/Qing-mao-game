@@ -65,6 +65,28 @@ async function diagnosis(page: Page): Promise<string> {
     .catch(() => 'could not be asked about WebGL2');
   notes.push(webgl);
 
+  // How far boot actually got. `window.qingMao` is assigned in the last few lines of
+  // boot, immediately before the title dialog is opened, so its presence separates
+  // "boot never finished" from "boot finished and the dialog did not open".
+  const progress = await page
+    .evaluate(() => {
+      const intro = document.getElementById('intro');
+      return {
+        booted: !!(window as unknown as { qingMao?: unknown }).qingMao,
+        introInDom: !!intro,
+        introOpen: intro instanceof HTMLDialogElement ? intro.open : false,
+        readyState: document.readyState
+      };
+    })
+    .catch(() => null);
+  if (progress) {
+    notes.push(
+      `boot ${progress.booted ? 'finished' : 'did NOT finish'}; ` +
+        `title dialog ${progress.introInDom ? (progress.introOpen ? 'open' : 'present but closed') : 'missing'}; ` +
+        `document ${progress.readyState}`
+    );
+  }
+
   const problems = PROBLEMS.get(page) ?? [];
   // Duplicates pile up fast when a frame loop throws every frame.
   if (problems.length) notes.push(...[...new Set(problems)].slice(0, 6));
@@ -86,7 +108,7 @@ export async function openTitle(page: Page, url = '/'): Promise<void> {
   watchPage(page);
   await page.goto(url);
   await stage(page, 'the title screen never became usable: #begin was not visible', () =>
-    page.locator('#begin').waitFor({ state: 'visible', timeout: 15_000 })
+    page.locator('#begin').waitFor({ state: 'visible', timeout: 30_000 })
   );
 }
 
@@ -94,7 +116,7 @@ export async function openTitle(page: Page, url = '/'): Promise<void> {
 export async function pressBegin(page: Page): Promise<void> {
   watchPage(page);
   await stage(page, 'the title screen never became usable: #begin was not visible', () =>
-    page.locator('#begin').waitFor({ state: 'visible', timeout: 15_000 })
+    page.locator('#begin').waitFor({ state: 'visible', timeout: 30_000 })
   );
   await page.locator('#begin').click();
   await waitForGame(page);

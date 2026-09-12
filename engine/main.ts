@@ -89,6 +89,8 @@ class Game implements TimelineHost {
   /** A one-line exchange with somebody in the world; not a scene. */
   private talking = false;
   private folkSyncedAt = 0;
+  /** Where people are standing. Kept apart from `blockers`; see `enterArea`. */
+  private folkBlockers: Blocker[] = [];
   private skipRequested = false;
   private lastTick = performance.now();
   private lastAutosave = performance.now();
@@ -399,12 +401,15 @@ class Game implements TimelineHost {
     for (const lantern of built.lanterns) this.renderer.addLantern(lantern.x, lantern.y, lantern.z);
     this.blockers = built.blockers;
     this.currentArea = areaId;
-    // People take up room. Without this you walk straight through whoever you are
-    // talking to and end up standing inside them, which on a trailing camera renders as
-    // one figure where there are two.
-    for (const person of folkIn(FOLK.get(areaId) ?? [], new Set(this.save.completed))) {
-      this.blockers.push({ x: person.x, z: person.z, w: 1.1, d: 1.1 });
-    }
+    // People take up room, but they are not architecture.
+    //
+    // Pushing them into `this.blockers` stranded a whole area: that list is what picks
+    // the spawn point and what checks the lane to the objective, and `blocked()` pads
+    // every entry by half a pace on each side, so three people in a 28 x 26 room walled
+    // the marker off entirely. They get their own list, consulted only when the player
+    // is walking, so the geometry the rest of the game reasons about is unchanged.
+    this.folkBlockers = folkIn(FOLK.get(areaId) ?? [], new Set(this.save.completed))
+      .map((person) => ({ x: person.x, z: person.z, w: 0.1, d: 0.1 }));
     this.save.area = areaId;
 
     // Genuinely dark means underground: caves, the stone forest, the blood lake. A
@@ -1164,8 +1169,8 @@ class Game implements TimelineHost {
     const nextX = this.player.x + dx * speed;
     const nextZ = this.player.z + dz * speed;
     // Axes are tested separately so a wall you are brushing along does not stop you.
-    if (!this.blocked(nextX, this.player.z)) this.player.x = nextX;
-    if (!this.blocked(this.player.x, nextZ)) this.player.z = nextZ;
+    if (!this.blocked(nextX, this.player.z) && !this.standingOn(nextX, this.player.z)) this.player.x = nextX;
+    if (!this.blocked(this.player.x, nextZ) && !this.standingOn(this.player.x, nextZ)) this.player.z = nextZ;
     this.player.facing = facing;
 
     const actor = this.actors.get('fang-yuan');
@@ -1272,6 +1277,17 @@ class Game implements TimelineHost {
       this.player
     );
     return found && found.distance <= GATHER_RANGE ? found.node : null;
+  }
+
+  /**
+   * Whether a person is standing here. Tight — a body, not a building — and separate
+   * from `blocked` so it never reaches the spawn search or the lane check.
+   */
+  private standingOn(x: number, z: number): boolean {
+    for (const person of this.folkBlockers) {
+      if (Math.abs(x - person.x) < person.w + 0.5 && Math.abs(z - person.z) < person.d + 0.5) return true;
+    }
+    return false;
   }
 
   private blocked(x: number, z: number): boolean {
