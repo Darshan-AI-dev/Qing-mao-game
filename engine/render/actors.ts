@@ -225,9 +225,24 @@ function buildStandIn(character: CanonCharacter, options: ActorOptions, root: Gr
   collar.rotation.z = 0.24;
   const sash = new Mesh(new BoxGeometry(0.64 * broad, 0.12, 0.4), trimMat);
   sash.position.y = 1.16;
-  const shoulders = new Mesh(new BoxGeometry(0.66 * broad, 0.12, 0.3), robeMat);
-  shoulders.position.y = 1.66;
-  torso.add(skirt, chest, collar, sash, shoulders);
+  // Rounded shoulders. A flat box across the top read as a plank laid on a tube, and
+  // the shoulder line is most of what tells you a figure's build at phone distance.
+  const shoulders = new Mesh(new CapsuleGeometry(0.15, 0.4 * broad, 4, 10), robeMat);
+  shoulders.rotation.z = Math.PI / 2;
+  shoulders.position.y = 1.63;
+  // A band at the hem, so the robe ends in something rather than being cut off.
+  const hem = new Mesh(new CylinderGeometry(0.305 * broad, 0.405 * broad, 0.11, 12), trimMat);
+  hem.position.y = 0.055;
+  // Sash ties hanging at the front. Small, and the only part of him that reads as
+  // cloth rather than as carpentry.
+  const ties: Mesh[] = [];
+  for (const side of [-1, 1]) {
+    const tie = new Mesh(new BoxGeometry(0.06, 0.44, 0.04), trimMat);
+    tie.position.set(side * 0.09, 0.94, 0.19 * broad);
+    tie.rotation.z = side * 0.06;
+    ties.push(tie);
+  }
+  torso.add(skirt, chest, collar, sash, shoulders, hem, ...ties);
 
   const head = new Group();
   const skull = new Mesh(new CapsuleGeometry(0.165, 0.1, 4, 12), skinMat);
@@ -281,11 +296,18 @@ function buildStandIn(character: CanonCharacter, options: ActorOptions, root: Gr
   for (const side of [-1, 1]) {
     if (oneArm && side === -1) continue;
     const arm = new Group();
-    const sleeve = new Mesh(new CylinderGeometry(0.085, 0.105, 0.5, 8), robeMat);
-    sleeve.position.y = -0.25;
+    // A wide hanging cuff is the silhouette of this robe, and the arm was a broom
+    // handle: a thin cylinder the same width top to bottom, which from behind — where
+    // the camera spends the whole game — read as a stick taped to each shoulder.
+    const upper = new Mesh(new CylinderGeometry(0.1, 0.155, 0.34, 8), robeMat);
+    upper.position.y = -0.17;
+    const cuff = new Mesh(new CylinderGeometry(0.155, 0.25, 0.3, 10), robeMat);
+    cuff.position.y = -0.48;
+    const cuffBand = new Mesh(new CylinderGeometry(0.25, 0.25, 0.05, 10), trimMat);
+    cuffBand.position.y = -0.635;
     const hand = new Mesh(new CapsuleGeometry(0.055, 0.04, 3, 6), skinMat);
-    hand.position.y = -0.55;
-    arm.add(sleeve, hand);
+    hand.position.y = -0.7;
+    arm.add(upper, cuff, cuffBand, hand);
     arm.position.set(side * 0.34 * broad, 1.6, 0);
     arms.push(arm);
     root.add(arm);
