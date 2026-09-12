@@ -26,6 +26,8 @@ import { Calendar } from './systems/calendar';
 import { Cultivation } from './systems/cultivation';
 import { Exposure } from './systems/exposure';
 import { Refinement, type RefinementOutcome } from './systems/refinement';
+import { lineAt, nearestFolk, folkIn, SPEAK_RANGE, type Folk } from './systems/folk';
+import { FOLK } from '../content/qingmao/world/folk';
 import { Memory } from './systems/memory';
 import { ABILITIES, BOSSES, Combat, type Ability } from './systems/combat';
 import { freshSave, type SaveGameV5 } from './save/schema';
@@ -84,6 +86,9 @@ class Game implements TimelineHost {
   private freeCamera = false;
   private cameraDistanceOverride: number | null = null;
   private inScene = false;
+  /** A one-line exchange with somebody in the world; not a scene. */
+  private talking = false;
+  private folkSyncedAt = 0;
   private skipRequested = false;
   private lastTick = performance.now();
   private lastAutosave = performance.now();
@@ -324,6 +329,11 @@ class Game implements TimelineHost {
     await this.timeline.run(script);
     byId('skipScene').hidden = true;
     this.dialogue.hide();
+    // A skip applies to the scene being skipped, not to everything afterwards. Instant
+    // mode was left on once a scene had been skipped, so the next line anybody spoke
+    // outside a scene — a villager answering you — appeared and vanished in the same
+    // frame, with no way to read it.
+    this.dialogue.setInstant(false);
     this.restorePresentation();
     // Control is released by the caller, once the next beat has been set up. Clearing
     // it here left a window where the player could act while the previous area, its
@@ -371,7 +381,14 @@ class Game implements TimelineHost {
     const description = areaDescription(areaId);
     const canon = areasById.get(areaId);
     this.renderer.clearChunks();
-    for (const actor of this.actors.values()) actor.dispose();
+    // Take them out of the scene as well as disposing them. `dispose()` empties an
+    // actor's group but leaves the group itself parented, so every area change left
+    // another abandoned node behind — three `actor:fang-yuan` groups were in the scene
+    // after two moves, and a full playthrough crosses thirty-six areas.
+    for (const actor of this.actors.values()) {
+      this.renderer.scene.remove(actor.root);
+      actor.dispose();
+    }
     this.actors.clear();
 
     const built = buildArea(description, {
@@ -382,6 +399,12 @@ class Game implements TimelineHost {
     for (const lantern of built.lanterns) this.renderer.addLantern(lantern.x, lantern.y, lantern.z);
     this.blockers = built.blockers;
     this.currentArea = areaId;
+    // People take up room. Without this you walk straight through whoever you are
+    // talking to and end up standing inside them, which on a trailing camera renders as
+    // one figure where there are two.
+    for (const person of folkIn(FOLK.get(areaId) ?? [], new Set(this.save.completed))) {
+      this.blockers.push({ x: person.x, z: person.z, w: 1.1, d: 1.1 });
+    }
     this.save.area = areaId;
 
     // Genuinely dark means underground: caves, the stone forest, the blood lake. A
@@ -694,6 +717,134 @@ class Game implements TimelineHost {
     this.foeActor = null;
   }
 
+  // ------------------------------------------------------------------ people
+  /**
+   * Puts the area's people where they stand, and keeps them there.
+   *
+   * Run from the frame loop rather than only on entry, because a scene may spawn the
+   * same character, walk them across the room and leave them there — Fang Zheng is in
+   * the household scene and also someone you can talk to afterwards. Re-seating them
+   * while exploring costs a distance check each and repairs that for free.
+   */
+  private syncFolk(now: number): void {
+    if (now - this.folkSyncedAt < 400) return;
+    this.folkSyncedAt = now;
+    for (const person of this.peopleHere()) {
+      const actor = this.actors.get(person.id) ?? this.spawn(person.id);
+      const at = actor.root.position;
+      if (Math.hypot(at.x - person.x, at.z - person.z) > 0.2) {
+        actor.setPosition(person.x, 0, person.z);
+        actor.setFacing(person.facing ?? 0);
+      }
+    }
+  }
+
+  /** The people standing in the current area right now. */
+  private peopleHere(): readonly Folk[] {
+    return folkIn(FOLK.get(this.currentArea) ?? [], new Set(this.save.completed));
+  }
+
+  /** Whoever is within speaking distance, or null. */
+  private folkInReach(): Folk | null {
+    if (this.encounter) return null;
+    return nearestFolk(FOLK.get(this.currentArea) ?? [], new Set(this.save.completed), this.player)?.person ?? null;
+  }
+
+  /**
+   * One line from one person, then control straight back.
+   *
+   * Deliberately not a scene: no letterbox, no skip button, no loss of the stick. The
+   * cost of talking to somebody should be the two seconds it takes to read them, or
+   * villages stop being worth walking through.
+   */
+  private speakTo(person: Folk): string | null {
+    // Returns what was actually said, and null when nothing was — already mid-line, in
+    // a scene, or out of lines. A caller that cannot tell the difference will happily
+    // report a line that never reached the screen.
+    if (this.talking || this.inScene) return null;
+    const state = (this.save.beatState[`folk.${person.id}`] ??= {});
+    const heard = typeof state.heard === 'number' ? state.heard : 0;
+    const text = lineAt(person, new Set(this.save.completed), heard);
+    if (!text) return null;
+    state.heard = heard + 1;
+
+    this.talking = true;
+    const actor = this.actors.get(person.id);
+    // They turn to whoever is speaking to them. A line delivered to the back of
+    // someone's head reads as a bug, however good the line is.
+    if (actor) {
+      actor.setFacing(Math.atan2(this.player.x - person.x, this.player.z - person.z));
+      actor.play(heard % 2 === 0 ? 'talk-point' : 'talk-cross-arms', true);
+    }
+    void this.dialogue.showLine(person.id, text, 'spoken').finally(() => {
+      this.talking = false;
+      if (!this.inScene) this.dialogue.hide();
+      actor?.play('idle');
+      actor?.setFacing(person.facing ?? 0);
+      void this.write('auto');
+    });
+    return text;
+  }
+
+  /** Who is here and what they would say next. Read by the tests and the dev console. */
+  folkHere(): { id: string; name: string; distance: number; next: string | null }[] {
+    const completed = new Set(this.save.completed);
+    return folkIn(FOLK.get(this.currentArea) ?? [], completed).map((person) => {
+      const state = this.save.beatState[`folk.${person.id}`] ?? {};
+      const heard = typeof state.heard === 'number' ? state.heard : 0;
+      return {
+        id: person.id,
+        name: charactersById.get(person.id)?.name ?? person.id,
+        distance: Math.hypot(person.x - this.player.x, person.z - this.player.z),
+        next: lineAt(person, completed, heard)
+      };
+    });
+  }
+
+  /** Walks to the nearest person the way `walkToObjective` walks to a marker. */
+  walkToFolk(): string | null {
+    const people = this.peopleHere();
+    if (people.length === 0 || this.inScene) return null;
+    let target = people[0]!;
+    for (const person of people) {
+      if (Math.hypot(person.x - this.player.x, person.z - this.player.z) <
+          Math.hypot(target.x - this.player.x, target.z - this.player.z)) target = person;
+    }
+    // Walking here moves the logical player; the body is placed at the end, the same
+    // way `walkToGather` and `walkToObjective` do it. Without that the character model
+    // stays where it was and every screenshot taken after a debug walk is a lie.
+    const arrive = (): string => {
+      this.player.facing = Math.atan2(target.x - this.player.x, target.z - this.player.z);
+      const actor = this.actors.get('fang-yuan');
+      actor?.setPosition(this.player.x, 0, this.player.z);
+      actor?.setFacing(this.player.facing);
+      return target.id;
+    };
+    for (let step = 0; step < 900; step++) {
+      const gap = Math.hypot(target.x - this.player.x, target.z - this.player.z);
+      if (gap <= SPEAK_RANGE * 0.9) return arrive();
+      const towards = Math.atan2(target.x - this.player.x, target.z - this.player.z);
+      let moved = false;
+      for (let turn = 0; turn < 9 && !moved; turn++) {
+        const angle = towards + (turn % 2 === 0 ? 1 : -1) * Math.ceil(turn / 2) * (Math.PI / 9);
+        const nextX = this.player.x + Math.sin(angle) * 0.8;
+        const nextZ = this.player.z + Math.cos(angle) * 0.8;
+        if (this.blocked(nextX, nextZ)) continue;
+        this.player.x = nextX;
+        this.player.z = nextZ;
+        moved = true;
+      }
+      if (!moved) return null;
+    }
+    return null;
+  }
+
+  /** Says the next line of whoever is in reach. Returns what was said, or null. */
+  speakToNearest(): string | null {
+    const person = this.folkInReach();
+    return person ? this.speakTo(person) : null;
+  }
+
   /** The fight panel's model, or null when nothing is fighting. */
   fightView(): EncounterView | null {
     return this.encounter ? this.encounter.view(performance.now()) : null;
@@ -896,6 +1047,7 @@ class Game implements TimelineHost {
       this.encounter.update(dt, now, this.flags());
       this.foe?.setPose(this.encounter.view(now).state, now);
     }
+    if (!this.inScene) this.syncFolk(now);
     for (const actor of this.actors.values()) actor.update(dt, now);
     if (this.renderer.hasCarriedLight) this.renderer.moveCarriedLight(this.player.x, 2.4, this.player.z);
     this.updateGatherMarker();
@@ -925,6 +1077,15 @@ class Game implements TimelineHost {
     if (pressed.has('recollect')) this.viewRecollection();
     if (this.inScene && (pressed.has('interact') || pressed.has('attack'))) this.dialogue.advance();
     if (this.inScene) return;
+    // Someone standing in front of you is the most specific thing in reach, so they
+    // are offered before the ground you are standing on and before a distant marker.
+    if (pressed.has('interact')) {
+      const near = this.folkInReach();
+      if (near) {
+        this.speakTo(near);
+        return;
+      }
+    }
     if (pressed.has('interact') && this.atForge() && (this.distanceToObjective() ?? Infinity) > OBJECTIVE_RANGE) {
       this.panels.openRefinery();
       return;
@@ -1292,6 +1453,8 @@ class Game implements TimelineHost {
     if (distance !== null && distance <= OBJECTIVE_RANGE) return { intent: 'interact', label: 'Begin' };
     // Standing over something worth picking. Offered before cultivating, because it is
     // the more specific thing to be doing in that spot.
+    const near = this.folkInReach();
+    if (near) return { intent: 'interact', label: `Speak to ${charactersById.get(near.id)?.name ?? near.id}` };
     if (this.gatherable()) return { intent: 'interact', label: 'Gather' };
     // A forge has a bench in it. Nowhere else does.
     if (this.atForge()) return { intent: 'interact', label: 'Refine' };
@@ -1741,6 +1904,9 @@ async function boot(): Promise<void> {
       visitArea: (areaId: string) => game.visitArea(areaId),
       jumpToBeat: (beatId: string) => game.jumpToBeat(beatId),
       walkToObjective: () => game.walkToObjective(),
+      folkHere: () => game.folkHere(),
+      walkToFolk: () => game.walkToFolk(),
+      speakToNearest: () => game.speakToNearest(),
       spawnClearance: (areaId: string) => game.spawnClearance(areaId),
       currentBeatFacts: () => game.currentBeatFacts(),
       cameraBasis: () => game.cameraBasis(),

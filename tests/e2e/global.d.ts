@@ -32,6 +32,9 @@ declare global {
         visitArea(areaId: string): boolean;
         jumpToBeat(beatId: string): boolean;
         walkToObjective(): boolean;
+        folkHere(): { id: string; name: string; distance: number; next: string | null }[];
+        walkToFolk(): string | null;
+        speakToNearest(): string | null;
         spawnClearance(areaId: string): { x: number; z: number; lane: boolean; reachable: boolean };
         currentBeatFacts(): { id: string; title: string; objective: string; designNote: string } | null;
         cameraBasis(): { right: { x: number; y: number; z: number }; forward: { x: number; y: number; z: number } };

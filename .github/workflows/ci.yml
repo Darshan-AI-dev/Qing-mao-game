@@ -58,7 +58,18 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps ${{ matrix.engine }}
       # One engine at one viewport, plus the frame and download budget checks.
-      - run: npx playwright test --project='${{ matrix.engine }}-${{ matrix.viewport }}'
+      #
+      # Firefox runs under a virtual display, because Playwright's Firefox cannot
+      # create a WebGL context in headless mode at all — a long-standing Firefox
+      # limitation, not a preference that can be flipped (microsoft/playwright#1032,
+      # #14161, mozilla bug 1375585). getContext('webgl2') returned null, the game
+      # correctly showed its "this browser needs WebGL2" panel, and every Firefox test
+      # on every viewport failed without ever reaching the game. Headed under xvfb is
+      # the documented way round it.
+      - if: matrix.engine == 'firefox'
+        run: xvfb-run -a npx playwright test --project='${{ matrix.engine }}-${{ matrix.viewport }}'
+      - if: matrix.engine != 'firefox'
+        run: npx playwright test --project='${{ matrix.engine }}-${{ matrix.viewport }}'
         env:
           CI: 'true'
       - uses: actions/upload-artifact@v4

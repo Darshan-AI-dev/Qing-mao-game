@@ -137,9 +137,10 @@ const village: AreaDescription = {
     { kind: 'bamboo', places: grid(240, 170, 2031) },
     { kind: 'tree', places: grid(26, 160, 99) },
     { kind: 'rock', places: grid(34, 170, 1777) },
+    // (-40, -6), (0, 6) and (-16, 12) are Wang Da, Jiang Ya and Jia Jin Sheng.
     { kind: 'villager', places: [
       { x: -10, z: -44 }, { x: 4, z: -40 }, { x: -26, z: -30 }, { x: 18, z: -20 },
-      { x: -16, z: 12 }, { x: 26, z: 10 }, { x: -40, z: -6 }, { x: 0, z: 6 }
+      { x: 26, z: 10 }
     ] },
     { kind: 'lantern', places: [{ x: -2, z: -40 }, { x: -2, z: -20 }, { x: -2, z: 0 }, { x: -2, z: 20 }, { x: 18, z: 2 }, { x: -22, z: 2 }] }
   ]
@@ -189,7 +190,8 @@ const academy: AreaDescription = {
   ],
   props: [
     { kind: 'bamboo', places: grid(120, 112, 313) },
-    { kind: 'villager', places: [{ x: -8, z: 24 }, { x: 6, z: 26 }, { x: -14, z: 16 }, { x: 16, z: 20 }, { x: 2, z: 34 }, { x: -4, z: 14 }] },
+    // (-8, 24) and (6, 26) are Mo Yan and Elder Mo Chen.
+    { kind: 'villager', places: [{ x: -14, z: 16 }, { x: 16, z: 20 }, { x: 2, z: 34 }, { x: -4, z: 14 }] },
     { kind: 'lantern', places: [{ x: -8, z: -6 }, { x: 8, z: -6 }, { x: 0, z: 30 }] },
     { kind: 'crate', places: grid(9, 40, 808) }
   ]
@@ -217,7 +219,7 @@ const guRoom: AreaDescription = {
     { kind: 'orchid', places: grid(18, 2.6, 4177).map((pl) => ({ ...pl, x: pl.x - 4.5, z: pl.z + 2, y: 0.82 })) },
     { kind: 'orchid', places: grid(18, 2.6, 913).map((pl) => ({ ...pl, x: pl.x + 4.5, z: pl.z + 2, y: 0.82 })) },
     { kind: 'chest', places: [{ x: -8, z: 8 }, { x: 8, z: 8 }, { x: 0, z: 10.5 }] },
-    { kind: 'villager', places: [{ x: 0, z: -4.6 }] },
+    // The figure behind the counter is Elder Feng, who runs this room and talks.
     { kind: 'lantern', places: [{ x: -8.5, z: -6 }, { x: 8.5, z: -6 }, { x: 0, z: 8 }] }
   ]
 };
@@ -249,7 +251,8 @@ const tavern: AreaDescription = {
   timeOfDay: 0.66,
   props: [
     { kind: 'crate', places: grid(14, 22, 1212) },
-    { kind: 'villager', places: [{ x: -7, z: -4 }, { x: -4, z: 2 }, { x: 6, z: -2 }, { x: 8, z: 6 }, { x: 0, z: 8 }] },
+    // Keeper Lu at (-7, -4) and Jiang He at (6, -2) are people now, not cones.
+    { kind: 'villager', places: [{ x: -4, z: 2 }, { x: 8, z: 6 }, { x: 0, z: 8 }] },
     { kind: 'lantern', places: [{ x: -9, z: -9 }, { x: 9, z: -9 }, { x: -9, z: 9 }, { x: 9, z: 9 }] }
   ]
 };
@@ -322,7 +325,9 @@ const uncleHouse: AreaDescription = {
   timeOfDay: 0.35,
   props: [
     { kind: 'crate', places: grid(10, 20, 1616) },
-    { kind: 'villager', places: [{ x: -5, z: -4 }, { x: 4, z: -3 }, { x: 0, z: 6 }] },
+    // The three cones that used to stand here are the uncle, the aunt and the brother,
+    // placed as real people in `folk.ts` — see the note there.
+
     { kind: 'lantern', places: [{ x: -8, z: -8 }, { x: 8, z: -8 }] }
   ]
 };

@@ -50,22 +50,29 @@ const ENGINES = [
     use: {
       ...devices['Desktop Firefox'],
       /**
-       * Firefox refuses WebGL on a machine with no GPU: its driver blocklist rejects
-       * llvmpipe, `getContext('webgl2')` returns null, and the game correctly shows its
-       * "this browser needs WebGL2" panel — which meant every Firefox test on every
-       * viewport waited out its own ninety-second timeout without ever reaching the
-       * game. Five viewports' worth of that is why the CI job was cancelled at twenty
-       * minutes, twice, having tested nothing.
+       * Firefox has to run headed, with a virtual display in front of it.
        *
-       * A CI runner without a GPU is not the configuration a Firefox player is in, so
-       * forcing software WebGL on here tests the game rather than the runner.
+       * Playwright's Firefox cannot create a WebGL context in headless mode — the
+       * capability is switched off in the build, it is not a preference the blocklist
+       * is keeping from us, and no combination of webgl.force-enabled and friends gets
+       * it back (microsoft/playwright#1032, #14161, mozilla bug 1375585). So
+       * getContext('webgl2') returned null, the game correctly showed its
+       * "this browser needs WebGL2" panel, and every Firefox test on every viewport
+       * failed without ever reaching the game. Two CI runs were cancelled at twenty
+       * minutes having tested nothing at all.
+       *
+       * CI prefixes this engine's run with `xvfb-run`; locally it needs a display, and
+       * a machine running the suite by hand has one.
        */
+      headless: false,
       launchOptions: {
         firefoxUserPrefs: {
           'webgl.force-enabled': true,
           'webgl.disabled': false,
           'webgl.disable-fail-if-major-performance-caveat': true,
-          'gfx.webrender.all': true
+          // Software WebRender: correct for a runner with no GPU. `gfx.webrender.all`
+          // asks for the hardware path, which is the opposite of what is available.
+          'gfx.webrender.software': true
         }
       }
     }

@@ -317,20 +317,33 @@ test('pushing right moves the player to the camera\'s right', async ({ page }) =
  */
 async function reachPrologueFight(page: Page): Promise<void> {
   await openGame(page);
-  for (let i = 0; i < 60; i++) {
+  // A wall-clock deadline, not a fixed number of turns round the loop.
+  //
+  // Sixty iterations each costing up to a 2.5-second click timeout is 160 seconds of
+  // worst case inside a 90-second test, so on a loaded runner the test budget ran out
+  // before the loop did and the failure read as a timeout with no line of its own.
+  // That is exactly what happened to both prologue-fight tests at desktop width, on
+  // Chromium and WebKit alike, while passing everywhere else.
+  const deadline = Date.now() + 75_000;
+  while (Date.now() < deadline) {
     if (await page.locator('#fightPanel').isVisible()) return;
     const choice = page.locator('#dialogueChoices button').first();
     if ((await choice.count()) && (await choice.isVisible())) {
       await choice.click();
     } else {
-      await page.locator('#dialogueContinue').click({ timeout: 2500 }).catch(() => {});
+      // Short, because a miss here is the normal case — the line is still typing — and
+      // a long wait per miss is what ate the budget.
+      await page.locator('#dialogueContinue').click({ timeout: 600 }).catch(() => {});
     }
-    await page.waitForTimeout(180);
+    await page.waitForTimeout(150);
   }
   throw new Error('never reached the prologue fight');
 }
 
 test('the prologue is a fight, with the Rank eight arsenal it is meant to be fought at', async ({ page }) => {
+  // Reaching the fight is itself a minute of scene on a loaded runner; the assertions
+  // come after that, so the budget has to cover both.
+  test.setTimeout(150_000);
   await reachPrologueFight(page);
   await expect(page.locator('#foeName')).toHaveText('The eight at the doorway');
   await expect(page.locator('#foePhase')).toHaveText('PHASE 1 OF 2');
@@ -341,6 +354,7 @@ test('the prologue is a fight, with the Rank eight arsenal it is meant to be fou
 });
 
 test('a strike only lands when the phase says it does', async ({ page }) => {
+  test.setTimeout(150_000);
   await reachPrologueFight(page);
 
   // Asked of the rule directly rather than through the keyboard. A key is queued and
@@ -396,6 +410,50 @@ test('a fight ends and gives the scene back', async ({ page }) => {
   // is the world: control returns and the next beat is offered.
   await page.waitForFunction(() => window.qingMao.debug.isExploring(), null, { timeout: 30_000 });
   expect(await page.evaluate(() => window.qingMao.debug.awaitingBeat())).not.toBeNull();
+});
+
+test('the village has people in it who answer when spoken to', async ({ page }) => {
+  await openGame(page);
+  await skipToControl(page);
+  // Every villager was an instanced cone: you could walk the length of the mountain
+  // past forty people and not one of them would acknowledge that you existed.
+  await page.evaluate(() => window.qingMao.debug.visitArea('mountain.village'));
+  await page.waitForTimeout(500);
+
+  const here = await page.evaluate(() => window.qingMao.debug.folkHere());
+  expect(here.length, 'nobody is standing in the village').toBeGreaterThan(1);
+  // Named people from the canon bible, not extras, and each with something to say.
+  for (const person of here) {
+    expect(person.name, 'a person is showing a raw id instead of a name').not.toContain('-');
+    expect(person.next, `${person.id} has nothing to say`).toBeTruthy();
+  }
+
+  const walked = await page.evaluate(() => window.qingMao.debug.walkToFolk());
+  expect(walked, 'could not walk to anybody').toBeTruthy();
+  await page.waitForTimeout(250);
+
+  // The context button names who is in reach, so you know who you are about to talk to.
+  await expect(page.locator('#contextButton')).toHaveText(/^Speak to /);
+
+  const expected = await page.evaluate(() => window.qingMao.debug.speakToNearest());
+  expect(expected).toBeTruthy();
+  const panel = page.locator('#dialoguePanel');
+  await expect(panel).toBeVisible();
+  await expect(page.locator('#dialogueSpeaker')).not.toBeEmpty();
+  await expect(panel).toContainText(expected!.slice(0, 24));
+
+  // Talking is not a scene: the stick still works and there is no skip button.
+  expect(await page.evaluate(() => window.qingMao.debug.isExploring())).toBe(true);
+  await expect(page.locator('#skipScene')).toBeHidden();
+
+  // And pressing again moves on rather than repeating the same line. Dismiss the first
+  // one properly — talking to somebody is one line at a time, so a second attempt while
+  // the first is still on screen is correctly refused.
+  await page.locator('#dialogueContinue').click();
+  await expect(panel).toBeHidden();
+  const second = await page.evaluate(() => window.qingMao.debug.speakToNearest());
+  expect(second, 'the second attempt said nothing at all').toBeTruthy();
+  expect(second, 'a second press repeated the first line').not.toBe(expected);
 });
 
 test('there is something to gather, and gathering it puts it in the bag', async ({ page }) => {

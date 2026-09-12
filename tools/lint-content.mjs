@@ -390,11 +390,40 @@ for (const row of ledger) {
   if (sentences < 2) fail('ledger', `chapter ${row.chapter} is one sentence; the ledger is two to four`);
   if (sentences > 5) warn('ledger', `chapter ${row.chapter} runs to ${sentences} sentences`);
 }
+// --------------------------------------------------------------- people who talk
+//
+// The villagers you can speak to are content, so they answer to the same rules as every
+// other line in the game: they must be canon characters, every beat they are gated on
+// must exist, and nothing they say may be a production note read out loud. Their lines
+// also join `prose` below, which is what enforces the terminology.
+const folkSource = readFileSync(join(root, 'content/qingmao/world/folk.ts'), 'utf8');
+const folkLines = [...folkSource.matchAll(/text:\s*'((?:[^'\\]|\\.)*)'/g)].map((m) => m[1].replace(/\\'/g, "'"));
+const folkIds = [...folkSource.matchAll(/^\s{4}id: '([a-z0-9-]+)',$/gm)].map((m) => m[1]);
+const folkGates = [...folkSource.matchAll(/(?:needs|until): '([a-z0-9.-]+)'/g)].map((m) => m[1]);
+const beatIds = new Set(beats.map((b) => b.id));
+
+if (folkIds.length === 0) fail('folk', 'no people are placed in the world at all');
+for (const id of folkIds) {
+  if (!characters.has(id)) fail('folk', `${id} is placed in the world but is not in the canon bible`);
+}
+for (const gate of folkGates) {
+  if (!beatIds.has(gate)) fail('folk', `a line is gated on "${gate}", which is not a beat`);
+}
+for (const line of folkLines) {
+  if (line.trim().length < 12) fail('folk', `a line is too short to be worth walking over to: "${line}"`);
+  const tell = NOTE_TELLS.find((pattern) => pattern.test(line));
+  if (tell) fail('folk', `someone in the world talks about the game rather than in it — "${line.slice(0, 60)}"`);
+}
+// Nobody stands in two places at once: it reads as a duplicate, not as a busy person.
+const placedTwice = folkIds.filter((id, i) => folkIds.indexOf(id) !== i);
+for (const id of new Set(placedTwice)) fail('folk', `${id} is standing in more than one area`);
+
 // Terminology: the chosen set is applied everywhere, so the avoided forms must not appear.
 const prose = [
   ...ledger.map((r) => r.ledger),
   ...scripts.flatMap(({ data }) => data.commands.filter((c) => c.op === 'line').map((c) => c.text)),
-  ...Object.values(strings)
+  ...Object.values(strings),
+  ...folkLines
 ];
 for (const term of glossary) {
   for (const avoided of term.avoid) {
