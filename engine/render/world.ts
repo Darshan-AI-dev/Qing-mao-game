@@ -272,7 +272,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   // --- the skyline
   if (!description.enclosed) {
     const ridges = new Mesh(
-      horizonGeometry(Math.max(description.size.x, description.size.z) / 2),
+      horizonGeometry(),
       surface('stone', 0xffffff, { vertexColors: true, roughness: 1, fog: false })
     );
     ridges.frustumCulled = false;
@@ -488,25 +488,35 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
  * them entirely — they stand far beyond any area's fog distance — and aerial
  * perspective painted into the vertex colours is both cheaper and easier to control.
  */
-function horizonGeometry(reach: number): BufferGeometry {
+function horizonGeometry(): BufferGeometry {
   const parts: BufferGeometry[] = [];
   let seed = 9161;
   const rand = () => {
     seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
     return seed / 4294967296;
   };
-  for (const [radius, count, minHeight, spread, hex] of [
+  // Fixed distances, not multiples of the area.
+  //
+  // Scaled to the village they landed at about 130 units, which is just outside the
+  // playable ground and well inside the fog — so a ridge stood unhazed next to trees
+  // that had faded almost to nothing, and read as a tent pitched at the edge of town
+  // rather than as a mountain. The ceiling is the camera's far plane, which on the low
+  // tier is 170, so everything has to fit inside that and be tall instead of far.
+  for (const [ring, count, minHeight, spread, minSpan, spanRange, hex] of [
     // The near band: darker, lower, and broken up.
-    [reach * 1.45, 16, 26, 22, 0x3f5f5a],
+    [128, 18, 30, 20, 0.40, 0.22, 0x3a5854],
     // The far band: paler and taller, which is what reads as distance.
-    [reach * 2.3, 13, 52, 34, 0x6d8896]
+    [150, 14, 58, 34, 0.32, 0.18, 0x74909d]
   ] as const) {
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2 + rand() * 0.22;
-      const distance = radius * (0.86 + rand() * 0.3);
+      const distance = ring * (0.94 + rand() * 0.12);
       const height = minHeight + rand() * spread;
-      const width = height * (0.85 + rand() * 0.75);
-      const peak = new ConeGeometry(width, height, 5 + Math.floor(rand() * 3));
+      // ConeGeometry's first argument is a radius, not a width. Treating it as a width
+      // made a peak 192 units across standing 118 away, so the near band reached back
+      // over the village and filled the screen with a pale wall. A ridge has to be
+      // narrow enough that its base stays outside the ground it is meant to be behind.
+      const peak = new ConeGeometry(height * (minSpan + rand() * spanRange), height, 5 + Math.floor(rand() * 3));
       peak.rotateY(rand() * Math.PI);
       // Squashed on one axis so a ridge is never a perfect cone from any angle.
       peak.scale(1, 1, 0.6 + rand() * 0.55);
