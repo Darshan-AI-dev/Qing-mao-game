@@ -272,7 +272,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   // --- the skyline
   if (!description.enclosed) {
     const ridges = new Mesh(
-      horizonGeometry(),
+      horizonGeometry(detailLevel()),
       surface('stone', 0xffffff, { vertexColors: true, roughness: 1, fog: false })
     );
     ridges.frustumCulled = false;
@@ -301,8 +301,8 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     // attempt rendered twenty thousand triangles of grass that could not be seen.
     const reach = Math.min(46, Math.max(description.size.x, description.size.z) / 2);
     for (const [kind, geometry, perSquareMetre, cap, lift] of [
-      ['grass', grassGeometry(), 0.28, detail === 'low' ? 420 : 1900, 0],
-      ['pebble', pebbleGeometry(), 0.02, detail === 'low' ? 40 : 150, 0.04]
+      ['grass', grassGeometry(), detail === 'low' ? 0.06 : 0.28, detail === 'low' ? 150 : 1900, 0],
+      ['pebble', pebbleGeometry(), 0.02, detail === 'low' ? 24 : 150, 0.04]
     ] as const) {
       const count = Math.min(cap, Math.round(Math.PI * reach * reach * perSquareMetre));
       const places: { x: number; z: number }[] = [];
@@ -348,7 +348,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   const houseBody: BufferGeometry[] = [];
   const houseRoof: BufferGeometry[] = [];
   for (const building of description.buildings ?? []) {
-    const parts = houseParts(building);
+    const parts = houseParts(building, detailLevel());
     houseBody.push(...parts.body);
     houseRoof.push(...parts.roof);
     blockers.push({ x: building.x, z: building.z, w: building.w / 2 + 0.7, d: building.d / 2 + 0.7 });
@@ -488,7 +488,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
  * them entirely — they stand far beyond any area's fog distance — and aerial
  * perspective painted into the vertex colours is both cheaper and easier to control.
  */
-function horizonGeometry(): BufferGeometry {
+function horizonGeometry(detail: Detail): BufferGeometry {
   const parts: BufferGeometry[] = [];
   let seed = 9161;
   const rand = () => {
@@ -504,9 +504,9 @@ function horizonGeometry(): BufferGeometry {
   // tier is 170, so everything has to fit inside that and be tall instead of far.
   for (const [ring, count, minHeight, spread, minSpan, spanRange, hex] of [
     // The near band: darker, lower, and broken up.
-    [128, 18, 30, 20, 0.40, 0.22, 0x3a5854],
+    [128, detail === 'low' ? 10 : 18, 30, 20, 0.40, 0.22, 0x3a5854],
     // The far band: paler and taller, which is what reads as distance.
-    [150, 14, 58, 34, 0.32, 0.18, 0x74909d]
+    [150, detail === 'low' ? 8 : 14, 58, 34, 0.32, 0.18, 0x74909d]
   ] as const) {
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2 + rand() * 0.22;
@@ -766,8 +766,7 @@ function heightOffset(kind: PropKind): number {
  * fifth so the eave lifts at the corners. It overhangs the walls, which is what casts
  * the deep shadow line under the eaves.
  */
-function curvedRoofGeometry(width: number, depth: number, peak: number, overhang: number): BufferGeometry {
-  const n = 12;
+function curvedRoofGeometry(width: number, depth: number, peak: number, overhang: number, n: number): BufferGeometry {
   const halfX = width / 2 + overhang;
   const halfZ = depth / 2 + overhang;
   const positions: number[] = [];
@@ -823,7 +822,13 @@ function curvedRoofGeometry(width: number, depth: number, peak: number, overhang
  */
 function houseParts(b: {
   x: number; z: number; w: number; d: number; h: number; stilts?: boolean; floors?: number;
-}): { body: BufferGeometry[]; roof: BufferGeometry[] } {
+}, detail: Detail): { body: BufferGeometry[]; roof: BufferGeometry[] } {
+  // The low tier gets the shape of the building and none of the joinery. Gating the
+  // shading by tier and leaving the geometry alone was half a job: a device slow enough
+  // to need Lambert is slow enough that forty pieces a house matters, and at desktop
+  // width on a software rasteriser it took `page.evaluate` past thirty seconds — the
+  // page could not get a turn at all.
+  const fine = detail !== 'low';
   const body: BufferGeometry[] = [];
   const roof: BufferGeometry[] = [];
   const at = (geometry: BufferGeometry, x: number, y: number, z: number, hex: number, target = body) => {
@@ -846,8 +851,10 @@ function houseParts(b: {
     }
     // Cross-bracing between the stilts, which is what stops them reading as stilts on
     // a model and starts them reading as a house standing over wet ground.
-    at(new BoxGeometry(b.w - 0.6, 0.16, 0.16), 0, base * 0.55, -b.d / 2 + 0.5, 0x4a3524);
-    at(new BoxGeometry(b.w - 0.6, 0.16, 0.16), 0, base * 0.55, b.d / 2 - 0.5, 0x4a3524);
+    if (fine) {
+      at(new BoxGeometry(b.w - 0.6, 0.16, 0.16), 0, base * 0.55, -b.d / 2 + 0.5, 0x4a3524);
+      at(new BoxGeometry(b.w - 0.6, 0.16, 0.16), 0, base * 0.55, b.d / 2 - 0.5, 0x4a3524);
+    }
   }
 
   for (let floor = 0; floor < floors; floor++) {
@@ -863,7 +870,7 @@ function houseParts(b: {
     at(new BoxGeometry(b.w + 0.2, 0.26, b.d + 0.2), 0, y + b.h, 0, 0x53381f);
 
     // Shutters: a recessed dark panel with a lattice over it, two to a face.
-    for (const sx of [-b.w * 0.26, b.w * 0.26]) {
+    for (const sx of fine ? [-b.w * 0.26, b.w * 0.26] : []) {
       const face = b.d / 2 - 0.14;
       at(new BoxGeometry(1.25, 1.05, 0.1), sx, y + b.h * 0.62, face, 0x2b2118);
       for (let k = -1; k <= 1; k++) {
@@ -884,7 +891,7 @@ function houseParts(b: {
     const rail = (length: number, x: number, z: number, along: 'x' | 'z') => {
       const geometry = along === 'x' ? new BoxGeometry(length, 0.12, 0.14) : new BoxGeometry(0.14, 0.12, length);
       at(geometry, x, y + 0.95, z, 0x6b4c2c);
-      const count = Math.max(3, Math.round(length / 0.75));
+      const count = fine ? Math.max(3, Math.round(length / 0.75)) : 0;
       for (let k = 0; k < count; k++) {
         const along01 = (k / (count - 1) - 0.5) * length;
         at(
@@ -904,11 +911,11 @@ function houseParts(b: {
 
   // The roof, and the ridges that run from the apex down to each corner.
   const peak = 2.1 + Math.max(b.w, b.d) * 0.16;
-  at(curvedRoofGeometry(b.w, b.d, peak, 1.15), 0, top, 0, PALETTE.roof, roof);
+  at(curvedRoofGeometry(b.w, b.d, peak, 1.15, fine ? 12 : 5), 0, top, 0, PALETTE.roof, roof);
   at(new BoxGeometry(0.42, 0.42, 0.42), 0, top + peak + 0.1, 0, 0x1d3536, roof);
   const halfX = b.w / 2 + 1.15;
   const halfZ = b.d / 2 + 1.15;
-  for (const [sx, sz] of [[1, 1], [1, -1], [-1, 1], [-1, -1]] as const) {
+  for (const [sx, sz] of fine ? [[1, 1], [1, -1], [-1, 1], [-1, -1]] as const : []) {
     const ridge = new BoxGeometry(Math.hypot(halfX, halfZ) * 1.02, 0.17, 0.22);
     ridge.rotateZ(-Math.atan2(peak, Math.hypot(halfX, halfZ)) * sx * (sz > 0 ? 1 : 1));
     ridge.rotateY(-Math.atan2(sz * halfZ, sx * halfX));
