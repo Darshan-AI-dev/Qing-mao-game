@@ -7,19 +7,18 @@
  * unlocked abilities are in the DOM.
  */
 import { expect, test, type Page } from '@playwright/test';
+import { openTitle, pressBegin } from './harness';
 
 async function openGame(page: Page): Promise<void> {
-  await page.goto('/');
+  await openTitle(page);
   const intro = page.locator('#intro');
   await expect(intro).toBeVisible();
-  await page.locator('#begin').click();
+  await pressBegin(page);
   await expect(intro).toBeHidden();
-  // The prologue opens with a chapter card; wait for the world to be live behind it.
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
 }
 
 test('the title screen shows the content notice and the intensity choice', async ({ page }) => {
-  await page.goto('/');
+  await openTitle(page);
   await expect(page.locator('#intro .notice h3')).toHaveText('Before you begin');
   await expect(page.locator('#introIntensity')).toBeVisible();
   // Start points run forward, not backward: 51, then 101, then 151.
@@ -27,8 +26,54 @@ test('the title screen shows the content notice and the intensity choice', async
   expect(labels).toEqual(['Start at chapter 51', 'Start at chapter 101', 'Start at chapter 151']);
 });
 
-test('the intro copy has no missing words', async ({ page }) => {
+test('a browser that cannot give WebGL2 is told so, not left on a blank page', async ({ page }) => {
+  // This is the state a CI Firefox runner with no GPU is in, and the state a real
+  // player is in with hardware acceleration off or a blocklisted driver. The game
+  // builds its renderer during boot, so a refused context has to be caught before
+  // then — otherwise boot throws, the title screen never opens, and the page just
+  // sits there with nothing on it.
+  await page.addInitScript(() => {
+    const real = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, id: string, ...rest: unknown[]) {
+      if (id === 'webgl2' || id === 'webgl') return null;
+      return (real as (...args: unknown[]) => unknown).call(this, id, ...rest);
+    } as typeof HTMLCanvasElement.prototype.getContext;
+  });
+
+  const thrown: string[] = [];
+  page.on('pageerror', (error) => thrown.push(error.message));
   await page.goto('/');
+
+  const panel = page.locator('#unsupported');
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText('WebGL2');
+  // And it says what to do about it, rather than only that something is wrong.
+  await expect(panel).toContainText(/hardware acceleration|Updating your browser/);
+  expect(thrown, 'the refusal should be handled, not thrown').toEqual([]);
+});
+
+test('a startup failure says so instead of leaving an empty page', async ({ page }) => {
+  // Boot was launched with `void boot()`, so anything it threw past the WebGL2 check
+  // was discarded: the player got a blank page and no reason for it. Storage being
+  // unreachable is the realistic version — a locked-down browser profile, private
+  // mode on some builds, a quota error.
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'indexedDB', {
+      get() { throw new Error('storage is unavailable'); }
+    });
+  });
+  await page.goto('/');
+
+  const panel = page.locator('#unsupported');
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText('The game could not start');
+  // And it says what the player can try, plus enough detail to report it.
+  await expect(panel).toContainText('Reloading may be enough');
+  await expect(panel.locator('pre')).toContainText('storage is unavailable');
+});
+
+test('the intro copy has no missing words', async ({ page }) => {
+  await openTitle(page);
   const text = (await page.locator('#intro').innerText()).replace(/\s+/g, ' ');
   expect(text).toContain('the wolf tide');
   expect(text).not.toMatch(/choices the wolf tide/);

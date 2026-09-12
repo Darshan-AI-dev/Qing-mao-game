@@ -7,23 +7,11 @@
  * auto-advance do what they say.
  */
 import { expect, test, type Page } from '@playwright/test';
+import { openGame, skipToControl } from './harness';
 
 // Reaching a playable state means sitting through (or skipping) the opening scene,
 // which is slower than the default per-test budget allows for.
 test.setTimeout(90_000);
-
-async function openGame(page: Page): Promise<void> {
-  await page.goto('/');
-  await page.locator('#begin').click();
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
-}
-
-/** Skips whatever scene is playing and waits for control to come back. */
-async function skipToControl(page: Page): Promise<void> {
-  await page.waitForSelector('#skipScene', { state: 'visible', timeout: 30_000 });
-  await page.locator('#skipScene').click();
-  await page.waitForFunction(() => window.qingMao.debug.isExploring(), null, { timeout: 30_000 });
-}
 
 /** Control must not come back until the next beat's area is actually loaded. */
 async function currentArea(page: Page): Promise<string> {
@@ -501,7 +489,13 @@ test('a player can refine, which until now only scripts could do', async ({ page
   expect(rows, 'the bench is empty').toBeGreaterThan(3);
   // Canonical recipes have to say they cannot be lost. A player who has just watched
   // Moonglow fail at chapter 119 needs to know that is the chapter, not their save.
-  const detail = await page.locator('.refineRow', { hasText: 'Moonglow' }).locator('small').textContent();
+  // Matched on 'Moonglow' once, which also hit the Blood Moon row because that one is
+  // refined *from* Moonglow Gu. The row's heading is what names the recipe.
+  const detail = await page
+    .locator('.refineRow')
+    .filter({ has: page.locator('strong', { hasText: /^Moonglow Gu$/ }) })
+    .locator('small')
+    .textContent();
   expect(detail).toContain('Cannot be lost');
 
   // And it actually does something: days and stones move.

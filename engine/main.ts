@@ -1783,7 +1783,30 @@ async function boot(): Promise<void> {
   }
 }
 
-void boot();
+/**
+ * Nothing in the game is reachable if boot throws, and `void boot()` discarded the
+ * rejection — so any failure past the WebGL2 gate (a migration that throws on a
+ * malformed save, a missing asset) left the player looking at an empty page with no
+ * indication that anything had gone wrong at all. A blank screen is the one outcome
+ * worth spending a few lines to rule out.
+ */
+void boot().catch((error: unknown) => {
+  const panel = document.getElementById('unsupported');
+  const body = document.getElementById('unsupportedBody');
+  const heading = panel?.querySelector('h2');
+  if (heading) heading.textContent = 'The game could not start';
+  if (body) {
+    body.textContent =
+      'Something failed while starting up, so the game stopped rather than showing you ' +
+      'an empty screen. Reloading may be enough. If it is not, the details are below ' +
+      'and clearing this site\'s stored data will start a fresh save.';
+    const detail = document.createElement('pre');
+    detail.textContent = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+    body.after(detail);
+  }
+  if (panel) panel.hidden = false;
+  throw error;
+});
 
 function setSelect(id: string, value: string): void {
   const node = document.getElementById(id) as HTMLSelectElement | null;

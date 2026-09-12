@@ -6,12 +6,11 @@
  * counters after the world is up and asserts them against the active tier's budget.
  */
 import { expect, test } from '@playwright/test';
+import { openGame } from './harness';
 import { BUDGETS } from '../../engine/render/quality';
 
 test('the frame stays inside the tier budget', async ({ page }, testInfo) => {
-  await page.goto('/');
-  await page.locator('#begin').click();
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
+  await openGame(page);
   // Wait for the world to be on screen rather than guessing at a settle time; under
   // parallel load a fixed delay races the first area build.
   await page.waitForFunction(() => window.qingMao.frameStats().drawCalls > 0, null, { timeout: 30_000 });
@@ -40,9 +39,7 @@ test('the frame stays inside the tier budget', async ({ page }, testInfo) => {
 });
 
 test('frustum culling removes chunks the camera cannot see', async ({ page }, testInfo) => {
-  await page.goto('/');
-  await page.locator('#begin').click();
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
+  await openGame(page);
   await page.waitForFunction(() => window.qingMao.frameStats().drawCalls > 0, null, { timeout: 30_000 });
   await page.waitForSelector('#skipScene', { state: 'visible', timeout: 30_000 });
   await page.locator('#skipScene').click();
@@ -92,9 +89,7 @@ test('the first playable moment stays inside the download budget', async ({ page
     }
   });
 
-  await page.goto('/');
-  await page.locator('#begin').click();
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
+  await openGame(page);
   await page.waitForTimeout(4000);
 
   const total = [...transferred.values()].reduce((a, b) => a + b, 0);

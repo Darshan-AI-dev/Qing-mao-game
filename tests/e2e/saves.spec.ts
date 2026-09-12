@@ -7,11 +7,10 @@
  * previous build still loads, and that the Legacy file is well formed.
  */
 import { expect, test } from '@playwright/test';
+import { openGame, openTitle, pressBegin, waitForGame } from './harness';
 
 test('progress is written to IndexedDB, not only localStorage', async ({ page }) => {
-  await page.goto('/');
-  await page.locator('#begin').click();
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
+  await openGame(page);
   await page.waitForTimeout(3000);
 
   const stored = await page.evaluate(async () => {
@@ -35,7 +34,7 @@ test('progress is written to IndexedDB, not only localStorage', async ({ page })
 });
 
 test('a pre-v5 save from the previous build still loads', async ({ page }) => {
-  await page.goto('/');
+  await openTitle(page);
   // The shape the old build wrote: a single step counter plus a few loose fields.
   await page.evaluate(() => {
     localStorage.setItem('qingmao.save', JSON.stringify({
@@ -51,8 +50,7 @@ test('a pre-v5 save from the previous build still loads', async ({ page }) => {
   await expect(page.locator('#migrationNote')).toBeVisible();
   await expect(page.locator('#migrationNote')).toContainText('Save migrated from version 4');
 
-  await page.locator('#begin').click();
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
+  await pressBegin(page);
   const carried = await page.evaluate(() => {
     const game = window.qingMao;
     return {
@@ -69,9 +67,7 @@ test('a pre-v5 save from the previous build still loads', async ({ page }) => {
 });
 
 test('the Legacy file is fixed canon plus player texture', async ({ page }) => {
-  await page.goto('/');
-  await page.locator('#begin').click();
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
+  await openGame(page);
 
   const legacy = await page.evaluate(() => window.qingMao.legacy.build());
 
@@ -89,8 +85,8 @@ test('the Legacy file is fixed canon plus player texture', async ({ page }) => {
 });
 
 test('a default Legacy exists so the sequel runs standalone', async ({ page }) => {
-  await page.goto('/');
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
+  await openTitle(page);
+  await waitForGame(page);
   const fallback = await page.evaluate(() => ({
     fromNothing: window.qingMao.legacy.fallback(),
     rejected: window.qingMao.legacy.validate({ legacyVersion: 99 })
@@ -101,8 +97,8 @@ test('a default Legacy exists so the sequel runs standalone', async ({ page }) =
 });
 
 test('a hand-edited Legacy cannot change canon', async ({ page }) => {
-  await page.goto('/');
-  await page.waitForFunction(() => !!window.qingMao, null, { timeout: 20_000 });
+  await openTitle(page);
+  await waitForGame(page);
   const validated = await page.evaluate(() =>
     window.qingMao.legacy.validate({
       legacyVersion: 1, game: 'qingmao', completedAt: 'ch200',

@@ -45,7 +45,31 @@ const ENGINES = [
       ...(chromiumBinary ? { launchOptions: { executablePath: chromiumBinary } } : {})
     }
   },
-  { name: 'firefox', use: devices['Desktop Firefox'] },
+  {
+    name: 'firefox',
+    use: {
+      ...devices['Desktop Firefox'],
+      /**
+       * Firefox refuses WebGL on a machine with no GPU: its driver blocklist rejects
+       * llvmpipe, `getContext('webgl2')` returns null, and the game correctly shows its
+       * "this browser needs WebGL2" panel — which meant every Firefox test on every
+       * viewport waited out its own ninety-second timeout without ever reaching the
+       * game. Five viewports' worth of that is why the CI job was cancelled at twenty
+       * minutes, twice, having tested nothing.
+       *
+       * A CI runner without a GPU is not the configuration a Firefox player is in, so
+       * forcing software WebGL on here tests the game rather than the runner.
+       */
+      launchOptions: {
+        firefoxUserPrefs: {
+          'webgl.force-enabled': true,
+          'webgl.disabled': false,
+          'webgl.disable-fail-if-major-performance-caveat': true,
+          'gfx.webrender.all': true
+        }
+      }
+    }
+  },
   { name: 'webkit', use: devices['Desktop Safari'] }
 ];
 
@@ -54,6 +78,11 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
+  // A whole engine failing is not worth thirty-six timeouts plus retries. Eight
+  // failures is far past the point where the run has already told us what it knows,
+  // and stopping there is the difference between a report in three minutes and a job
+  // cancelled at twenty with no report at all.
+  maxFailures: process.env.CI ? 8 : undefined,
   // Playwright defaults to a single worker under CI, which for 540 WebGL tests meant a
   // three-hour run. Three hours is not feedback: it is why two WebKit camera failures
   // sat in the branch unnoticed across several pushes. Two workers on a shared runner

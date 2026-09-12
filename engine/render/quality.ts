@@ -113,10 +113,13 @@ export class AdaptiveQuality {
 }
 
 /** The message shown when WebGL2 is missing, rather than a blank canvas. */
+// The panel this fills already carries "This game needs WebGL2" as its heading, so
+// this does not say it a second time — the rendered text read "This game needs WebGL2
+// This game needs WebGL2, which your browser does not provide."
 export const NO_WEBGL2_MESSAGE =
-  'This game needs WebGL2, which your browser does not provide. WebGL2 ships in ' +
-  'current Chrome, Edge, Firefox and Safari 15 and later. Updating your browser, or ' +
-  'turning hardware acceleration back on, should be enough.';
+  'Your browser did not provide it. WebGL2 ships in current Chrome, Edge, Firefox and ' +
+  'Safari 15 and later, so updating your browser, or turning hardware acceleration ' +
+  'back on, should be enough.';
 
 export function hasWebGL2(): boolean {
   try {
