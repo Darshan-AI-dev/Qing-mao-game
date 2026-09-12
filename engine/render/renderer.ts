@@ -16,7 +16,7 @@ import {
   PointLight, Scene, Sphere, Vector3, WebGLRenderer
 } from 'three';
 import { Sky } from './sky';
-import { setSurfaceTier } from './surfaces';
+import { setSurfaceTier, usesEnvironment } from './surfaces';
 import { AdaptiveQuality, BUDGETS, type TierName } from './quality';
 
 export interface Chunk {
@@ -231,6 +231,10 @@ export class Renderer {
     // the environment every material reflects. Built from colours the area already
     // declares, so the sky and the lighting cannot drift apart.
     const zenith = options.skyColor ?? fogColor;
+    // The gradient background is nearly free and the low tier keeps it. The blurred
+    // environment is not: it is another texture sampled on every lit pixel, and the
+    // materials that would reflect it are Lambert on that tier anyway.
+    const wantsEnvironment = usesEnvironment();
     const { background, environment } = this.sky.update({
       zenith,
       // Not the fog colour raw. Fog is a dark teal chosen to swallow distance, and
@@ -248,7 +252,7 @@ export class Renderer {
     // through the doorway of a cave. The environment still applies: it is what gives
     // lamplit metal and lacquer their sheen.
     this.scene.background = indoor || underground ? null : background;
-    this.scene.environment = environment;
+    this.scene.environment = wantsEnvironment ? environment : null;
     // Interiors reflect their own dim surroundings, not a bright outdoor dome.
     this.scene.environmentIntensity = underground ? 0.25 : indoor ? 0.5 : 1;
   }

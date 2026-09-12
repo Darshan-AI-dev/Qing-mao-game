@@ -14,3 +14,7 @@ sweep-play-phone/
 sweep-phone/
 sheet-play*.png
 sheet-wide*.png
+
+# Throwaway visual captures. These belong in the session scratchpad, not the repo:
+# six of them were committed by an `add -A` during the rendering pass.
+scratchpad-shots/

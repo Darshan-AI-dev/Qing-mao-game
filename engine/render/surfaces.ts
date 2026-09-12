@@ -16,7 +16,10 @@
  * photographic detail on top of boxes and cones — the job of these maps is to break up
  * flat fields and give light something to sit on, not to pretend to be photographs.
  */
-import { CanvasTexture, Color, MeshStandardMaterial, RepeatWrapping, SRGBColorSpace, type Texture } from 'three';
+import {
+  CanvasTexture, Color, MeshLambertMaterial, MeshStandardMaterial, RepeatWrapping, SRGBColorSpace,
+  type Texture
+} from 'three';
 import type { TierName } from './quality';
 
 export type Surface =
@@ -66,6 +69,34 @@ function mapSize(): number {
 }
 function wantsNormals(): boolean {
   return tier !== 'low';
+}
+
+/**
+ * Whether this device gets physically based shading at all.
+ *
+ * Standard materials are far more expensive per pixel than Lambert, and the low tier
+ * is the tier for machines that cannot afford it — a phone, or anything falling back
+ * to software rasterisation. Measured on the software rasteriser these tests run on,
+ * turning the whole game standard took a three-project run from 16.6 minutes to 38.2
+ * and timed twenty tests out at laptop and desktop width. That is a real cost on a
+ * real class of device, not a quirk of the harness.
+ *
+ * Low still gets the grain map, which is most of what broke up the flat fields; it
+ * loses the normal map, the specular response and the environment.
+ */
+function wantsPhysical(): boolean {
+  return tier !== 'low';
+}
+
+/** How much geometry detail the foliage builders should produce. */
+export type Detail = 'low' | 'full';
+export function detailLevel(): Detail {
+  return tier === 'low' ? 'low' : 'full';
+}
+
+/** Read by the renderer: whether to build and apply an environment map at all. */
+export function usesEnvironment(): boolean {
+  return wantsPhysical();
 }
 
 export function setSurfaceTier(next: TierName): void {
@@ -210,7 +241,7 @@ function normalTexture(field: { data: Float32Array; size: number }): Texture | n
 
 interface Maps { grain: Texture | null; normal: Texture | null }
 const MAPS = new Map<Surface, Maps>();
-const MATERIALS = new Map<string, MeshStandardMaterial>();
+const MATERIALS = new Map<string, MeshStandardMaterial | MeshLambertMaterial>();
 
 function mapsFor(kind: Surface): Maps {
   const cached = MAPS.get(kind);
@@ -247,7 +278,11 @@ export interface SurfaceOptions {
  * hundreds of props from a handful of distinct surfaces, and an uncached factory here
  * would put a separate shader program behind every crate.
  */
-export function surface(kind: Surface, color: number | Color, options: SurfaceOptions = {}): MeshStandardMaterial {
+export function surface(
+  kind: Surface,
+  color: number | Color,
+  options: SurfaceOptions = {}
+): MeshStandardMaterial | MeshLambertMaterial {
   const tint = color instanceof Color ? color : new Color(color);
   const key = [
     kind, tint.getHexString(), options.roughness ?? '', options.metalness ?? '',
@@ -259,14 +294,19 @@ export function surface(kind: Surface, color: number | Color, options: SurfaceOp
 
   const recipe = RECIPES[kind];
   const maps = mapsFor(kind);
-  const material = new MeshStandardMaterial({
+  const shared = {
     color: tint,
-    roughness: options.roughness ?? recipe.roughness,
-    metalness: options.metalness ?? recipe.metalness,
     vertexColors: options.vertexColors ?? false,
     transparent: options.transparent ?? false,
     opacity: options.opacity ?? 1
-  });
+  };
+  const material = wantsPhysical()
+    ? new MeshStandardMaterial({
+        ...shared,
+        roughness: options.roughness ?? recipe.roughness,
+        metalness: options.metalness ?? recipe.metalness
+      })
+    : new MeshLambertMaterial(shared);
   if (options.side !== undefined) material.side = options.side as MeshStandardMaterial['side'];
   if (options.emissive !== undefined) {
     material.emissive = new Color(options.emissive);
@@ -282,7 +322,7 @@ export function surface(kind: Surface, color: number | Color, options: SurfaceOp
     map.repeat.set(repeat, repeat);
     material.map = map;
   }
-  if (maps.normal) {
+  if (maps.normal && material instanceof MeshStandardMaterial) {
     const map = maps.normal.clone();
     map.needsUpdate = true;
     map.repeat.set(repeat, repeat);
@@ -298,7 +338,7 @@ export function surface(kind: Surface, color: number | Color, options: SurfaceOp
 export function disposeSurfaces(): void {
   for (const material of MATERIALS.values()) {
     material.map?.dispose();
-    material.normalMap?.dispose();
+    if (material instanceof MeshStandardMaterial) material.normalMap?.dispose();
     material.dispose();
   }
   MATERIALS.clear();
@@ -310,6 +350,11 @@ export function disposeSurfaces(): void {
 }
 
 /** Read by the tests: how much this costs and that it is actually producing maps. */
-export function surfaceStats(): { materials: number; maps: number; size: number; normals: boolean } {
-  return { materials: MATERIALS.size, maps: MAPS.size, size: mapSize(), normals: wantsNormals() };
+export function surfaceStats(): {
+  materials: number; maps: number; size: number; normals: boolean; physical: boolean;
+} {
+  return {
+    materials: MATERIALS.size, maps: MAPS.size, size: mapSize(),
+    normals: wantsNormals(), physical: wantsPhysical()
+  };
 }

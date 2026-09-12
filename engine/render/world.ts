@@ -14,7 +14,7 @@ import {
   Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, SphereGeometry,
   PlaneGeometry, Quaternion, RingGeometry, Vector3, type BufferGeometry, type Material
 } from 'three';
-import { surface, type Surface, type SurfaceOptions } from './surfaces';
+import { detailLevel, surface, type Detail, type Surface, type SurfaceOptions } from './surfaces';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { Rng } from '../core/rng';
 
@@ -110,9 +110,9 @@ const PALETTE = {
 function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Material; blocker?: Blocker } {
   switch (kind) {
     // Qing Mao's bamboo is straight with a spear-sharp tip, per the source text.
-    case 'bamboo': return { geometry: bambooGeometry(), material: surface('foliage', 0xffffff, { vertexColors: true }), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
+    case 'bamboo': return { geometry: bambooGeometry(detailLevel()), material: surface('foliage', 0xffffff, { vertexColors: true }), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
     case 'rock': return { geometry: rockGeometry(), material: mat('stone', PALETTE.rock), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
-    case 'tree': return { geometry: treeGeometry(), material: surface('foliage', 0xffffff, { vertexColors: true }), blocker: { x: 0, z: 0, w: 1, d: 1 } };
+    case 'tree': return { geometry: treeGeometry(detailLevel()), material: surface('foliage', 0xffffff, { vertexColors: true }), blocker: { x: 0, z: 0, w: 1, d: 1 } };
     // Not a cone. A pale seven-sided cone at 1.9 tall is fine as a distant crowd and
     // looks like a traffic cone the moment the camera is in the same room as one — on
     // a phone, where interiors put the camera close, the hall and the tavern each had
@@ -151,7 +151,7 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
     // Ice is the smoothest thing in the game, so it is the one surface that visibly
     // mirrors the sky now that there is a sky to mirror.
     case 'icespike': return { geometry: new ConeGeometry(1.1, 6.5, 5), material: mat('stone', 0xa9cfdb, { roughness: 0.09, metalness: 0.05 }), blocker: { x: 0, z: 0, w: 0.9, d: 0.9 } };
-    case 'pine': return { geometry: pineGeometry(), material: surface('foliage', 0xffffff, { vertexColors: true }), blocker: { x: 0, z: 0, w: 0.9, d: 0.9 } };
+    case 'pine': return { geometry: pineGeometry(detailLevel()), material: surface('foliage', 0xffffff, { vertexColors: true }), blocker: { x: 0, z: 0, w: 0.9, d: 0.9 } };
     // --- cultivation and water
     case 'terrace': return { geometry: new BoxGeometry(11, 0.5, 3.4), material: mat('earth', 0x4a5a34), blocker: { x: 0, z: 0, w: 5.5, d: 1.7 } };
     case 'reed': return { geometry: new CylinderGeometry(0.05, 0.07, 2.4, 4), material: mat('foliage', 0x6d7a3e) };
@@ -422,20 +422,22 @@ function tinted(geometry: BufferGeometry, hex: number): BufferGeometry {
  * cost a dozen triangles each, they merge into the same geometry, and the grove is
  * still one instanced draw call.
  */
-function bambooGeometry(): BufferGeometry {
+function bambooGeometry(detail: Detail): BufferGeometry {
   const parts: BufferGeometry[] = [tinted(new CylinderGeometry(0.11, 0.16, 9, 6), PALETTE.bamboo)];
   // Nodes: the rings a bamboo is segmented by, and the cue that reads as bamboo
   // rather than as a pole, even in silhouette.
-  for (let i = 0; i < 5; i++) {
+  const nodes = detail === 'low' ? 3 : 5;
+  for (let i = 0; i < nodes; i++) {
     const ring = new CylinderGeometry(0.155, 0.155, 0.12, 6);
-    ring.translate(0, -4 + i * 1.9, 0);
+    ring.translate(0, -4 + i * (7.6 / Math.max(1, nodes - 1)), 0);
     parts.push(tinted(ring, 0x2c5c3c));
   }
   // Blades, splayed around the top third and drooping. Smaller and more numerous than
   // the first attempt, which hung seven planks a metre and a half long off each culm
   // and read as green shelving from anywhere near the camera.
-  for (let i = 0; i < 10; i++) {
-    const angle = (i / 10) * Math.PI * 2 + 0.4;
+  const blades = detail === 'low' ? 4 : 10;
+  for (let i = 0; i < blades; i++) {
+    const angle = (i / blades) * Math.PI * 2 + 0.4;
     const length = 0.72 + (i % 3) * 0.16;
     const blade = new BoxGeometry(length, 0.03, 0.1);
     blade.translate(length * 0.55, 0, 0);
@@ -454,7 +456,7 @@ function bambooGeometry(): BufferGeometry {
  * and greens read as a crown, and the trunk underneath is what makes it a tree rather
  * than a bush — the previous version had no trunk at all and floated on the grass.
  */
-function treeGeometry(): BufferGeometry {
+function treeGeometry(detail: Detail): BufferGeometry {
   const parts: BufferGeometry[] = [];
   const trunk = new CylinderGeometry(0.34, 0.5, 3.2, 6);
   trunk.translate(0, -2.4, 0);
@@ -464,7 +466,7 @@ function treeGeometry(): BufferGeometry {
     [2.5, 2.6, 0.9, 0x35774b],
     [1.6, 2.2, 2.6, 0x3f8654]
   ];
-  for (const [radius, height, y, hex] of tiers) {
+  for (const [radius, height, y, hex] of detail === 'low' ? tiers.slice(0, 2) : tiers) {
     const tier = new ConeGeometry(radius, height, 7);
     tier.rotateY(y);
     tier.translate(0, y, 0);
@@ -474,12 +476,12 @@ function treeGeometry(): BufferGeometry {
 }
 
 /** The winter version: a bare trunk and four tight, dark tiers. */
-function pineGeometry(): BufferGeometry {
+function pineGeometry(detail: Detail): BufferGeometry {
   const parts: BufferGeometry[] = [];
   const trunk = new CylinderGeometry(0.26, 0.38, 2.4, 6);
   trunk.translate(0, -2.6, 0);
   parts.push(tinted(trunk, 0x3a2b20));
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < (detail === 'low' ? 2 : 4); i++) {
     const tier = new ConeGeometry(2.4 - i * 0.5, 2.4, 7);
     tier.rotateY(i * 0.8);
     tier.translate(0, -1.4 + i * 1.5, 0);

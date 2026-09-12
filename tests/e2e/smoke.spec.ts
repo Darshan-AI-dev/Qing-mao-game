@@ -7,7 +7,7 @@
  * unlocked abilities are in the DOM.
  */
 import { expect, test, type Page } from '@playwright/test';
-import { openTitle, pressBegin } from './harness';
+import { openTitle, pressBegin, skipToControl } from './harness';
 
 async function openGame(page: Page): Promise<void> {
   await openTitle(page);
@@ -129,24 +129,56 @@ test('the game renders and stays inside the frame', async ({ page }) => {
 
 test('the HUD leaves the world visible on a phone', async ({ page }, testInfo) => {
   await openGame(page);
-  await page.waitForTimeout(2500);
   const viewport = page.viewportSize()!;
-  const covered = await page.evaluate(() => {
-    const ids = ['header', 'quest', 'dialoguePanel', 'footer', 'joystick'];
-    let area = 0;
-    for (const id of ids) {
-      const node = document.getElementById(id) ?? document.querySelector(id);
-      if (!node || (node as HTMLElement).hidden) continue;
-      const box = node.getBoundingClientRect();
-      if (box.width <= 0 || box.height <= 0) continue;
-      area += box.width * box.height;
-    }
-    return area;
-  });
-  const ratio = covered / (viewport.width * viewport.height);
-  testInfo.annotations.push({ type: 'hud-coverage', description: `${(ratio * 100).toFixed(1)}%` });
-  // The old build measured about 70% on a 390 px phone. Half the screen is the cap.
-  expect(ratio).toBeLessThan(0.5);
+
+  /**
+   * Chrome the player can actually see.
+   *
+   * This counted anything without the `hidden` attribute, and the HUD does not stand
+   * down that way: during a scene the footer, the stick and the quest card are taken
+   * to `opacity: 0` in CSS, so three invisible panels were being charged at full size.
+   * It read 64.6% of a phone screen for a frame showing a dialogue box and a header.
+   * `checkVisibility` is the same fix the play sweep needed for the same mistake.
+   */
+  const coverage = async (): Promise<number> => {
+    const covered = await page.evaluate(() => {
+      const ids = ['header', 'quest', 'dialoguePanel', 'footer', 'joystick'];
+      let area = 0;
+      for (const id of ids) {
+        const node = document.getElementById(id) ?? document.querySelector(id);
+        if (!node) continue;
+        const el = node as HTMLElement;
+        const visible = !el.hidden && (
+          typeof el.checkVisibility === 'function'
+            ? el.checkVisibility({ opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })
+            : getComputedStyle(el).opacity !== '0'
+        );
+        if (!visible) continue;
+        const box = el.getBoundingClientRect();
+        if (box.width <= 0 || box.height <= 0) continue;
+        area += box.width * box.height;
+      }
+      return area;
+    });
+    return covered / (viewport.width * viewport.height);
+  };
+
+  // Both states, at the moment each is actually on screen, rather than whatever
+  // happened to be up two and a half seconds after the game started. A sampled moment
+  // is why this passed for as long as it did while measuring the wrong thing.
+  await page.locator('#dialoguePanel').waitFor({ state: 'visible', timeout: 30_000 });
+  const inScene = await coverage();
+  testInfo.annotations.push({ type: 'hud-coverage-scene', description: `${(inScene * 100).toFixed(1)}%` });
+
+  await skipToControl(page);
+  await page.waitForTimeout(600);
+  const exploring = await coverage();
+  testInfo.annotations.push({ type: 'hud-coverage-exploring', description: `${(exploring * 100).toFixed(1)}%` });
+
+  // The old build measured about 70% on a 390 px phone. Half the screen is the cap,
+  // in the scene that hides most of the HUD and in the exploration that shows all of it.
+  expect(inScene, 'a dialogue scene covers too much of the screen').toBeLessThan(0.5);
+  expect(exploring, 'the exploring HUD covers too much of the screen').toBeLessThan(0.5);
 });
 
 test('only unlocked abilities are in the DOM', async ({ page }) => {
