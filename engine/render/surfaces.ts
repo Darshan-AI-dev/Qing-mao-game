@@ -270,6 +270,8 @@ export interface SurfaceOptions {
   emissiveIntensity?: number;
   /** Texture repeats per world metre, overriding the recipe. */
   repeat?: number;
+  /** Distant scenery opts out of fog: it is painted already hazed. */
+  fog?: boolean;
   side?: number;
 }
 
@@ -287,7 +289,8 @@ export function surface(
   const key = [
     kind, tint.getHexString(), options.roughness ?? '', options.metalness ?? '',
     options.transparent ? 't' : '', options.opacity ?? '', options.vertexColors ? 'v' : '',
-    options.emissive ?? '', options.emissiveIntensity ?? '', options.repeat ?? '', options.side ?? ''
+    options.emissive ?? '', options.emissiveIntensity ?? '', options.repeat ?? '', options.side ?? '',
+    options.fog === false ? 'nofog' : ''
   ].join('|');
   const cached = MATERIALS.get(key);
   if (cached) return cached;
@@ -308,6 +311,7 @@ export function surface(
       })
     : new MeshLambertMaterial(shared);
   if (options.side !== undefined) material.side = options.side as MeshStandardMaterial['side'];
+  if (options.fog === false) material.fog = false;
   if (options.emissive !== undefined) {
     material.emissive = new Color(options.emissive);
     material.emissiveIntensity = options.emissiveIntensity ?? 1;

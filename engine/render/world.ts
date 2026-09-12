@@ -269,6 +269,16 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     shell.add(strip);
   }
 
+  // --- the skyline
+  if (!description.enclosed) {
+    const ridges = new Mesh(
+      horizonGeometry(Math.max(description.size.x, description.size.z) / 2),
+      surface('stone', 0xffffff, { vertexColors: true, roughness: 1, fog: false })
+    );
+    ridges.frustumCulled = false;
+    shell.add(ridges);
+  }
+
   // --- ground scatter: tufts and pebbles, one instanced mesh each for the whole area
   if (!description.enclosed) {
     const detail = detailLevel();
@@ -464,6 +474,48 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   }
 
   return { group: root, chunks, blockers, lanterns };
+}
+
+/**
+ * The mountain the place is named after.
+ *
+ * Outdoor areas ended at a flat horizon where the ground plane met the sky, which on a
+ * phone is a third of the frame whenever the player looks up from their feet. This is a
+ * ring of ridges well outside the playable area: two bands, the far one paler and
+ * taller, so the skyline has depth rather than a single cut-out row.
+ *
+ * They opt out of fog and carry their haze in their own colour instead. Fog would eat
+ * them entirely — they stand far beyond any area's fog distance — and aerial
+ * perspective painted into the vertex colours is both cheaper and easier to control.
+ */
+function horizonGeometry(reach: number): BufferGeometry {
+  const parts: BufferGeometry[] = [];
+  let seed = 9161;
+  const rand = () => {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+  for (const [radius, count, minHeight, spread, hex] of [
+    // The near band: darker, lower, and broken up.
+    [reach * 1.45, 16, 26, 22, 0x3f5f5a],
+    // The far band: paler and taller, which is what reads as distance.
+    [reach * 2.3, 13, 52, 34, 0x6d8896]
+  ] as const) {
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2 + rand() * 0.22;
+      const distance = radius * (0.86 + rand() * 0.3);
+      const height = minHeight + rand() * spread;
+      const width = height * (0.85 + rand() * 0.75);
+      const peak = new ConeGeometry(width, height, 5 + Math.floor(rand() * 3));
+      peak.rotateY(rand() * Math.PI);
+      // Squashed on one axis so a ridge is never a perfect cone from any angle.
+      peak.scale(1, 1, 0.6 + rand() * 0.55);
+      peak.translate(Math.cos(angle) * distance, height / 2 - 6, Math.sin(angle) * distance);
+      const shade = new Color(hex).offsetHSL(0, (rand() - 0.5) * 0.05, (rand() - 0.5) * 0.07);
+      parts.push(tinted(peak, shade.getHex()));
+    }
+  }
+  return mergeGeometries(parts, false) ?? parts[0]!;
 }
 
 /**

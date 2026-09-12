@@ -34,8 +34,10 @@ export interface SkyDescription {
   enclosed: boolean;
 }
 
-const WIDTH = 128;
-const HEIGHT = 64;
+// Small, but no longer tiny: the gradient needed almost no resolution, cloud banding
+// does. It is still a fraction of a kilobyte of canvas and costs nothing to download.
+const WIDTH = 512;
+const HEIGHT = 256;
 
 function draw(sky: SkyDescription): HTMLCanvasElement | null {
   const canvas = document.createElement('canvas');
@@ -65,6 +67,42 @@ function draw(sky: SkyDescription): HTMLCanvasElement | null {
     }
     ctx.fillStyle = `#${scratch.getHexString()}`;
     ctx.fillRect(0, y, WIDTH, 1);
+  }
+
+  if (!sky.enclosed) {
+    // Cloud banding: soft horizontal streaks thickening towards the horizon, drawn from
+    // a fixed hash so the sky is the same sky on every device and every run. Clouds are
+    // the cheapest depth cue there is — the dome was a clean gradient, which reads as a
+    // painted backdrop the moment a player looks up, and on a phone they look up a lot.
+    let seed = 20260912;
+    const rand = (): number => {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      return seed / 4294967296;
+    };
+    const overcast = 0.35 + (1 - Math.abs(sky.timeOfDay - 0.5) * 2) * 0.25;
+    ctx.save();
+    for (let i = 0; i < 46; i++) {
+      // Above the horizon only, and squashed flat: a cloud seen from below is a long
+      // shallow smear, not a puff.
+      const y = HEIGHT * (0.06 + Math.pow(rand(), 0.55) * 0.4);
+      const x = rand() * WIDTH;
+      const width = WIDTH * (0.06 + rand() * 0.16);
+      const height = Math.max(3, width * (0.1 + rand() * 0.13));
+      const band = ctx.createRadialGradient(x, y, 0, x, y, width);
+      const lift = 0.1 + rand() * overcast;
+      band.addColorStop(0, `rgba(255,255,255,${lift.toFixed(3)})`);
+      band.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = band;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(1, height / width);
+      ctx.translate(-x, -y);
+      ctx.beginPath();
+      ctx.arc(x, y, width, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
   }
 
   if (!sky.enclosed) {
