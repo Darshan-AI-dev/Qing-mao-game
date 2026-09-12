@@ -242,7 +242,31 @@ for (const entry of art.illustrations) {
   if (!entry.alt) fail('art', `${entry.id} has no alt text`);
 }
 
-// ------------------------------- 8. the production notes are not read out to the player
+// --------------------------------------------- 8. every fight refers to a real boss
+//
+// A `fight` command naming a boss that does not exist would hand control to the player
+// and never give it back, so this is checked in data rather than discovered in play.
+// Every boss also needs engine rules; one without them silently falls back to "strike
+// in the open window" for all its phases, throwing away the reads the fiction describes.
+const combatSource = readFileSync(join(root, 'engine/systems/bosses.ts'), 'utf8');
+const encounterSource = readFileSync(join(root, 'engine/systems/phases.ts'), 'utf8');
+const bossIds = [...combatSource.matchAll(/id: '([a-z-]+)', name:/g)].map((m) => m[1]);
+const ruleIds = [...encounterSource.matchAll(/^  '([a-z-]+)': \[/gm)].map((m) => m[1]);
+for (const script of scripts) {
+  for (const command of script.data.commands ?? []) {
+    if (command.op !== 'fight') continue;
+    if (!bossIds.includes(command.boss)) {
+      fail('fights', `${script.path}: fight names unknown boss "${command.boss}"`);
+    } else if (!ruleIds.includes(command.boss)) {
+      fail('fights', `${script.path}: boss "${command.boss}" has no phase rules in encounter.ts`);
+    }
+  }
+}
+for (const id of bossIds) {
+  if (!ruleIds.includes(id)) warn('fights', `boss "${id}" has no phase rules; every phase would be the open-window rule`);
+}
+
+// ------------------------------- 9. the production notes are not read out to the player
 //
 // Fifty-four scaffold scenes narrated their own Reader's Lens note, so the game told
 // players in its own narrator's voice that a room "has to feel too large" and that
@@ -266,7 +290,7 @@ for (const script of scripts) {
   }
 }
 
-// ------------------------------------- 9. nobody is left standing in the next shot
+// ------------------------------------ 10. nobody is left standing in the next shot
 //
 // A scene that covers more than one chapter re-stages between them. Whoever was placed
 // for an earlier shot stays in the world unless the script says otherwise, so the Gu

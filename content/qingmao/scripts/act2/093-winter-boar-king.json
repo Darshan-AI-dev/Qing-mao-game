@@ -123,6 +123,10 @@
       "sfx": null
     },
     {
+      "op": "fight",
+      "boss": "boar-king"
+    },
+    {
       "op": "flag",
       "set": "item.snowy-tusk"
     },

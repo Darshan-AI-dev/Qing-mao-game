@@ -50,6 +50,18 @@
 <aside id="lensPanel" class="glass" hidden aria-label="Reader's Lens"></aside>
 <aside id="recollectionPanel" class="glass" hidden aria-live="polite"></aside>
 
+<!--
+  The fight panel. A phase is a rule to read, so the rule is on screen: what it is
+  doing, what gets through it, and whether a strike would land right now.
+-->
+<section id="fightPanel" class="glass" hidden aria-live="polite">
+  <div class="fightHead"><strong id="foeName"></strong><span id="foePhase"></span></div>
+  <div class="foeMeter"><div id="foeBar"></div></div>
+  <p id="foeDefence"></p>
+  <p id="foeHint"></p>
+  <div id="foeOpen" hidden>OPEN</div>
+</section>
+
 <div id="toast" role="status"></div>
 <div id="sluggishRow" hidden aria-live="polite"></div>
 

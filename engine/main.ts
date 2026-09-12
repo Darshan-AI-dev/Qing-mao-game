@@ -27,7 +27,7 @@ import { Cultivation } from './systems/cultivation';
 import { Exposure } from './systems/exposure';
 import { Refinement } from './systems/refinement';
 import { Memory } from './systems/memory';
-import { Combat, type Ability } from './systems/combat';
+import { ABILITIES, BOSSES, Combat, type Ability } from './systems/combat';
 import { freshSave, type SaveGameV5 } from './save/schema';
 import { buildLegacy, defaultLegacy, validateLegacy } from './save/legacy';
 import { migrate } from './save/migrate';
@@ -37,6 +37,8 @@ import { Dialogue, showChapterTitle } from './ui/dialogue';
 import { Hud, attachToasts } from './ui/hud';
 import { Panels } from './ui/panels';
 import { Feedback } from './ui/feedback';
+import { Encounter, type EncounterView } from './systems/encounter';
+import { Foe, FOE_BODIES } from './render/foe';
 import { DevOverlay } from './dev/overlay';
 import { byId, closeDialog, el, maybe, openDialog } from './ui/dom';
 
@@ -68,6 +70,9 @@ class Game implements TimelineHost {
   private memory: Memory;
   private combat: Combat;
 
+  private encounter: Encounter | null = null;
+  private foe: Foe | null = null;
+  private foeActor: Actor | null = null;
   private actors = new Map<string, Actor>();
   private blockers: Blocker[] = [];
   private player = { x: 0, z: 44, facing: 0 };
@@ -538,6 +543,134 @@ class Game implements TimelineHost {
     return actor;
   }
 
+  /**
+   * Runs a fight and resolves when it is over.
+   *
+   * Control goes back to the player for the duration — `inScene` drops, so the stick
+   * and the abilities work — and the scene picks up again afterwards whichever way it
+   * went. Losing is a beat the text answers, not a game over: the story of this
+   * character is not one you can fail out of.
+   */
+  async fight(bossId: string, resolveAtOnce: boolean): Promise<void> {
+    const boss = Combat.bossFor(bossId) ?? BOSSES.find((b) => b.id === bossId);
+    if (!boss) return;
+    if (resolveAtOnce) {
+      // A skipped scene still records that the fight happened.
+      this.setFlag(`fight.${boss.id}.won`);
+      return;
+    }
+    const encounter = new Encounter(boss, this.save, this.combat, this.cultivation, {
+      playerPosition: () => ({ x: this.player.x, z: this.player.z }),
+      moveFoe: (x, z, facing) => this.placeFoe(x, z, facing),
+      recalled: () => this.memory.viewed(boss.beat),
+      concealed: (now) => this.combat.concealed(now),
+      guarding: (now) => this.combat.guarding(now)
+    });
+    this.encounter = encounter;
+    this.spawnFoeBody(boss.id);
+
+    // Hand the world back to the player properly.
+    //
+    // A scripted `place` moves the actor's model but not the player's logical
+    // position, so the orbit camera — which follows the logical position — was looking
+    // at the patch of floor where the player had been standing before the scene staged
+    // itself. Both combatants were off screen for the whole fight. Sync the logical
+    // position to where the model actually is, point the camera down the line between
+    // the two of them, and drop the scene's framing and letterbox: a fight is not a
+    // cutscene, and the bars only cost it room.
+    const body = this.actors.get('fang-yuan');
+    if (body) this.player = { x: body.position.x, z: body.position.z, facing: this.player.facing };
+    // Close enough to read the wind-up on its body from the first frame.
+    const stand = 11;
+    const facing = this.player.facing;
+    encounter.placeFoeAt(this.player.x + Math.sin(facing) * stand, this.player.z + Math.cos(facing) * stand);
+    this.cameraYaw = facing;
+    this.sceneAim = null;
+    const barsWereDown = this.letterboxNode.classList.contains('on');
+    this.letterbox(false);
+    this.inScene = false;
+    this.dialogue.hide();
+    this.placeCamera();
+
+    await new Promise<void>((resolve) => {
+      const tick = (): void => {
+        if (encounter.finished) {
+          resolve();
+          return;
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+
+    this.inScene = true;
+    // Put the bars back only if the scene had them. Turning them on unconditionally
+    // added a letterbox to every scene that had chosen not to have one, and left the
+    // vitals panel sitting under the bottom bar for the rest of it.
+    this.letterbox(barsWereDown);
+    if (encounter.won) this.setFlag(`fight.${boss.id}.won`);
+    this.clearFoeBody();
+    this.encounter = null;
+    bus.emit('toast', {
+      text: encounter.won ? `${boss.name}: down.` : `${boss.name} put you down. The story goes on.`
+    });
+    // A loss leaves him standing but spent, rather than dead.
+    if (!encounter.won) this.save.vitality = Math.max(1, Math.round(this.save.vitalityMax * 0.25));
+  }
+
+  /** Human opponents get their canon model; beasts get a body from foe.ts. */
+  private spawnFoeBody(bossId: string): void {
+    const body = FOE_BODIES[bossId];
+    if (body) {
+      this.foe = new Foe(body.kind, body.scale, this.renderer.quality.budget.shadows !== 'blob');
+      this.renderer.scene.add(this.foe.root);
+      return;
+    }
+    const human = bossId === 'fang-zheng' ? 'fang-zheng' : bossId === 'bai-ning-bing' ? 'bai-ning-bing' : null;
+    if (human) this.foeActor = this.spawn(human);
+  }
+
+  private placeFoe(x: number, z: number, facing: number): void {
+    this.foe?.setPosition(x, z);
+    this.foe?.setFacing(facing);
+    this.foeActor?.setPosition(x, 0, z);
+    this.foeActor?.setFacing(facing);
+  }
+
+  private clearFoeBody(): void {
+    if (this.foe) {
+      this.renderer.scene.remove(this.foe.root);
+      this.foe.dispose();
+      this.foe = null;
+    }
+    this.foeActor = null;
+  }
+
+  /** The fight panel's model, or null when nothing is fighting. */
+  fightView(): EncounterView | null {
+    return this.encounter ? this.encounter.view(performance.now()) : null;
+  }
+
+  /**
+   * Attempts a strike and reports what the phase rule decided.
+   *
+   * For tests, and for the dev console. Going through the keyboard cannot check a
+   * rule: a key is queued and consumed on the next frame, so a press made a moment
+   * before the window opens lands inside it. That is the right behaviour to keep —
+   * being forgiving by one frame is how the game should feel — but it means a test
+   * that presses a key and then reads the bar is testing the race, not the rule.
+   */
+  tryStrike(abilityId: string): { landed: boolean; reason: string; damage: number } | null {
+    if (!this.encounter) return null;
+    const ability = ABILITIES.find((a) => a.id === abilityId);
+    if (!ability) return null;
+    const now = performance.now();
+    if (!this.combat.use(ability, now)) {
+      return { landed: false, reason: 'Not ready, or not enough essence.', damage: 0 };
+    }
+    return this.encounter.strike(ability, now);
+  }
+
   /** Removes an actor from the world. Fang Yuan stays: he is the player. */
   despawn(id: string): void {
     if (id === 'fang-yuan') return;
@@ -620,6 +753,12 @@ class Game implements TimelineHost {
 
   letterbox(on: boolean): void {
     this.letterboxNode.classList.toggle('on', on);
+    // The bars are what the header and the dialogue panel have to clear, so the layout
+    // keys off the bars rather than off "a scene is playing". They are not the same
+    // thing: a fight is not a cutscene and drops them, and plenty of scenes never
+    // raise them at all, both of which left panels tucked under a bar that was not
+    // there or standing clear of one that was.
+    document.body.classList.toggle('letterboxed', on);
   }
 
   setWeather(kind: string, intensity: number): void {
@@ -701,6 +840,10 @@ class Game implements TimelineHost {
     if (!this.inScene) this.movePlayer(frame, dt);
     this.updateCamera(frame, dt);
 
+    if (this.encounter) {
+      this.encounter.update(dt, now, this.flags());
+      this.foe?.setPose(this.encounter.view(now).state, now);
+    }
     for (const actor of this.actors.values()) actor.update(dt, now);
     if (this.renderer.hasCarriedLight) this.renderer.moveCarriedLight(this.player.x, 2.4, this.player.z);
     if (this.objective) {
@@ -750,7 +893,20 @@ class Game implements TimelineHost {
     }
     const flags = this.flags();
     for (const ability of this.combat.availableAbilities(flags)) {
-      if (pressed.has(ability.key as Intent)) this.combat.use(ability, performance.now());
+      if (!pressed.has(ability.key as Intent)) continue;
+      const now = performance.now();
+      if (!this.combat.use(ability, now)) {
+        // Say which of the two reasons it was; "nothing happened" teaches nobody.
+        if (!this.combat.ready(ability, now)) continue;
+        bus.emit('toast', { text: `Not enough essence for ${ability.label}.` });
+        continue;
+      }
+      // A fight is the only thing that can be struck. Outside one the ability still
+      // fires — the essence is spent and the feedback plays — so practising works.
+      if (this.encounter && ability.damage > 0) {
+        const result = this.encounter.strike(ability, now);
+        if (!result.landed) bus.emit('toast', { text: result.reason });
+      }
     }
   }
 
@@ -866,13 +1022,25 @@ class Game implements TimelineHost {
    * CI a long enough window that the camera tests read the old position and failed.
    */
   private placeCamera(): void {
+    // In a fight, orbit the point between the two of them and stand further back.
+    //
+    // Orbiting the player alone framed a fight as one man looking at empty ground: the
+    // foe closes from fifteen paces and spends most of the encounter off screen or a
+    // speck at the top of it. Weighted toward the player so it still reads as his
+    // shoulder, not a duel seen from the side.
+    const fight = this.encounter;
+    const foe = fight?.foePosition();
+    const centre = foe
+      ? { x: this.player.x * 0.68 + foe.x * 0.32, z: this.player.z * 0.68 + foe.z * 0.32 }
+      : this.player;
+    const pull = fight ? 4.5 : 0;
     const eye = this.insideTheWalls(
-      orbitCamera(this.player, this.cameraYaw, this.cameraPitch, this.effectiveCameraDistance())
+      orbitCamera(centre, this.cameraYaw, this.cameraPitch, this.effectiveCameraDistance() + pull)
     );
     this.renderer.camera.position.set(eye.x, eye.y, eye.z);
-    const distance = Math.hypot(eye.x - this.player.x, eye.y - 2, eye.z - this.player.z);
+    const distance = Math.hypot(eye.x - centre.x, eye.y - 2, eye.z - centre.z);
     this.renderer.camera.lookAt(
-      new Vector3(this.player.x, 2 - this.framingLift(distance), this.player.z)
+      new Vector3(centre.x, 2 - this.framingLift(distance), centre.z)
     );
   }
 
@@ -924,6 +1092,7 @@ class Game implements TimelineHost {
   private renderHud(): void {
     // The exploration HUD stands down during a scene; see `body.scene` in style.css.
     document.body.classList.toggle('scene', this.inScene);
+    document.body.classList.toggle('fighting', !!this.encounter);
     const beat = this.currentBeat();
     const flags = this.flags();
     const abilities = this.combat.availableAbilities(flags);
@@ -945,7 +1114,8 @@ class Game implements TimelineHost {
         distance: this.distanceToObjective(),
         context: this.contextAction(),
         sluggish: this.save.gu.filter((g) => g.sluggish).map((g) => g.id),
-        recollectionAvailable: !!beat && !!this.memory.available(beat.id) && !this.memory.viewed(beat.id)
+        recollectionAvailable: !!beat && !!this.memory.available(beat.id) && !this.memory.viewed(beat.id),
+        fight: this.fightView()
       },
       abilities,
       (ability: Ability) => this.combat.cost(ability)
@@ -1404,6 +1574,8 @@ async function boot(): Promise<void> {
       spawnClearance: (areaId: string) => game.spawnClearance(areaId),
       currentBeatFacts: () => game.currentBeatFacts(),
       cameraBasis: () => game.cameraBasis(),
+      fightView: () => game.fightView(),
+      tryStrike: (abilityId: string) => game.tryStrike(abilityId),
       areaIds: () => game.areaIds(),
       setCameraDistance: (d: number) => game.setCameraDistance(d),
       setInspectionDistance: (d: number | null) => game.setInspectionDistance(d),

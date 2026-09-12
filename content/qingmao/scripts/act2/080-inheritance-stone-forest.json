@@ -80,6 +80,10 @@
       "sfx": null
     },
     {
+      "op": "fight",
+      "boss": "monkey-king"
+    },
+    {
       "op": "flag",
       "set": "flag.monkeys-known"
     },

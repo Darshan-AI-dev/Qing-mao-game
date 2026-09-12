@@ -18,6 +18,10 @@
   ],
   "commands": [
     {
+      "op": "flag",
+      "set": "rank.8.prologue"
+    },
+    {
       "op": "letterbox",
       "on": true
     },
@@ -176,6 +180,10 @@
       "text": "Not mercy. A ledger closed, and reopened on the first page.",
       "kind": "thought",
       "sfx": null
+    },
+    {
+      "op": "fight",
+      "boss": "prologue-eight"
     },
     {
       "op": "fade",

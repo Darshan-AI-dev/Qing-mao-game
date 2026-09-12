@@ -16,7 +16,9 @@
       "requires": [],
       "sets": [
         "prologue.done",
-        "gu.cicada"
+        "gu.cicada",
+        "rank.8.prologue",
+        "tutorial.combat"
       ],
       "reads": [],
       "evidence": [],

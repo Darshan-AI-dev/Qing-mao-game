@@ -122,6 +122,10 @@
       ]
     },
     {
+      "op": "fight",
+      "boss": "thunder-crown-wolf"
+    },
+    {
       "op": "flag",
       "set": "flag.tide-entered"
     },

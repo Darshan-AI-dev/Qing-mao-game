@@ -35,6 +35,15 @@ export interface GameEvents {
   'gu.refine': { gu: string; outcome: 'success' | 'delay' | 'failure'; days: number; stones: number };
   'hit.player': { amount: number; source: string };
   'hit.enemy': { amount: number; target: string; telegraph: string | null };
+  // Fights. The audio seam wants these named for a sound pack: a wind-up, an impact,
+  // a phase turn and a win are four different cues.
+  'fight.start': { boss: string; name: string; phases: number };
+  'fight.phase': { boss: string; phase: number; defence: string };
+  'fight.open': { boss: string; seconds: number };
+  'fight.miss': { boss: string; reason: string };
+  /** The player worked a phase out without calling the memory up. */
+  'fight.read': { boss: string; phase: number; hint: string };
+  'fight.end': { boss: string; won: boolean };
   'enemy.telegraph': { target: string; shape: string; pattern: string; seconds: number };
   'enemy.phase': { target: string; phase: number; of: number };
   'enemy.down': { target: string };

@@ -90,11 +90,21 @@ const inspect = () =>
           ['dialogue', document.getElementById('dialoguePanel')],
           ['nav', document.querySelector('header nav')]
         ].map(([name, el]) => {
-          const visible = el && !el.hidden && getComputedStyle(el).opacity !== '0';
+          // Effective visibility, ancestors included. Reading the element's own
+          // opacity said the vitals panel was on screen through every cutscene in the
+          // game: the panel's opacity is 1, and the 0 that hides it sits on the
+          // `footer` above it. Twenty-six frames of "this panel is under a letterbox
+          // bar" about a panel that was not being drawn at all.
+          const visible = el && !el.hidden && (
+            typeof el.checkVisibility === 'function'
+              ? el.checkVisibility({ opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })
+              : getComputedStyle(el).opacity !== '0'
+          );
           const r = visible ? el.getBoundingClientRect() : null;
           return [name, r ? { left: r.left, right: r.right, top: r.top, bottom: r.bottom } : null];
         })
       ),
+      fight: window.qingMao?.debug?.fightView?.() ?? null,
       exploring: !!window.qingMao?.debug?.isExploring?.(),
       area: window.qingMao?.debug?.currentArea?.() ?? '',
       viewport: { w: window.innerWidth, h: window.innerHeight }
@@ -121,6 +131,9 @@ const problems = [];
 let shot = 0;
 let lastLine = '';
 let stuck = 0;
+/** Reasons a strike was refused, so the sweep can report what a player would learn. */
+const fightMisses = new Set();
+const fightsSeen = new Set();
 
 for (let step = 0; step < steps; step++) {
   await page.waitForTimeout(220);
@@ -135,6 +148,7 @@ for (let step = 0; step < steps; step++) {
     await page.screenshot({ path: `${out}/${name}.png` });
     frames.push({ shot: name, step, ...state });
 
+    if (state.fight) fightsSeen.add(state.fight.name);
     if (state.choices.length && state.choiceBottom > state.viewport.h) {
       problems.push(`${name}: the last choice is ${state.choiceBottom - state.viewport.h}px below the screen`);
     }
@@ -180,6 +194,24 @@ for (let step = 0; step < steps; step++) {
     }
   }
 
+  // Fight when there is a fight. Without this the sweep wedges at the prologue, which
+  // is now an encounter rather than a scene — and a sweep that cannot get past chapter
+  // two tells you nothing about chapter two hundred.
+  if (state.fight) {
+    const struck = await page.evaluate(() => {
+      const view = window.qingMao.debug.fightView();
+      if (!view) return null;
+      // Take the strongest thing that is affordable and let the rule decide.
+      for (const id of ['blood-moon', 'moonglow', 'ruined-blade', 'centipede', 'moonblade', 'strike']) {
+        const result = window.qingMao.debug.tryStrike(id);
+        if (result && (result.landed || !result.reason.startsWith('Not ready'))) return result;
+      }
+      return null;
+    });
+    if (struck && !struck.landed) fightMisses.add(struck.reason);
+    continue;
+  }
+
   if (state.choices.length) {
     await page.locator('#dialogueChoices button').first().click();
     continue;
@@ -220,6 +252,8 @@ for (const frame of frames) {
 
 await writeFile(`${out}/report.json`, JSON.stringify({ width, height, phone, frames, problems, consoleErrors }, null, 2));
 console.log(`\n${frames.length} frames photographed into ${out}`);
+if (fightsSeen.size) console.log(`fights played: ${[...fightsSeen].join(', ')}`);
+if (fightMisses.size) console.log(`strikes refused, with reasons: ${[...fightMisses].join(' | ')}`);
 if (consoleErrors.length) problems.push(`console: ${[...new Set(consoleErrors)].slice(0, 5).join(' | ')}`);
 if (problems.length) {
   console.log('\nPROBLEMS');

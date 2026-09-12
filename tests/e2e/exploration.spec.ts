@@ -317,3 +317,88 @@ test('pushing right moves the player to the camera\'s right', async ({ page }) =
       .toBeGreaterThan(0.9);
   }
 });
+
+/**
+ * Fights.
+ *
+ * The five multi-phase bosses existed as data for a long time with nothing that could
+ * instantiate one, so every must-land fight in the game — the prologue included — was
+ * a dialogue scene with an essence bar that did nothing. These check that a fight is a
+ * fight: that it starts, that the phase rule gates damage rather than a health bar,
+ * and that it ends and hands the scene back.
+ */
+async function reachPrologueFight(page: Page): Promise<void> {
+  await openGame(page);
+  for (let i = 0; i < 60; i++) {
+    if (await page.locator('#fightPanel').isVisible()) return;
+    const choice = page.locator('#dialogueChoices button').first();
+    if ((await choice.count()) && (await choice.isVisible())) {
+      await choice.click();
+    } else {
+      await page.locator('#dialogueContinue').click({ timeout: 2500 }).catch(() => {});
+    }
+    await page.waitForTimeout(180);
+  }
+  throw new Error('never reached the prologue fight');
+}
+
+test('the prologue is a fight, with the Rank eight arsenal it is meant to be fought at', async ({ page }) => {
+  await reachPrologueFight(page);
+  await expect(page.locator('#foeName')).toHaveText('The eight at the doorway');
+  await expect(page.locator('#foePhase')).toHaveText('PHASE 1 OF 2');
+  // Full power, hopeless odds: the drop to Rank one in the next beat has to be a drop
+  // from something, and that something is this action bar.
+  const abilities = await page.locator('#actions button').allTextContents();
+  expect(abilities.join(' ')).toContain('Ruined Blade');
+});
+
+test('a strike only lands when the phase says it does', async ({ page }) => {
+  await reachPrologueFight(page);
+
+  // Asked of the rule directly rather than through the keyboard. A key is queued and
+  // consumed on the next frame, so a press made just before the window opens lands
+  // inside it — which is the right way for the game to feel, and makes a test that
+  // presses and then reads the bar a test of the race rather than of the rule.
+  const attempt = () =>
+    page.evaluate(() => {
+      const view = window.qingMao.debug.fightView()!;
+      return { open: view.openNow, result: window.qingMao.debug.tryStrike('ruined-blade')! };
+    });
+
+  let intoGuard: Awaited<ReturnType<typeof attempt>> | null = null;
+  let intoWindow: Awaited<ReturnType<typeof attempt>> | null = null;
+  for (let i = 0; i < 120 && (!intoGuard || !intoWindow); i++) {
+    const tried = await attempt();
+    // Recovery can refuse a swing outright; that is a different rejection.
+    if (!tried.result.reason.startsWith('Not ready')) {
+      if (tried.open) intoWindow ??= tried;
+      else intoGuard ??= tried;
+    }
+    await page.waitForTimeout(120);
+  }
+
+  expect(intoGuard, 'never caught the phase with its guard up').not.toBeNull();
+  expect(intoGuard!.result.landed, 'a strike into the guard landed').toBe(false);
+  expect(intoGuard!.result.reason, 'a refused strike must say why').toContain('gap');
+  expect(intoWindow, 'never caught the open window').not.toBeNull();
+  expect(intoWindow!.result.landed, 'a strike in the open window did not land').toBe(true);
+  expect(intoWindow!.result.damage).toBeGreaterThan(0);
+});
+
+test('a fight ends and gives the scene back', async ({ page }) => {
+  await reachPrologueFight(page);
+  // Strike whenever the window is open. Ability recovery is what stops this being a
+  // click-race, so this is also a check that a fight is winnable at a human rate.
+  for (let i = 0; i < 200; i++) {
+    if (!(await page.locator('#fightPanel').isVisible())) break;
+    if (await page.evaluate(() => !document.getElementById('foeOpen')!.hidden)) {
+      await page.keyboard.press('Space');
+    }
+    await page.waitForTimeout(120);
+  }
+  await expect(page.locator('#fightPanel')).toBeHidden();
+  // The prologue's fight is the last thing in its scene, so what the fight hands back
+  // is the world: control returns and the next beat is offered.
+  await page.waitForFunction(() => window.qingMao.debug.isExploring(), null, { timeout: 30_000 });
+  expect(await page.evaluate(() => window.qingMao.debug.awaitingBeat())).not.toBeNull();
+});

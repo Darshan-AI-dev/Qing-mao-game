@@ -35,6 +35,11 @@ export interface HudModel {
   context: { intent: Intent; label: string } | null;
   sluggish: string[];
   recollectionAvailable: boolean;
+  /** Null when nothing is fighting. */
+  fight: {
+    name: string; phase: number; phases: number; defence: string; hint: string;
+    vitality: number; vitalityMax: number; openNow: boolean;
+  } | null;
 }
 
 export class Hud {
@@ -74,6 +79,7 @@ export class Hud {
     byId('stones').textContent = `${model.stones} stones`;
     byId('essenceBar').style.width = model.essenceMax > 0 ? `${(model.essence / model.essenceMax) * 100}%` : '0%';
     byId('healthBar').style.width = `${(model.vitality / model.vitalityMax) * 100}%`;
+    this.renderFight(model.fight);
     byId('questTitle').textContent = model.questTitle;
     byId('questText').textContent = model.questTask;
     byId('chapterLabel').textContent = model.chapterLabel;
@@ -145,6 +151,22 @@ export class Hud {
     const open = force ?? this.wheelNode.hidden;
     this.wheelNode.hidden = !open;
     this.input.setWheel(open ? 0 : null);
+  }
+
+  /**
+   * The fight panel. Written out every frame it changes, including the OPEN flag,
+   * because the whole point of a readable fight is that the read is on screen.
+   */
+  private renderFight(fight: HudModel['fight']): void {
+    const panel = byId('fightPanel');
+    panel.hidden = !fight;
+    if (!fight) return;
+    byId('foeName').textContent = fight.name;
+    byId('foePhase').textContent = `PHASE ${fight.phase} OF ${fight.phases}`;
+    byId('foeBar').style.width = `${Math.max(0, (fight.vitality / fight.vitalityMax) * 100)}%`;
+    byId('foeDefence').textContent = fight.defence;
+    byId('foeHint').textContent = fight.hint;
+    byId('foeOpen').hidden = !fight.openNow;
   }
 
   private showTelegraph(shape: string, pattern: string, seconds: number): void {

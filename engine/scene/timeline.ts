@@ -30,6 +30,13 @@ export type SceneCommand =
    * still in frame in the tavern, shoulder to shoulder with the keeper.
    */
   | { op: 'exit'; actor: string }
+  /**
+   * Hands control to the player for a fight, and waits for it to end.
+   *
+   * `boss` names a definition in combat.ts. The scene resumes when the fight is over
+   * either way: losing is not a game over here, it is a beat the text can answer.
+   */
+  | { op: 'fight'; boss: string }
   | { op: 'face'; actor: string; target: string }
   | { op: 'gesture'; actor: string; gesture: AnimationName }
   | { op: 'camera'; to: [number, number, number]; look: [number, number, number]; seconds?: number }
@@ -77,12 +84,14 @@ export interface TimelineHost {
   showTitle(chapter: number, text: string): Promise<void>;
   showArt(id: string | null): void;
   recordMethod(choiceId: string, optionId: string): void;
+  /** Runs a fight and resolves when it ends. `resolveAtOnce` for a skipped scene. */
+  fight(boss: string, resolveAtOnce: boolean): Promise<void>;
   /** True once the player has asked to skip; every command then resolves immediately. */
   skipping(): boolean;
 }
 
 /** Commands that change the world rather than present it. A skip still runs these. */
-const STATEFUL_OPS = new Set<SceneCommand['op']>(['flag', 'evidence', 'weather', 'timeOfDay']);
+const STATEFUL_OPS = new Set<SceneCommand['op']>(['flag', 'evidence', 'weather', 'timeOfDay', 'fight']);
 
 export class Timeline {
   private aborted = false;
@@ -141,6 +150,13 @@ export class Timeline {
         const actor = this.host.actor(command.actor);
         const target = this.host.actor(command.target);
         if (actor && target) actor.faceTowards(target.position);
+        return;
+      }
+      case 'fight': {
+        // A skip does not skip the fight: it is the beat, not its presentation. But a
+        // skipped scene resolves it instantly so a reader who wants the story is not
+        // stuck at a boss.
+        await this.host.fight(command.boss, fast);
         return;
       }
       case 'gesture': {

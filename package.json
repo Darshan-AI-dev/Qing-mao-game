@@ -15,7 +15,7 @@
     "verify": "npm run lint:content && npm run typecheck && npm test",
     "art:optimise": "node tools/optimise-art.mjs",
     "vendor:three": "node tools/vendor-three.mjs",
-    "test:unit": "node --experimental-strip-types --no-warnings tests/unit/movement.test.mts",
+    "test:unit": "node --experimental-strip-types --no-warnings tests/unit/movement.test.mts && node --experimental-strip-types --no-warnings tests/unit/encounter.test.mts",
     "sweep": "npm run build && node tools/visual-sweep.mjs && python3 tools/contact-sheet.py",
     "sweep:phone": "npm run build && node tools/visual-sweep.mjs --phone --out sweep-phone && python3 tools/contact-sheet.py --dir sweep-phone",
     "sweep:play": "npm run build && node tools/play-sweep.mjs",

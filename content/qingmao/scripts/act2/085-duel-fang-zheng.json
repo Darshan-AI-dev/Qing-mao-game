@@ -139,6 +139,10 @@
       ]
     },
     {
+      "op": "fight",
+      "boss": "fang-zheng"
+    },
+    {
       "op": "flag",
       "set": "flag.duel-won"
     },

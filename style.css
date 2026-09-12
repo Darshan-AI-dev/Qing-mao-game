@@ -110,11 +110,26 @@ footer, #joystick, #quest { transition: opacity 0.35s ease; }
  * costing the world about a hundred and fifty pixels at the top of the frame. That is
  * the band the scene is playing in.
  */
-body.scene #dialoguePanel { bottom: calc(var(--safe-bottom) + var(--bar) + 0.4rem); }
+body.letterboxed #dialoguePanel { bottom: calc(var(--safe-bottom) + var(--bar) + 0.4rem); }
+body.scene:not(.letterboxed) #dialoguePanel { bottom: calc(var(--safe-bottom) + 0.7rem); }
+/* During a fight the objective is the fight, so the quest strip gets out of the way
+   and the fight panel takes that space. */
+body.fighting #quest { opacity: 0; pointer-events: none; }
 #dialoguePanel { transition: bottom 0.35s ease; }
 /* The nav has to stay reachable during a scene — Pause and the Journal both — so it
    moves down past the top bar rather than hiding underneath it. */
-body.scene header { transform: translateY(var(--bar)); }
+body.letterboxed header { transform: translateY(var(--bar)); }
+/*
+ * Anything at an edge gets out from under the bar whenever the bars are down.
+ *
+ * This is stated as layout rather than as a list of states, because the states
+ * multiply: a fight drops the bars but keeps the HUD, a scene keeps the bars and drops
+ * the HUD, the frame between the two has one of each, and every combination had a
+ * panel tucked under a bar in it at some point today. Padding the edges by the bar
+ * depth is right in all of them.
+ */
+body.letterboxed footer { padding-bottom: calc(var(--bar) + 0.5rem); }
+body.letterboxed #joystick { bottom: calc(var(--safe-bottom) + var(--bar) + 0.7rem); }
 header { transition: transform 0.45s ease; }
 
 #telegraphLayer { position: fixed; inset: 0; pointer-events: none; z-index: 20; display: grid; place-items: center; }
@@ -233,6 +248,43 @@ kbd { font-family: var(--ui-font); font-size: 0.65rem; opacity: 0.65; border: 1p
 }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/*
+ * The fight panel sits top-centre, under the header and clear of the dialogue.
+ *
+ * Everything a phase asks of the player is here: what it is doing, what beats it, and
+ * a bright OPEN the instant a strike would actually land. The colour is doubled by the
+ * word, because a player who cannot see the green should still know the window is up.
+ */
+#fightPanel {
+  position: fixed; z-index: 13;
+  top: calc(var(--safe-top) + 4.6rem); left: 50%; transform: translateX(-50%);
+  width: min(26rem, calc(100vw - var(--safe-left) - var(--safe-right) - 1.6rem));
+  padding: 0.6rem 0.8rem;
+}
+.fightHead { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; }
+.fightHead strong { font-size: 0.95rem; }
+#foePhase { font-family: var(--ui-font); font-size: 0.66rem; letter-spacing: 0.12em; color: var(--ink-faint); }
+.foeMeter { height: 6px; margin: 0.45rem 0; border-radius: 999px; background: rgba(196, 88, 79, 0.22); overflow: hidden; }
+#foeBar { height: 100%; width: 100%; background: var(--blood); transition: width 0.18s ease; }
+#foeDefence { margin: 0; font-size: 0.82rem; }
+#foeHint {
+  margin: 0.3rem 0 0; padding-left: 0.7rem; border-left: 2px solid var(--gold);
+  font-family: var(--ui-font); font-size: 0.74rem; color: var(--ink-dim);
+}
+#foeOpen {
+  margin-top: 0.45rem; padding: 0.15rem 0.5rem; border-radius: 999px;
+  display: inline-block; background: var(--jade); color: #06231a;
+  font-family: var(--ui-font); font-size: 0.7rem; letter-spacing: 0.18em; font-weight: 700;
+}
+@media (max-width: 560px) {
+  #fightPanel {
+    top: calc(var(--safe-top) + 4.2rem);
+    left: calc(var(--safe-left) + 0.6rem); right: calc(var(--safe-right) + 0.6rem);
+    width: auto; transform: none;
+  }
+  #foeDefence { font-size: 0.76rem; }
+}
+
 #sluggishRow {
   position: fixed; z-index: 8;
   top: calc(var(--safe-top) + 5.2rem); left: 50%; transform: translateX(-50%);
@@ -258,7 +310,7 @@ kbd { font-family: var(--ui-font); font-size: 0.65rem; opacity: 0.65; border: 1p
  * art inside its own box.
  */
 #sceneArt img {
-  width: 100%; max-width: 100%; height: auto; max-height: 30vh; object-fit: cover;
+  width: 100%; max-width: 100%; height: auto; max-height: 22vh; object-fit: cover;
   border-radius: var(--radius); display: block;
 }
 #sceneArt figcaption { font-family: var(--ui-font); font-size: 0.68rem; color: var(--ink-faint); margin-top: 0.25rem; }

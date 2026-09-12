@@ -35,6 +35,11 @@ declare global {
         spawnClearance(areaId: string): { x: number; z: number; lane: boolean; reachable: boolean };
         currentBeatFacts(): { id: string; title: string; objective: string; designNote: string } | null;
         cameraBasis(): { right: { x: number; y: number; z: number }; forward: { x: number; y: number; z: number } };
+        fightView(): {
+          name: string; phase: number; phases: number; defence: string; hint: string;
+          vitality: number; vitalityMax: number; state: string; openNow: boolean;
+        } | null;
+        tryStrike(abilityId: string): { landed: boolean; reason: string; damage: number } | null;
         areaIds(): string[];
         setCameraDistance(distance: number): void;
         setInspectionDistance(distance: number | null): void;
