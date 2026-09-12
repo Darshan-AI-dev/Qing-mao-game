@@ -12,9 +12,10 @@
  */
 import {
   AnimationMixer, Bone, BoxGeometry, CapsuleGeometry, CircleGeometry, Color,
-  CylinderGeometry, Group, Mesh, MeshBasicMaterial, MeshLambertMaterial,
+  CylinderGeometry, Group, Mesh, MeshBasicMaterial,
   Object3D, SkinnedMesh, Vector3, type AnimationClip
 } from 'three';
+import { surface } from './surfaces';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { charactersById, type CanonCharacter } from '../../canon/index';
 
@@ -191,10 +192,13 @@ export class Actor {
 
 function buildStandIn(character: CanonCharacter, options: ActorOptions, root: Group) {
   const { robe, trim, hair, skin } = character.palette;
-  const robeMat = new MeshLambertMaterial({ color: rgb(robe) });
-  const trimMat = new MeshLambertMaterial({ color: rgb(trim) });
-  const hairMat = new MeshLambertMaterial({ color: rgb(hair) });
-  const skinMat = new MeshLambertMaterial({ color: rgb(skin) });
+  // Cloth for the robe, cloth with a tighter weave for the trim, and skin that takes
+  // almost no grain — a face is the closest thing to the camera in every scene, and
+  // stone-sized noise on it reads as damage rather than as detail.
+  const robeMat = surface('cloth', rgb(robe));
+  const trimMat = surface('cloth', rgb(trim), { roughness: 0.55, repeat: 3.2 });
+  const hairMat = surface('cloth', rgb(hair), { roughness: 0.42, repeat: 4 });
+  const skinMat = surface('skin', rgb(skin));
 
   const broad = character.rig?.includes('broad') ? 1.18 : character.rig?.includes('female') ? 0.92 : 1;
   const oneArm = options.variant
@@ -290,7 +294,7 @@ function buildStandIn(character: CanonCharacter, options: ActorOptions, root: Gr
   const legs: Object3D[] = [];
   for (const side of [-1, 1]) {
     // Only the feet show below the robe; the legs drive the walk.
-    const leg = new Mesh(new BoxGeometry(0.15, 0.1, 0.28), new MeshLambertMaterial({ color: rgb(trim) }));
+    const leg = new Mesh(new BoxGeometry(0.15, 0.1, 0.28), surface('cloth', rgb(trim)));
     leg.position.set(side * 0.13, 0.05, 0);
     legs.push(leg);
     root.add(leg);

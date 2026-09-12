@@ -15,6 +15,8 @@ import {
   Group, HemisphereLight, Matrix4, Object3D, PCFSoftShadowMap, PerspectiveCamera,
   PointLight, Scene, Sphere, Vector3, WebGLRenderer
 } from 'three';
+import { Sky } from './sky';
+import { setSurfaceTier } from './surfaces';
 import { AdaptiveQuality, BUDGETS, type TierName } from './quality';
 
 export interface Chunk {
@@ -54,6 +56,7 @@ export class Renderer {
   private lanterns: PointLight[] = [];
   /** Follows the player through dark areas. See `setCarriedLight`. */
   private carried: PointLight | null = null;
+  private sky: Sky;
   private lastFrame = performance.now();
   private fps = 60;
   private chunksVisible = 0;
@@ -68,8 +71,15 @@ export class Renderer {
     // ACES pulls the midtones down hard, and this palette lives in the midtones: at
     // 1.05 the outdoor ground came back at about a fifth of its own brightness and a
     // forest floor was indistinguishable from the fog behind it.
-    this.renderer.toneMappingExposure = 1.32;
+    // Raised again for physically based materials. Lambert did not divide its diffuse
+    // by pi and standard materials do, so the same palette under the same lights came
+    // back about a third darker the moment the surfaces became physical.
+    this.renderer.toneMappingExposure = 1.55;
     this.quality = new AdaptiveQuality(tier, renderScale);
+    // Materials size their generated maps to the tier, so it has to be set before the
+    // first area is built.
+    setSurfaceTier(tier);
+    this.sky = new Sky(this.renderer);
 
     const budget = BUDGETS[tier];
     this.renderer.shadowMap.enabled = budget.shadows !== 'blob';
@@ -216,6 +226,31 @@ export class Renderer {
       // to the fog colour made every outdoor area's `sky` field dead data.
       this.renderer.setClearColor(new Color(options.skyColor ?? fogColor));
     }
+
+    // A gradient dome rather than a flat clear colour, and the same image blurred into
+    // the environment every material reflects. Built from colours the area already
+    // declares, so the sky and the lighting cannot drift apart.
+    const zenith = options.skyColor ?? fogColor;
+    const { background, environment } = this.sky.update({
+      zenith,
+      // Not the fog colour raw. Fog is a dark teal chosen to swallow distance, and
+      // painting the horizon band with it turned the whole dome grey — darker than the
+      // flat clear colour it replaced. A real horizon is the *lighter* part of the sky,
+      // so this is the fog hazed most of the way back towards the sky's own colour.
+      horizon: new Color(fogColor).lerp(new Color(zenith), 0.62).getHex(),
+      // Bounce from whatever is underfoot, dimmed: it fills undersides without
+      // lifting the whole scene the way raising ambient light does.
+      ground: new Color(fogColor).lerp(new Color(0x000000), underground ? 0.55 : 0.3).getHex(),
+      timeOfDay,
+      enclosed: !!indoor || underground
+    });
+    // Indoors the room's own walls are the backdrop; a sky behind them would show
+    // through the doorway of a cave. The environment still applies: it is what gives
+    // lamplit metal and lacquer their sheen.
+    this.scene.background = indoor || underground ? null : background;
+    this.scene.environment = environment;
+    // Interiors reflect their own dim surroundings, not a bright outdoor dome.
+    this.scene.environmentIntensity = underground ? 0.25 : indoor ? 0.5 : 1;
   }
 
   resize(): void {

@@ -11,8 +11,9 @@
  */
 import {
   BoxGeometry, BufferAttribute, Color, ConeGeometry, CylinderGeometry, Group, Mesh,
-  MeshLambertMaterial, SphereGeometry, type BufferGeometry
+  SphereGeometry, type BufferGeometry
 } from 'three';
+import { surface } from './surfaces';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 export type FoeKind = 'boar' | 'monkey' | 'wolf' | 'shade';
@@ -121,7 +122,8 @@ export const FOE_BODIES: Record<string, { kind: FoeKind; scale: number }> = {
 export class Foe {
   readonly root = new Group();
   private mesh: Mesh;
-  private material = new MeshLambertMaterial({ vertexColors: true });
+  // Hide and hair rather than cloth: a boar or a wolf should not read as upholstery.
+  private material = surface('foliage', 0xffffff, { vertexColors: true, roughness: 0.88 });
 
   constructor(kind: FoeKind, scale = 1, shadows = true) {
     this.mesh = new Mesh(BODIES[kind](), this.material);

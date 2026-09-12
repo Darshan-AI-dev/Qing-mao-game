@@ -11,9 +11,10 @@
  */
 import {
   BoxGeometry, BufferAttribute, CircleGeometry, Color, ConeGeometry, CylinderGeometry, DoubleSide,
-  Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshLambertMaterial,
+  Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial,
   PlaneGeometry, Quaternion, RingGeometry, Vector3, type BufferGeometry, type Material
 } from 'three';
+import { surface, type Surface, type SurfaceOptions } from './surfaces';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { Rng } from '../core/rng';
 
@@ -88,7 +89,15 @@ export interface BuiltArea {
 
 const CHUNK_SIZE = 48;
 
-const mat = (hex: number) => new MeshLambertMaterial({ color: new Color(hex) });
+/**
+ * Every prop names the material it is made of, not just a colour.
+ *
+ * `mat()` used to return a flat Lambert material, so a crate, a stone pillar, a silk
+ * banner and a straw awning differed only in hue. They are different substances now:
+ * the surface decides roughness, how metallic it is, and which generated grain and
+ * normal map it wears. See `surfaces.ts`.
+ */
+const mat = (kind: Surface, hex: number, options: SurfaceOptions = {}) => surface(kind, hex, options);
 
 const PALETTE = {
   grass: 0x4f6c4e, path: 0x7d7758, wood: 0x49331f, roof: 0x27494a, wall: 0x8f8d64,
@@ -101,49 +110,52 @@ const PALETTE = {
 function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Material; blocker?: Blocker } {
   switch (kind) {
     // Qing Mao's bamboo is straight with a spear-sharp tip, per the source text.
-    case 'bamboo': return { geometry: new CylinderGeometry(0.12, 0.16, 9, 6), material: mat(PALETTE.bamboo), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
-    case 'rock': return { geometry: new ConeGeometry(1.9, 3.4, 6), material: mat(PALETTE.rock), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
-    case 'tree': return { geometry: new ConeGeometry(3.1, 7.2, 7), material: mat(PALETTE.leaf), blocker: { x: 0, z: 0, w: 1, d: 1 } };
+    case 'bamboo': return { geometry: new CylinderGeometry(0.12, 0.16, 9, 6), material: mat('foliage', PALETTE.bamboo), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
+    case 'rock': return { geometry: new ConeGeometry(1.9, 3.4, 6), material: mat('stone', PALETTE.rock), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
+    case 'tree': return { geometry: new ConeGeometry(3.1, 7.2, 7), material: mat('foliage', PALETTE.leaf), blocker: { x: 0, z: 0, w: 1, d: 1 } };
     // Not a cone. A pale seven-sided cone at 1.9 tall is fine as a distant crowd and
     // looks like a traffic cone the moment the camera is in the same room as one — on
     // a phone, where interiors put the camera close, the hall and the tavern each had
     // a cream cone standing next to the player.
     case 'villager': return {
       geometry: villagerGeometry(),
-      material: new MeshLambertMaterial({ vertexColors: true })
+      material: surface('cloth', 0xffffff, { vertexColors: true })
     };
     // A post with a paper lamp on it. The post alone was a bare brown stick that read
     // as a pole planted in the floor, and in the Gu room one stood directly behind the
     // player and looked like part of him.
-    case 'lantern': return { geometry: lanternGeometry(), material: mat(PALETTE.cloth), blocker: { x: 0, z: 0, w: 0.2, d: 0.2 } };
-    case 'pillar': return { geometry: new CylinderGeometry(1.5, 2.1, 22, 7), material: mat(PALETTE.stone), blocker: { x: 0, z: 0, w: 1.8, d: 1.8 } };
-    case 'crate': return { geometry: new BoxGeometry(1.2, 1, 1.2), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 0.7, d: 0.7 } };
-    case 'orchid': return { geometry: new ConeGeometry(0.22, 0.6, 5), material: mat(PALETTE.orchid) };
-    case 'bed': return { geometry: new BoxGeometry(2.0, 0.42, 3.1), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 1.1, d: 1.7 } };
-    case 'table': return { geometry: new BoxGeometry(1.5, 0.08, 0.95), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 0.8, d: 0.55 } };
-    case 'stool': return { geometry: new CylinderGeometry(0.26, 0.3, 0.44, 8), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
-    case 'chest': return { geometry: new BoxGeometry(1.1, 0.62, 0.66), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 0.6, d: 0.4 } };
-    case 'shelf': return { geometry: new BoxGeometry(1.8, 0.07, 0.42), material: mat(PALETTE.wood) };
+    case 'lantern': return { geometry: lanternGeometry(), material: mat('paper', PALETTE.cloth), blocker: { x: 0, z: 0, w: 0.2, d: 0.2 } };
+    case 'pillar': return { geometry: new CylinderGeometry(1.5, 2.1, 22, 7), material: mat('stone', PALETTE.stone), blocker: { x: 0, z: 0, w: 1.8, d: 1.8 } };
+    case 'crate': return { geometry: new BoxGeometry(1.2, 1, 1.2), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 0.7, d: 0.7 } };
+    case 'orchid': return { geometry: new ConeGeometry(0.22, 0.6, 5), material: mat('foliage', PALETTE.orchid) };
+    case 'bed': return { geometry: new BoxGeometry(2.0, 0.42, 3.1), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 1.1, d: 1.7 } };
+    case 'table': return { geometry: new BoxGeometry(1.5, 0.08, 0.95), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 0.8, d: 0.55 } };
+    case 'stool': return { geometry: new CylinderGeometry(0.26, 0.3, 0.44, 8), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
+    case 'chest': return { geometry: new BoxGeometry(1.1, 0.62, 0.66), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 0.6, d: 0.4 } };
+    case 'shelf': return { geometry: new BoxGeometry(1.8, 0.07, 0.42), material: mat('wood', PALETTE.wood) };
     // A pale panel standing in for daylight through an opening, with its frame.
-    case 'window': return { geometry: new BoxGeometry(1.7, 1.5, 0.12), material: new MeshLambertMaterial({ color: new Color(0x9fc6d2), emissive: new Color(0x32505c) }) };
+    case 'window': return { geometry: new BoxGeometry(1.7, 1.5, 0.12), material: mat('paper', 0x9fc6d2, { emissive: 0x32505c, emissiveIntensity: 1 }) };
     // --- halls and rooms
-    case 'pew': return { geometry: new BoxGeometry(3.6, 0.36, 0.7), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 1.8, d: 0.4 } };
-    case 'dais': return { geometry: new BoxGeometry(7, 0.5, 4), material: mat(0x5a4a30), blocker: { x: 0, z: 0, w: 3.4, d: 2 } };
-    case 'desk': return { geometry: new BoxGeometry(1.9, 0.12, 0.7), material: mat(PALETTE.wood), blocker: { x: 0, z: 0, w: 1, d: 0.4 } };
-    case 'banner': return { geometry: new BoxGeometry(1.1, 3.2, 0.08), material: mat(0x6d3630) };
-    case 'furnace': return { geometry: new CylinderGeometry(1.25, 1.5, 2.6, 8), material: mat(0x3a2b22), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
-    case 'brazier': return { geometry: new CylinderGeometry(0.5, 0.34, 0.7, 8), material: new MeshLambertMaterial({ color: new Color(0x6b3a22), emissive: new Color(0x4a2008) }) };
+    case 'pew': return { geometry: new BoxGeometry(3.6, 0.36, 0.7), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 1.8, d: 0.4 } };
+    case 'dais': return { geometry: new BoxGeometry(7, 0.5, 4), material: mat('wood', 0x5a4a30), blocker: { x: 0, z: 0, w: 3.4, d: 2 } };
+    case 'desk': return { geometry: new BoxGeometry(1.9, 0.12, 0.7), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 1, d: 0.4 } };
+    case 'banner': return { geometry: new BoxGeometry(1.1, 3.2, 0.08), material: mat('cloth', 0x6d3630) };
+    case 'furnace': return { geometry: new CylinderGeometry(1.25, 1.5, 2.6, 8), material: mat('stone', 0x3a2b22), blocker: { x: 0, z: 0, w: 1.4, d: 1.4 } };
+    case 'brazier': return { geometry: new CylinderGeometry(0.5, 0.34, 0.7, 8), material: mat('metal', 0x6b3a22, { emissive: 0x4a2008, emissiveIntensity: 1 }) };
     // --- market
-    case 'stall': return { geometry: new BoxGeometry(2.6, 1.05, 1.5), material: mat(0x6a5230), blocker: { x: 0, z: 0, w: 1.4, d: 0.9 } };
-    case 'awning': return { geometry: new BoxGeometry(3.2, 0.1, 2.2), material: mat(0x8a4a3a) };
+    case 'stall': return { geometry: new BoxGeometry(2.6, 1.05, 1.5), material: mat('wood', 0x6a5230), blocker: { x: 0, z: 0, w: 1.4, d: 0.9 } };
+    case 'awning': return { geometry: new BoxGeometry(3.2, 0.1, 2.2), material: mat('cloth', 0x8a4a3a) };
     // --- winter
-    case 'snowdrift': return { geometry: new ConeGeometry(2.6, 1.1, 7), material: mat(0xdde9ee) };
-    case 'icespike': return { geometry: new ConeGeometry(1.1, 6.5, 5), material: new MeshLambertMaterial({ color: new Color(0xa9cfdb) }), blocker: { x: 0, z: 0, w: 0.9, d: 0.9 } };
-    case 'pine': return { geometry: new ConeGeometry(2.3, 6.5, 7), material: mat(0x1f3a30), blocker: { x: 0, z: 0, w: 0.9, d: 0.9 } };
+    // Snow is bright and slightly softer than bare earth, and takes almost no grain.
+    case 'snowdrift': return { geometry: new ConeGeometry(2.6, 1.1, 7), material: mat('earth', 0xdde9ee, { roughness: 0.8 }) };
+    // Ice is the smoothest thing in the game, so it is the one surface that visibly
+    // mirrors the sky now that there is a sky to mirror.
+    case 'icespike': return { geometry: new ConeGeometry(1.1, 6.5, 5), material: mat('stone', 0xa9cfdb, { roughness: 0.09, metalness: 0.05 }), blocker: { x: 0, z: 0, w: 0.9, d: 0.9 } };
+    case 'pine': return { geometry: new ConeGeometry(2.3, 6.5, 7), material: mat('foliage', 0x1f3a30), blocker: { x: 0, z: 0, w: 0.9, d: 0.9 } };
     // --- cultivation and water
-    case 'terrace': return { geometry: new BoxGeometry(11, 0.5, 3.4), material: mat(0x4a5a34), blocker: { x: 0, z: 0, w: 5.5, d: 1.7 } };
-    case 'reed': return { geometry: new CylinderGeometry(0.05, 0.07, 2.4, 4), material: mat(0x6d7a3e) };
-    case 'raft': return { geometry: new BoxGeometry(4.2, 0.24, 6.4), material: mat(0x5a4326), blocker: { x: 0, z: 0, w: 2.1, d: 3.2 } };
+    case 'terrace': return { geometry: new BoxGeometry(11, 0.5, 3.4), material: mat('earth', 0x4a5a34), blocker: { x: 0, z: 0, w: 5.5, d: 1.7 } };
+    case 'reed': return { geometry: new CylinderGeometry(0.05, 0.07, 2.4, 4), material: mat('foliage', 0x6d7a3e) };
+    case 'raft': return { geometry: new BoxGeometry(4.2, 0.24, 6.4), material: mat('wood', 0x5a4326), blocker: { x: 0, z: 0, w: 2.1, d: 3.2 } };
   }
 }
 
@@ -177,7 +189,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   const shellColour = description.interior?.wall ?? (cave ? PALETTE.ceiling : PALETTE.roomWall);
   const ceilingColour = description.interior?.ceiling
     ?? (cave ? PALETTE.ceiling : PALETTE.roomCeiling);
-  const ground = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(floorColour));
+  const ground = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(description.enclosed ? 'wood' : 'earth', floorColour));
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = castShadow;
   shell.add(ground);
@@ -195,7 +207,12 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     // White material: an InstancedMesh multiplies the material colour by the per-
     // instance colour, so tinting both meant every patch came out as the ground colour
     // squared — twenty-six near-black discs laid over the floor.
-    const patches = new InstancedMesh(new CircleGeometry(1, 10), mat(0xffffff), count);
+    // No `vertexColors` here. An InstancedMesh takes its per-instance tint from
+    // `setColorAt`, which three wires up on its own; asking for vertex colours as well
+    // makes the shader look for an attribute `CircleGeometry` does not have, reads
+    // zero, and paints twenty-six black discs up to twenty-two metres across over the
+    // foreground of every outdoor area.
+    const patches = new InstancedMesh(new CircleGeometry(1, 10), mat('earth', 0xffffff), count);
     patches.receiveShadow = castShadow;
     const base = new Color(floorColour);
     const matrix = new Matrix4();
@@ -223,7 +240,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
 
   if (description.enclosed) {
     const height = description.ceilingHeight ?? 14;
-    const ceiling = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat(ceilingColour));
+    const ceiling = new Mesh(new PlaneGeometry(description.size.x, description.size.z), mat('wood', ceilingColour));
     ceiling.rotation.x = Math.PI / 2;
     ceiling.position.y = height;
     shell.add(ceiling);
@@ -231,7 +248,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     for (const [sx, sz] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
       const wall = new Mesh(
         new PlaneGeometry(sx ? description.size.z : description.size.x, height),
-        mat(shellColour)
+        mat(description.enclosed ? 'wood' : 'stone', shellColour)
       );
       wall.position.set((sx * description.size.x) / 2, height / 2, (sz * description.size.z) / 2);
       wall.rotation.y = sx ? -sx * Math.PI / 2 : sz > 0 ? Math.PI : 0;
@@ -244,7 +261,7 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
     const [x1, z1] = path.from;
     const [x2, z2] = path.to;
     const length = Math.hypot(x2 - x1, z2 - z1);
-    const strip = new Mesh(new PlaneGeometry(path.width ?? 4, length), mat(path.color ?? PALETTE.path));
+    const strip = new Mesh(new PlaneGeometry(path.width ?? 4, length), mat('earth', path.color ?? PALETTE.path));
     strip.rotation.x = -Math.PI / 2;
     strip.rotation.z = -Math.atan2(x2 - x1, z2 - z1);
     strip.position.set((x1 + x2) / 2, 0.03, (z1 + z2) / 2);
@@ -254,10 +271,10 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
 
   // --- water
   for (const pool of description.water ?? []) {
-    const surface = new Mesh(new PlaneGeometry(pool.w, pool.d), mat(pool.color));
-    surface.rotation.x = -Math.PI / 2;
-    surface.position.set(pool.x, 0.05, pool.z);
-    shell.add(surface);
+    const pond = new Mesh(new PlaneGeometry(pool.w, pool.d), mat('stone', pool.color, { roughness: 0.06, metalness: 0.1 }));
+    pond.rotation.x = -Math.PI / 2;
+    pond.position.set(pool.x, 0.05, pool.z);
+    shell.add(pond);
   }
 
   // --- buildings: pale-green two-storey bamboo on wooden stakes over uneven ground
@@ -459,7 +476,7 @@ function buildHouse(b: { x: number; z: number; w: number; d: number; h: number; 
   if (base > 0) {
     for (const sx of [-b.w / 2 + 0.5, b.w / 2 - 0.5]) {
       for (const sz of [-b.d / 2 + 0.5, b.d / 2 - 0.5]) {
-        const stake = new Mesh(new CylinderGeometry(0.26, 0.3, base, 8), mat(PALETTE.wood));
+        const stake = new Mesh(new CylinderGeometry(0.26, 0.3, base, 8), mat('wood', PALETTE.wood));
         stake.position.set(b.x + sx, base / 2, b.z + sz);
         stake.castShadow = castShadow;
         house.add(stake);
@@ -468,13 +485,13 @@ function buildHouse(b: { x: number; z: number; w: number; d: number; h: number; 
   }
   const floors = b.floors ?? 1;
   for (let floor = 0; floor < floors; floor++) {
-    const storey = new Mesh(new BoxGeometry(b.w, b.h, b.d), mat(PALETTE.wall));
+    const storey = new Mesh(new BoxGeometry(b.w, b.h, b.d), mat('stone', PALETTE.wall));
     storey.position.set(b.x, base + b.h / 2 + floor * b.h, b.z);
     storey.castShadow = castShadow;
     storey.receiveShadow = castShadow;
     house.add(storey);
   }
-  const roof = new Mesh(new ConeGeometry(Math.max(b.w, b.d) * 0.78, 2.6, 4), mat(PALETTE.roof));
+  const roof = new Mesh(new ConeGeometry(Math.max(b.w, b.d) * 0.78, 2.6, 4), mat('thatch', PALETTE.roof));
   roof.rotation.y = Math.PI / 4;
   roof.position.set(b.x, base + b.h * floors + 1.3, b.z);
   roof.castShadow = castShadow;
@@ -497,34 +514,34 @@ export function dressInterior(root: Group, dressing: InteriorDressing[], castSha
   for (const item of dressing) {
     switch (item.kind) {
       case 'blanket': {
-        const blanket = new Mesh(new BoxGeometry(1.8, 0.1, 1.9), mat(0x8f9a86));
+        const blanket = new Mesh(new BoxGeometry(1.8, 0.1, 1.9), mat('cloth', 0x8f9a86));
         blanket.position.set(item.x, 0.48, item.z);
         blanket.castShadow = castShadow;
         root.add(blanket);
-        const pillow = new Mesh(new BoxGeometry(0.9, 0.16, 0.42), mat(0xb3b6a0));
+        const pillow = new Mesh(new BoxGeometry(0.9, 0.16, 0.42), mat('cloth', 0xb3b6a0));
         pillow.position.set(item.x, 0.52, item.z - 1.2);
         root.add(pillow);
         break;
       }
       case 'mullion': {
         for (const offset of [-0.55, 0, 0.55]) {
-          const bar = new Mesh(new BoxGeometry(0.07, 1.5, 0.16), mat(PALETTE.wood));
+          const bar = new Mesh(new BoxGeometry(0.07, 1.5, 0.16), mat('wood', PALETTE.wood));
           bar.position.set(item.x + offset, 1.85, item.z);
           root.add(bar);
         }
-        const sill = new Mesh(new BoxGeometry(1.95, 0.12, 0.3), mat(PALETTE.wood));
+        const sill = new Mesh(new BoxGeometry(1.95, 0.12, 0.3), mat('wood', PALETTE.wood));
         sill.position.set(item.x, 1.05, item.z);
         root.add(sill);
         break;
       }
       case 'stone-bag': {
-        const bag = new Mesh(new CylinderGeometry(0.22, 0.28, 0.3, 8), mat(0x6e6a52));
+        const bag = new Mesh(new CylinderGeometry(0.22, 0.28, 0.3, 8), mat('cloth', 0x6e6a52));
         bag.position.set(item.x, 0.15, item.z);
         bag.castShadow = castShadow;
         root.add(bag);
         // A few stones spilled beside it, because twelve is a number you can count.
         for (let i = 0; i < 4; i++) {
-          const stone = new Mesh(new ConeGeometry(0.08, 0.12, 5), mat(0x7fa89a));
+          const stone = new Mesh(new ConeGeometry(0.08, 0.12, 5), mat('stone', 0x7fa89a));
           stone.position.set(item.x + 0.32 + (i % 2) * 0.16, 0.06, item.z + 0.1 + Math.floor(i / 2) * 0.16);
           root.add(stone);
         }
