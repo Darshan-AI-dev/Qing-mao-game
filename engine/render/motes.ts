@@ -13,8 +13,35 @@
  * when it is overdone.
  */
 import {
-  AdditiveBlending, BufferAttribute, BufferGeometry, Color, Points, PointsMaterial, type Scene
+  AdditiveBlending, BufferAttribute, BufferGeometry, CanvasTexture, Color, Points, PointsMaterial,
+  type Scene, type Texture
 } from 'three';
+
+/**
+ * A soft round dot to draw each speck with.
+ *
+ * `PointsMaterial` with no map draws squares. At any size big enough to notice, a few
+ * hundred hard white squares read as dead pixels or dirt on the lens — in the clan hall
+ * they looked like a rendering fault rather than dust in the air. A radial falloff makes
+ * them specks of light instead, and costs one 32-pixel canvas for the whole game.
+ */
+let sprite: Texture | null = null;
+function moteSprite(): Texture | null {
+  if (sprite) return sprite;
+  const canvas = document.createElement('canvas');
+  canvas.width = 32;
+  canvas.height = 32;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+  const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+  gradient.addColorStop(0, 'rgba(255,255,255,1)');
+  gradient.addColorStop(0.35, 'rgba(255,255,255,0.55)');
+  gradient.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 32, 32);
+  sprite = new CanvasTexture(canvas);
+  return sprite;
+}
 
 export interface MoteStyle {
   /** How many, before the tier budget and reduced motion take their cut. */
@@ -66,10 +93,14 @@ export class Motes {
       geometry,
       new PointsMaterial({
         color: new Color(style.colour),
-        size: 0.17,
+        map: moteSprite(),
+        size: 0.22,
         sizeAttenuation: true,
         transparent: true,
-        opacity: 0.55,
+        // Lower than it looks like it should be: additive blending stacks wherever two
+        // specks overlap, and against a pale ground they were reading as white dots
+        // rather than as motes catching the light.
+        opacity: 0.34,
         depthWrite: false,
         blending: AdditiveBlending
       })
