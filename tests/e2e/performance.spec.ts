@@ -83,6 +83,13 @@ test('the high tier renders through its postprocessing chain', async ({ page }, 
 });
 
 test('frustum culling removes chunks the camera cannot see', async ({ page }, testInfo) => {
+  // Time to boot, skip a scene and build a 132-unit area before the measurement even
+  // starts. On a software rasteriser at desktop width a frame costs a few hundred
+  // milliseconds, so the default thirty seconds is spent on setup and the test times
+  // out at about thirty-two — which says nothing about culling, the thing it checks.
+  // What this asserts is behaviour, not speed; the frame budget test above is what
+  // guards cost, and it has its own numbers to fail on.
+  test.setTimeout(120_000);
   await openGame(page);
   await page.waitForFunction(() => window.qingMao.frameStats().drawCalls > 0, null, { timeout: 30_000 });
   await page.waitForSelector('#skipScene', { state: 'visible', timeout: 30_000 });
