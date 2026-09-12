@@ -39,7 +39,7 @@ export type PropKind =
   // the stones by the bed, so those have to exist as objects, not as narration.
   | 'bed' | 'table' | 'stool' | 'chest' | 'shelf' | 'window'
   // Area-archetype props, so a hall, a market and a forge are not the same empty box.
-  | 'pew' | 'dais' | 'stall' | 'awning' | 'furnace' | 'brazier' | 'desk'
+  | 'pew' | 'dais' | 'stall' | 'awning' | 'furnace' | 'brazier' | 'desk' | 'jar'
   | 'snowdrift' | 'pine' | 'icespike' | 'terrace' | 'reed' | 'raft' | 'banner';
 
 export interface AreaDescription {
@@ -155,6 +155,8 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
     // --- cultivation and water
     case 'terrace': return { geometry: new BoxGeometry(11, 0.5, 3.4), material: mat('earth', 0x4a5a34), blocker: { x: 0, z: 0, w: 5.5, d: 1.7 } };
     case 'reed': return { geometry: new CylinderGeometry(0.05, 0.07, 2.4, 4), material: mat('foliage', 0x6d7a3e) };
+    // The tavern is named for its wine and did not contain a single vessel.
+    case 'jar': return { geometry: jarGeometry(), material: surface('paper', 0xffffff, { vertexColors: true }), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
     case 'raft': return { geometry: new BoxGeometry(4.2, 0.24, 6.4), material: mat('wood', 0x5a4326), blocker: { x: 0, z: 0, w: 2.1, d: 3.2 } };
   }
 }
@@ -253,6 +255,17 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
       wall.position.set((sx * description.size.x) / 2, height / 2, (sz * description.size.z) / 2);
       wall.rotation.y = sx ? -sx * Math.PI / 2 : sz > 0 ? Math.PI : 0;
       shell.add(wall);
+    }
+
+    // Rooms are carpentered; caves are not.
+    if (!cave) {
+      const frame = interiorFrame(description.size.x, description.size.z, height, detailLevel());
+      if (frame) {
+        const timber = new Mesh(frame, surface('wood', 0xffffff, { vertexColors: true }));
+        timber.castShadow = castShadow;
+        timber.receiveShadow = castShadow;
+        shell.add(timber);
+      }
     }
   }
 
@@ -474,6 +487,95 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   }
 
   return { group: root, chunks, blockers, lanterns };
+}
+
+/** A glazed wine jar: swollen body, short neck, a lid. */
+function jarGeometry(): BufferGeometry {
+  const parts: BufferGeometry[] = [];
+  const body = new SphereGeometry(0.42, 9, 7);
+  body.scale(1, 1.18, 1);
+  body.translate(0, 0.5, 0);
+  parts.push(tinted(body, 0x5d6b62));
+  const neck = new CylinderGeometry(0.17, 0.24, 0.26, 8);
+  neck.translate(0, 1.02, 0);
+  parts.push(tinted(neck, 0x4c584f));
+  const lid = new CylinderGeometry(0.22, 0.2, 0.09, 8);
+  lid.translate(0, 1.19, 0);
+  parts.push(tinted(lid, 0x8a7a58));
+  return mergeGeometries(parts, false) ?? parts[0]!;
+}
+
+/**
+ * The timber frame of a room: rafters overhead, posts down the walls, a skirting board.
+ *
+ * Interiors were a box — four coloured planes and a floor — so the tavern, the Gu room
+ * and the clan hall were the same empty carton in different browns while the outdoors
+ * had grown houses, grass and a skyline. Overhead is the half of a room a phone player
+ * sees most, because the camera sits low and the ceiling fills the top of the frame the
+ * moment they look up, and there was nothing up there at all.
+ *
+ * All of it merges into one mesh, so a furnished room costs one draw call. A cave gets
+ * none of it: rafters in a grotto would be somebody's carpentry.
+ */
+function interiorFrame(sizeX: number, sizeZ: number, height: number, detail: Detail): BufferGeometry | null {
+  const parts: BufferGeometry[] = [];
+  const add = (geometry: BufferGeometry, x: number, y: number, z: number, hex: number) => {
+    geometry.translate(x, y, z);
+    parts.push(tinted(geometry, hex));
+  };
+  const beam = 0x4a3524;
+  const halfX = sizeX / 2;
+  const halfZ = sizeZ / 2;
+
+  // Rafters across the short axis, and a ridge beam down the long one.
+  const across = sizeX <= sizeZ;
+  const span = across ? sizeX : sizeZ;
+  const run = across ? sizeZ : sizeX;
+  const count = Math.max(3, Math.round(run / (detail === 'low' ? 6 : 3.2)));
+  for (let i = 0; i < count; i++) {
+    const at = (i / (count - 1) - 0.5) * (run - 1.4);
+    const rafter = across
+      ? new BoxGeometry(span - 0.4, 0.24, 0.3)
+      : new BoxGeometry(0.3, 0.24, span - 0.4);
+    add(rafter, across ? 0 : at, height - 0.42, across ? at : 0, beam);
+  }
+  add(
+    across ? new BoxGeometry(0.34, 0.34, run - 0.6) : new BoxGeometry(run - 0.6, 0.34, 0.34),
+    0, height - 0.15, 0, 0x3a2a1c
+  );
+
+  // Posts down each wall, and a skirting board where wall meets floor.
+  if (detail !== 'low') {
+    const posts = (length: number, along: 'x' | 'z', offset: number) => {
+      const spacing = Math.max(2, length / Math.max(2, Math.round(length / 4.5)));
+      for (let at = -length / 2 + spacing / 2; at < length / 2; at += spacing) {
+        add(
+          new BoxGeometry(0.26, height, 0.26),
+          along === 'x' ? at : offset,
+          height / 2,
+          along === 'x' ? offset : at,
+          beam
+        );
+      }
+    };
+    posts(sizeX, 'x', halfZ - 0.2);
+    posts(sizeX, 'x', -halfZ + 0.2);
+    posts(sizeZ, 'z', halfX - 0.2);
+    posts(sizeZ, 'z', -halfX + 0.2);
+  }
+  for (const [along, length, offset] of [
+    ['x', sizeX, halfZ - 0.12], ['x', sizeX, -halfZ + 0.12],
+    ['z', sizeZ, halfX - 0.12], ['z', sizeZ, -halfX + 0.12]
+  ] as const) {
+    add(
+      along === 'x' ? new BoxGeometry(length, 0.34, 0.18) : new BoxGeometry(0.18, 0.34, length),
+      along === 'x' ? 0 : offset,
+      0.17,
+      along === 'x' ? offset : 0,
+      0x3a2a1c
+    );
+  }
+  return parts.length ? mergeGeometries(parts, false) : null;
 }
 
 /**
@@ -745,6 +847,8 @@ function heightOffset(kind: PropKind): number {
     case 'banner': return 3.4;
     case 'furnace': return 1.3;
     case 'brazier': return 0.35;
+    // Built standing on its own base, so it only needs lifting off the floor.
+    case 'jar': return 0;
     case 'stall': return 0.52;
     case 'awning': return 2.3;
     case 'snowdrift': return 0.55;

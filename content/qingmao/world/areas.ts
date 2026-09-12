@@ -249,10 +249,30 @@ const tavern: AreaDescription = {
   enclosed: true,
   ceilingHeight: 9.4,
   timeOfDay: 0.66,
+  // A drinking house, not a storeroom. It held fourteen crates, five cones and four
+  // lamps, which is the same furniture the Gu room and the uncle's house had.
   props: [
-    { kind: 'crate', places: grid(14, 22, 1212) },
+    // The counter Keeper Lu works from, along the back wall, with the stock behind it.
+    { kind: 'dais', places: [{ x: -7, z: -6.5, rotation: 0, scale: 1 }] },
+    { kind: 'shelf', places: [-9, -6.4, -3.8].map((x) => ({ x, z: -12.4, rotation: 0, scale: 1.1 })) },
+    { kind: 'jar', places: [
+      { x: -9.4, z: -12.4, y: 0.1 }, { x: -8.2, z: -12.4, y: 0.1 }, { x: -6.6, z: -12.4, y: 0.1 },
+      { x: -4.2, z: -12.4, y: 0.1 }, { x: 5.6, z: -11.6 }, { x: 7.1, z: -11.4 }, { x: 6.4, z: -10.2 },
+      { x: -11.8, z: 4.2 }, { x: -11.4, z: 5.6 }
+    ] },
+    // Three tables with stools round them, which is what the room is for.
+    { kind: 'table', places: [
+      { x: -4, z: 2, scale: 1.5 }, { x: 6, z: -2, scale: 1.5 }, { x: 1, z: 8, scale: 1.5 }
+    ] },
+    { kind: 'stool', places: [
+      { x: -5.6, z: 2 }, { x: -2.4, z: 2 }, { x: -4, z: 3.6 },
+      { x: 4.4, z: -2 }, { x: 7.6, z: -2 }, { x: 6, z: -0.4 },
+      { x: -0.6, z: 8 }, { x: 2.6, z: 8 }, { x: 1, z: 9.6 }
+    ] },
+    { kind: 'crate', places: grid(6, 20, 1212) },
     // Keeper Lu at (-7, -4) and Jiang He at (6, -2) are people now, not cones.
     { kind: 'villager', places: [{ x: -4, z: 2 }, { x: 8, z: 6 }, { x: 0, z: 8 }] },
+    { kind: 'brazier', places: [{ x: 10, z: 0 }, { x: -11, z: -1 }] },
     { kind: 'lantern', places: [{ x: -9, z: -9 }, { x: 9, z: -9 }, { x: -9, z: 9 }, { x: 9, z: 9 }] }
   ]
 };
