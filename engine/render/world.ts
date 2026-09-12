@@ -124,7 +124,10 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
     // A post with a paper lamp on it. The post alone was a bare brown stick that read
     // as a pole planted in the floor, and in the Gu room one stood directly behind the
     // player and looked like part of him.
-    case 'lantern': return { geometry: lanternGeometry(), material: mat('paper', PALETTE.cloth), blocker: { x: 0, z: 0, w: 0.2, d: 0.2 } };
+    // Paper over a flame. It carries the light the area already places at its top, so
+    // now that bloom exists the shade should be the thing that glows rather than a
+    // slightly paler cylinder next to a point light.
+    case 'lantern': return { geometry: lanternGeometry(), material: surface('paper', 0xffffff, { vertexColors: true, emissive: 0xffa64d, emissiveIntensity: 0.55 }), blocker: { x: 0, z: 0, w: 0.2, d: 0.2 } };
     case 'pillar': return { geometry: new CylinderGeometry(1.5, 2.1, 22, 7), material: mat('stone', PALETTE.stone), blocker: { x: 0, z: 0, w: 1.8, d: 1.8 } };
     case 'crate': return { geometry: new BoxGeometry(1.2, 1, 1.2), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 0.7, d: 0.7 } };
     case 'orchid': return { geometry: new ConeGeometry(0.22, 0.6, 5), material: mat('foliage', PALETTE.orchid) };
@@ -819,7 +822,12 @@ function lanternGeometry(): BufferGeometry {
   lamp.translate(0, 0.55, 0);
   const cap = new CylinderGeometry(0.5, 0.12, 0.3, 8);
   cap.translate(0, 1.18, 0);
-  return mergeGeometries([post, lamp, cap], false) ?? post;
+  // The shade is near-white so the emissive reads on it; the post and cap are dark
+  // enough that the same glow only warms them.
+  return mergeGeometries(
+    [tinted(post, 0x4a3524), tinted(lamp, 0xfff3d6), tinted(cap, 0x5a4630)],
+    false
+  ) ?? post;
 }
 
 function heightOffset(kind: PropKind): number {

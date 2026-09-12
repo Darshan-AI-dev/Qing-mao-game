@@ -18,6 +18,7 @@ import {
 import { Sky } from './sky';
 import { setSurfaceTier, usesEnvironment } from './surfaces';
 import { Post } from './post';
+import { Motes } from './motes';
 import { AdaptiveQuality, BUDGETS, type TierName } from './quality';
 
 export interface Chunk {
@@ -58,6 +59,8 @@ export class Renderer {
   /** Follows the player through dark areas. See `setCarriedLight`. */
   private carried: PointLight | null = null;
   private sky: Sky;
+  /** Dust and pollen. Always on; the area decides how much and what colour. */
+  readonly motes: Motes;
   /** Bloom, on the high tier only. Null everywhere else. */
   private post: Post | null = null;
   private lastFrame = performance.now();
@@ -83,6 +86,7 @@ export class Renderer {
     // first area is built.
     setSurfaceTier(tier);
     this.sky = new Sky(this.renderer);
+    this.motes = new Motes(this.scene, BUDGETS[tier].particles, false);
 
     const budget = BUDGETS[tier];
     this.renderer.shadowMap.enabled = budget.shadows !== 'blob';
@@ -263,6 +267,16 @@ export class Renderer {
     this.scene.environment = wantsEnvironment ? environment : null;
     // Interiors reflect their own dim surroundings, not a bright outdoor dome.
     this.scene.environmentIntensity = underground ? 0.25 : indoor ? 0.5 : 1;
+
+    // What is in the air here. A room has dust that rises off a hearth, a cave has
+    // almost nothing and it hangs, outdoors has pollen on a slow breeze.
+    this.motes.configure(
+      underground
+        ? { density: 90, colour: 0x9fb4c0, reach: 22, ceiling: 9, rise: 0.05 }
+        : indoor
+          ? { density: 150, colour: 0xffe0b0, reach: 16, ceiling: 7, rise: 0.22 }
+          : { density: 520, colour: 0xfff0cf, reach: 34, ceiling: 14, rise: 0.09 }
+    );
   }
 
   resize(): void {
@@ -318,6 +332,7 @@ export class Renderer {
     // quad and nothing else: one draw call, one triangle, and a frame budget test that
     // could never fail. Resetting by hand once a frame accumulates the whole frame
     // instead, scene and postprocessing together, which is the real cost anyway.
+    this.motes.update(Math.min(0.05, dt / 1000), this.camera.position.x, this.camera.position.z);
     this.renderer.info.autoReset = false;
     this.renderer.info.reset();
     if (this.post) this.post.render();
