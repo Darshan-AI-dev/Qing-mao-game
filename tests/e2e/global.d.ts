@@ -32,6 +32,9 @@ declare global {
         visitArea(areaId: string): boolean;
         jumpToBeat(beatId: string): boolean;
         walkToObjective(): boolean;
+        narrative(): { active: string | null; sets: string[] };
+        setNarrative(id: string | null): Promise<boolean>;
+        ledgerText(chapter: number): string | null;
         folkHere(): { id: string; name: string; distance: number; next: string | null }[];
         walkToFolk(): string | null;
         speakToNearest(): string | null;

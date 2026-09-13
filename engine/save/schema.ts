@@ -90,6 +90,11 @@ export interface SettingsState {
   /** 0.2 to 2.0. Touch and mouse share it; the gamepad scales from the same value. */
   lookSensitivity: number;
   refinementFailure: boolean;
+  /**
+   * Which narrative set the prose comes from, or null for whatever the content files
+   * currently say. Archived sets make a rewrite reversible from the Options panel.
+   */
+  narrative: string | null;
   guUpkeep: boolean;
   /**
    * Print a boss phase's answer without recalling or discovering it.
@@ -157,6 +162,7 @@ export function defaultSettings(): SettingsState {
     invertLookY: false,
     lookSensitivity: 1,
     refinementFailure: true,
+    narrative: null,
     guUpkeep: true,
     keymap: {
       forward: 'KeyW', back: 'KeyS', left: 'KeyA', right: 'KeyD',

@@ -8,7 +8,7 @@
  */
 import { Vector3, type Mesh, type Object3D } from 'three';
 import { areasById, charactersById, actForChapter } from '../canon/index';
-import { graph, illustrationsById, loadScript, t } from '../content/qingmao/index';
+import { activeNarrativeId, applyNarrative, graph, illustrationsById, loadScript, narrativeSets, t } from '../content/qingmao/index';
 import { AREAS, areaDescription } from '../content/qingmao/world/areas';
 import { bus } from './core/bus';
 import { Rng } from './core/rng';
@@ -1599,6 +1599,17 @@ class Game implements TimelineHost {
     setSelect('difficulty', settings.difficulty);
     setSelect('intensity', settings.intensity);
     setSelect('approach', settings.approach);
+    // The registry decides what is on offer; the markup ships only the "current" row.
+    const narrativeSelect = maybe<HTMLSelectElement>('narrative');
+    if (narrativeSelect && narrativeSelect.options.length <= 1) {
+      for (const set of narrativeSets) {
+        const option = document.createElement('option');
+        option.value = set.id;
+        option.textContent = `${set.label} — ${set.note}`;
+        narrativeSelect.append(option);
+      }
+    }
+    setSelect('narrative', settings.narrative ?? '');
     setSelect('tier', settings.tier);
     setSelect('fontChoice', settings.font);
     setSelect('textSize', String(settings.textSize));
@@ -1638,6 +1649,23 @@ class Game implements TimelineHost {
                       'fightHints'] as const) {
       const node = maybe<HTMLInputElement>(id);
       if (node) (settings as unknown as Record<string, unknown>)[id] = node.checked;
+    }
+    // The narrative set is applied rather than merely stored: the prose has to change
+    // when Apply is pressed, not on the next launch. An empty value means the live
+    // content files, which is what a fresh save starts on.
+    const narrative = maybe<HTMLSelectElement>('narrative');
+    if (narrative) {
+      const chosen = narrative.value === '' ? null : narrative.value;
+      if (chosen !== settings.narrative) {
+        settings.narrative = chosen;
+        void applyNarrative(chosen).then((applied) => {
+          bus.emit('toast', {
+            text: applied
+              ? `Prose set to ${chosen === null ? 'the current text' : chosen}.`
+              : `No narrative set named ${chosen ?? ''}.`
+          });
+        });
+      }
     }
     this.save.reader.lens = maybe<HTMLInputElement>('lensToggle')?.checked ?? this.save.reader.lens;
     this.save.reader.veteran = maybe<HTMLInputElement>('veteranToggle')?.checked ?? this.save.reader.veteran;
@@ -1950,6 +1978,10 @@ async function boot(): Promise<void> {
     if (result.original) await store.write('legacy', { keptFrom: result.migratedFrom, original: result.original });
   }
 
+  // Apply the saved narrative set before anything reads a line. Sets load on demand,
+  // and `t()` and the ledger are synchronous everywhere below this point.
+  if (result.save.settings.narrative) await applyNarrative(result.save.settings.narrative);
+
   const stored = result.save.settings.tier;
   let tier: TierName;
   if (stored === 'auto') {
@@ -1983,6 +2015,9 @@ async function boot(): Promise<void> {
       visitArea: (areaId: string) => game.visitArea(areaId),
       jumpToBeat: (beatId: string) => game.jumpToBeat(beatId),
       walkToObjective: () => game.walkToObjective(),
+      narrative: () => ({ active: activeNarrativeId(), sets: narrativeSets.map((n) => n.id) }),
+      setNarrative: (id: string | null) => applyNarrative(id),
+      ledgerText: (chapter: number) => graph.chapters.find((c) => c.chapter === chapter)?.ledger ?? null,
       folkHere: () => game.folkHere(),
       walkToFolk: () => game.walkToFolk(),
       speakToNearest: () => game.speakToNearest(),

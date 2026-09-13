@@ -435,6 +435,45 @@ for (const term of glossary) {
   }
 }
 
+// ------------------------------------------------------ narrative sets are complete
+//
+// An archived set is only worth having if switching back to it is exact. This checks
+// that every line, chapter and string the live files contain is present in each set,
+// so a set captured before a rewrite can restore all of it and not most of it.
+const narrativeDir = join(root, 'content/qingmao/narrative/sets');
+if (existsSync(narrativeDir)) {
+  const liveLines = new Map();
+  for (const script of scripts) {
+    for (const [index, command] of (script.data.commands ?? []).entries()) {
+      if (command.op === 'line' && typeof command.text === 'string') {
+        liveLines.set(`${script.data.beat}#${index}`, command.text);
+      }
+    }
+  }
+  for (const file of readdirSync(narrativeDir)) {
+    if (!file.endsWith('.json')) continue;
+    const set = JSON.parse(readFileSync(join(narrativeDir, file), 'utf8'));
+    const missingLines = [...liveLines.keys()].filter((key) => !(key in set.lines));
+    const missingChapters = ledger.filter((row) => !(String(row.chapter) in set.ledger));
+    const missingStrings = Object.keys(strings).filter((key) => !(key in set.strings));
+    if (missingLines.length) {
+      fail('narrative', `set "${set.id}" is missing ${missingLines.length} line(s), e.g. ${missingLines[0]} — re-run tools/snapshot-narrative.mjs`);
+    }
+    if (missingChapters.length) {
+      fail('narrative', `set "${set.id}" is missing ${missingChapters.length} ledger chapter(s), e.g. ${missingChapters[0].chapter}`);
+    }
+    if (missingStrings.length) {
+      fail('narrative', `set "${set.id}" is missing ${missingStrings.length} ui string(s), e.g. ${missingStrings[0]}`);
+    }
+  }
+  const registry = JSON.parse(readFileSync(join(root, 'content/qingmao/narrative/index.json'), 'utf8'));
+  for (const entry of registry.sets ?? []) {
+    if (!existsSync(join(narrativeDir, `${entry.id}.json`))) {
+      fail('narrative', `the registry lists "${entry.id}" but there is no set file for it`);
+    }
+  }
+}
+
 // ----------------------------------------------------------------------- report
 const summary = {
   beats: beats.length,

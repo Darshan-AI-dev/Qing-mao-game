@@ -84,6 +84,43 @@ test('the Legacy file is fixed canon plus player texture', async ({ page }) => {
   expect(legacy.player).toHaveProperty('exposure');
 });
 
+test('an archived narrative set restores the prose exactly', async ({ page }) => {
+  // The point of archiving the text is that a rewrite is reversible. If switching back
+  // returns something merely similar, the archive is worthless — so this compares a
+  // scene line and a ledger chapter before and after a round trip through the set.
+  await openGame(page);
+  const sets = await page.evaluate(() => window.qingMao.debug.narrative());
+  expect(sets.sets, 'no narrative sets are registered').toContain('house');
+  expect(sets.active, 'a fresh save should start on the live content files').toBeNull();
+
+  const before = await page.evaluate(() => ({
+    ledger7: window.qingMao.debug.ledgerText(7),
+    ledger200: window.qingMao.debug.ledgerText(200)
+  }));
+  expect(before.ledger7).toBeTruthy();
+  expect(before.ledger200).toBeTruthy();
+
+  const applied = await page.evaluate(() => window.qingMao.debug.setNarrative('house'));
+  expect(applied, 'the archived set did not load').toBe(true);
+  const during = await page.evaluate(() => ({
+    active: window.qingMao.debug.narrative().active,
+    ledger7: window.qingMao.debug.ledgerText(7),
+    ledger200: window.qingMao.debug.ledgerText(200)
+  }));
+  expect(during.active).toBe('house');
+  expect(during.ledger7, 'the archive changed chapter 7').toBe(before.ledger7);
+  expect(during.ledger200, 'the archive changed chapter 200').toBe(before.ledger200);
+
+  // And back off it again, which is the direction that matters after a bad rewrite.
+  await page.evaluate(() => window.qingMao.debug.setNarrative(null));
+  const after = await page.evaluate(() => ({
+    active: window.qingMao.debug.narrative().active,
+    ledger7: window.qingMao.debug.ledgerText(7)
+  }));
+  expect(after.active).toBeNull();
+  expect(after.ledger7).toBe(before.ledger7);
+});
+
 test('a default Legacy exists so the sequel runs standalone', async ({ page }) => {
   await openTitle(page);
   await waitForGame(page);

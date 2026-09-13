@@ -1,0 +1,9 @@
+{
+  "sets": [
+    {
+      "id": "house",
+      "label": "House prose",
+      "note": "The game as originally written, in its own voice."
+    }
+  ]
+}
