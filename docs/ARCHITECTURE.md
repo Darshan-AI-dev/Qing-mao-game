@@ -47,6 +47,51 @@ Inserting a beat between two others changes nothing else. `legacyStep` exists on
 a pre-v5 save can be mapped onto the graph once, at migration time: legacy step *N*
 means every beat with `legacyStep <= N` is complete, with prerequisites closed over.
 
+## Swapping the prose
+
+The text the game speaks can be replaced wholesale and put back, which is what makes a
+rewrite safe to attempt. A *narrative set* is one JSON file under
+`content/qingmao/narrative/sets/` holding every scene line, every ledger chapter and
+every UI string, and `content/qingmao/narrative/index.json` lists the ones the Options
+panel offers under **Story text**.
+
+Lines are keyed `<beat id>#<command index>`, which is why the beat IDs above have to be
+stable: a set written against today's scripts has to still find its lines after a script
+gains a command. A key that no longer resolves is simply not applied — it cannot break a
+scene — so the lint rule is what catches drift:
+
+```bash
+node tools/lint-content.mjs   # fails if a set is missing a line, chapter or string
+```
+
+`applyNarrative(id)` patches a cached clone of each script as it loads and overrides
+`t()`; passing `null` goes back to the live content files. Nothing is rewritten on disk,
+so the files under `content/qingmao/scripts/` remain the source of truth and any set can
+be abandoned by selecting another one.
+
+Two sets ship:
+
+- **house** — the game exactly as first written, captured by
+  `node tools/snapshot-narrative.mjs house "House prose" "..."`. It exists so that any
+  later rewrite is reversible, and an e2e test asserts the round trip through it changes
+  nothing at all.
+- **ledger-voice** — the same story in a colder, plainer register: shorter sentences, the
+  Gu world's own vocabulary in place of modern business idiom, and none of the
+  chapter-number asides that had leaked into Fang Yuan's narration.
+
+To write your own, let the tool do the mapping — knowing which line sits where in the
+story is the hard part, and the template answers it:
+
+```bash
+node tools/import-narrative.mjs --template mine.json   # all 316 lines in story order,
+                                                       # tagged with beat, chapters, speaker
+# fill in the text you want to change, leave the rest alone, then:
+node tools/import-narrative.mjs --from mine.json --id mine --label "My wording"
+```
+
+A partial pass is fine: anything left untouched falls back to the house text, so the game
+stays playable from the first line you replace.
+
 ## The event bus
 
 Every system publishes through `engine/core/bus.ts` and nothing reaches into another

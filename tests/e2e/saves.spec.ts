@@ -121,6 +121,42 @@ test('an archived narrative set restores the prose exactly', async ({ page }) =>
   expect(after.ledger7).toBe(before.ledger7);
 });
 
+test('a rewritten narrative set changes the prose and reverting puts it back', async ({ page }) => {
+  // The house set proves a round trip is lossless. This proves the other half: that a
+  // rewrite set actually takes effect. A switcher that silently kept showing the old
+  // words would pass the test above and be useless.
+  await openGame(page);
+  const sets = await page.evaluate(() => window.qingMao.debug.narrative());
+  expect(sets.sets, 'the rewrite set is not registered').toContain('ledger-voice');
+
+  const live = await page.evaluate(() => ({
+    ledger1: window.qingMao.debug.ledgerText(1),
+    ledger200: window.qingMao.debug.ledgerText(200)
+  }));
+
+  expect(await page.evaluate(() => window.qingMao.debug.setNarrative('ledger-voice'))).toBe(true);
+  const rewritten = await page.evaluate(() => ({
+    active: window.qingMao.debug.narrative().active,
+    ledger1: window.qingMao.debug.ledgerText(1),
+    ledger200: window.qingMao.debug.ledgerText(200)
+  }));
+  expect(rewritten.active).toBe('ledger-voice');
+  expect(rewritten.ledger1, 'the rewrite did not reach chapter 1').not.toBe(live.ledger1);
+  expect(rewritten.ledger1?.length ?? 0).toBeGreaterThan(40);
+  expect(rewritten.ledger200, 'the rewrite did not reach the last chapter').not.toBe(live.ledger200);
+
+  // Reverting is the escape hatch the archive exists for, so it has to be exact.
+  await page.evaluate(() => window.qingMao.debug.setNarrative(null));
+  const reverted = await page.evaluate(() => ({
+    active: window.qingMao.debug.narrative().active,
+    ledger1: window.qingMao.debug.ledgerText(1),
+    ledger200: window.qingMao.debug.ledgerText(200)
+  }));
+  expect(reverted.active).toBeNull();
+  expect(reverted.ledger1).toBe(live.ledger1);
+  expect(reverted.ledger200).toBe(live.ledger200);
+});
+
 test('a default Legacy exists so the sequel runs standalone', async ({ page }) => {
   await openTitle(page);
   await waitForGame(page);

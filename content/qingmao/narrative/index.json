@@ -4,6 +4,11 @@
       "id": "house",
       "label": "House prose",
       "note": "The game as originally written, in its own voice."
+    },
+    {
+      "id": "ledger-voice",
+      "label": "Ledger voice",
+      "note": "The same story told in a colder, plainer register: shorter sentences, the Gu world's own vocabulary, and none of the winking."
     }
   ]
 }
