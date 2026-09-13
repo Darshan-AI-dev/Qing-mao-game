@@ -515,6 +515,58 @@ class Game implements TimelineHost {
         if (!this.blocked(x, z) && this.objectiveReachable(x, z)) return { x, z };
       }
     }
+    // Small rooms never reached either search above.
+    //
+    // The spawn radius is `size.z / 2 - 6`, and the floor is `OBJECTIVE_RANGE + 1.5`.
+    // A 26-unit room gives 7 against a floor of 7.5, so both loops break before testing
+    // a single candidate and the blind fallback below was the only thing that ever ran
+    // — unchecked. In the Gu room that put the player at (0, 7.5), which is inside the
+    // blocker of the lantern at (0, 8), with the post standing between him and the
+    // camera and filling the frame. The chapter 7 room, entered that way every time.
+    //
+    // So: sweep for somewhere unblocked at whatever distance the room actually has. The
+    // floor is there to stop the player spawning already inside the objective's range;
+    // in a room too small to honour it, being near the wall beats being inside a post.
+    // Whether a prop stands in the stretch the camera occupies behind the player.
+    //
+    // `clear` cannot answer this in a small room: it uses `blocked`, which also reports
+    // the area bounds, and in a 26-unit room the camera necessarily sits beyond them —
+    // so `clear` is false everywhere and the strict pass below found nothing at all.
+    // The camera is allowed to be near a wall. It is not allowed to have a lantern post
+    // in front of it. Sampled at twice the density, because a post is about a metre
+    // wide and one sample per metre can step straight over it.
+    const propInTheWay = (px: number, pz: number): boolean =>
+      this.blockers.some(
+        (b) => Math.abs(px - b.x) < b.w + 0.5 && Math.abs(pz - b.z) < b.d + 0.5
+      );
+    const cameraLaneClear = (x: number, z: number): boolean => {
+      const distance = Math.hypot(x, z);
+      if (distance < 0.001) return true;
+      const steps = Math.max(6, Math.ceil(camera * 2));
+      for (let i = 1; i <= steps; i++) {
+        const out = 1 + (i / steps) * (camera / distance);
+        if (propInTheWay(x * out, z * out)) return false;
+      }
+      return true;
+    };
+
+    // Two passes: somewhere with a clear view first, then merely somewhere solid.
+    // Standing clear of the post is not enough on its own — at (0, 7) the player is
+    // outside the Gu room lantern's blocker and the lantern is still at (0, 8), which
+    // is between him and a camera at 11.8. `clear` is what tests the stretch the camera
+    // occupies, and it is the check the small-room path was missing.
+    for (const strict of [true, false]) {
+      for (const distance of [radius, radius * 0.85, radius * 0.7]) {
+        if (distance < 2) break;
+        for (let i = 0; i < 24; i++) {
+          const angle = (i % 2 === 0 ? 1 : -1) * Math.ceil(i / 2) * (Math.PI / 12);
+          const x = Math.sin(angle) * distance;
+          const z = Math.cos(angle) * distance;
+          if (this.blocked(x, z)) continue;
+          if (!strict || cameraLaneClear(x, z)) return { x, z };
+        }
+      }
+    }
     return { x: 0, z: Math.max(floor, radius) };
   }
 

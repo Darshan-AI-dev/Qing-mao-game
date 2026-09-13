@@ -218,6 +218,14 @@ const guRoom: AreaDescription = {
     { kind: 'table', places: [{ x: -4.5, z: 2 }, { x: 4.5, z: 2 }] },
     { kind: 'orchid', places: grid(18, 2.6, 4177).map((pl) => ({ ...pl, x: pl.x - 4.5, z: pl.z + 2, y: 0.82 })) },
     { kind: 'orchid', places: grid(18, 2.6, 913).map((pl) => ({ ...pl, x: pl.x + 4.5, z: pl.z + 2, y: 0.82 })) },
+    // The Moonlight Gu themselves, on the trays this room feeds them from. The clan's
+    // signature Gu is the first upkeep the player ever pays and it had never once been
+    // on screen — in the room built to hold every Gu the clan owns.
+    { kind: 'moth', places: [
+      { x: -5.1, z: 1.4, y: 0.95, rotation: 0.4 }, { x: -3.9, z: 2.7, y: 0.95, rotation: 2.1 },
+      { x: -4.6, z: 3.1, y: 0.95, rotation: 4.4 }, { x: 4.2, z: 1.6, y: 0.95, rotation: 1.2 },
+      { x: 5.2, z: 2.9, y: 0.95, rotation: 3.6 }, { x: 3.8, z: 2.2, y: 0.95, rotation: 5.5 }
+    ] },
     { kind: 'chest', places: [{ x: -8, z: 8 }, { x: 8, z: 8 }, { x: 0, z: 10.5 }] },
     // The figure behind the counter is Elder Feng, who runs this room and talks.
     { kind: 'lantern', places: [{ x: -8.5, z: -6 }, { x: 8.5, z: -6 }, { x: 0, z: 8 }] }

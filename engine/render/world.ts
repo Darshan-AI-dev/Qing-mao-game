@@ -12,7 +12,7 @@
 import {
   BoxGeometry, BufferAttribute, CircleGeometry, Color, ConeGeometry, CylinderGeometry, DoubleSide,
   Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, SphereGeometry,
-  BufferGeometry, PlaneGeometry, Quaternion, RingGeometry, Vector3, type Material
+  BufferGeometry, CapsuleGeometry, PlaneGeometry, Quaternion, RingGeometry, Vector3, type Material
 } from 'three';
 import { detailLevel, surface, type Detail, type Surface, type SurfaceOptions } from './surfaces';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
@@ -39,7 +39,7 @@ export type PropKind =
   // the stones by the bed, so those have to exist as objects, not as narration.
   | 'bed' | 'table' | 'stool' | 'chest' | 'shelf' | 'window'
   // Area-archetype props, so a hall, a market and a forge are not the same empty box.
-  | 'pew' | 'dais' | 'stall' | 'awning' | 'furnace' | 'brazier' | 'desk' | 'jar'
+  | 'pew' | 'dais' | 'stall' | 'awning' | 'furnace' | 'brazier' | 'desk' | 'jar' | 'moth'
   | 'snowdrift' | 'pine' | 'icespike' | 'terrace' | 'reed' | 'raft' | 'banner';
 
 export interface AreaDescription {
@@ -100,7 +100,11 @@ const CHUNK_SIZE = 48;
 const mat = (kind: Surface, hex: number, options: SurfaceOptions = {}) => surface(kind, hex, options);
 
 const PALETTE = {
-  grass: 0x4f6c4e, path: 0x7d7758, wood: 0x49331f, roof: 0x27494a, wall: 0x8f8d64,
+  // `wall` was a khaki tan. The canon bible calls the village "pale-green two-storey
+  // bamboo and wood houses on wooden stakes", and the areas file has repeated that
+  // phrase in a comment since it was written while rendering the houses the wrong
+  // colour entirely. Split bamboo weathers to a pale green, so that is what it is.
+  grass: 0x4f6c4e, path: 0x7d7758, wood: 0x49331f, roof: 0x27494a, wall: 0x9db089,
   rock: 0x3e5457, bamboo: 0x38744c, leaf: 0x265f45, stone: 0x4a5458, water: 0x2f6f86,
   cloth: 0xa6a383, orchid: 0xbcc8ee, ceiling: 0x1b2326, gold: 0xf0b047,
   // A room is not a cave. Interiors get bamboo and boards rather than wet rock.
@@ -130,7 +134,9 @@ function propGeometry(kind: PropKind): { geometry: BufferGeometry; material: Mat
     case 'lantern': return { geometry: lanternGeometry(), material: surface('paper', 0xffffff, { vertexColors: true, emissive: 0xffa64d, emissiveIntensity: 0.55 }), blocker: { x: 0, z: 0, w: 0.2, d: 0.2 } };
     case 'pillar': return { geometry: new CylinderGeometry(1.5, 2.1, 22, 7), material: mat('stone', PALETTE.stone), blocker: { x: 0, z: 0, w: 1.8, d: 1.8 } };
     case 'crate': return { geometry: new BoxGeometry(1.2, 1, 1.2), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 0.7, d: 0.7 } };
-    case 'orchid': return { geometry: new ConeGeometry(0.22, 0.6, 5), material: mat('foliage', PALETTE.orchid) };
+    case 'orchid': return { geometry: orchidGeometry(), material: surface('foliage', 0xffffff, { vertexColors: true }) };
+    // A Gu, visible at last. Faintly luminous so it can be picked out on a tray.
+    case 'moth': return { geometry: mothGeometry(), material: surface('cloth', 0xffffff, { vertexColors: true, emissive: 0x9fb4ff, emissiveIntensity: 0.7, roughness: 0.5 }) };
     case 'bed': return { geometry: new BoxGeometry(2.0, 0.42, 3.1), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 1.1, d: 1.7 } };
     case 'table': return { geometry: new BoxGeometry(1.5, 0.08, 0.95), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 0.8, d: 0.55 } };
     case 'stool': return { geometry: new CylinderGeometry(0.26, 0.3, 0.44, 8), material: mat('wood', PALETTE.wood), blocker: { x: 0, z: 0, w: 0.3, d: 0.3 } };
@@ -497,6 +503,66 @@ export function buildArea(description: AreaDescription, budget: { instanceBudget
   return { group: root, chunks, blockers, lanterns };
 }
 
+/**
+ * A moon orchid, as the canon bible describes it: "moon orchids with jade stems and
+ * pearl-bright centres on the far bank".
+ *
+ * It was a five-sided cone. Both named features — the jade stem and the bright centre —
+ * were missing from the one plant the source stops to describe, and it is the plant the
+ * Moonlight Gu are fed on, so the player sees it on the river bank at the awakening and
+ * again on every tray in the Gu room.
+ */
+function orchidGeometry(): BufferGeometry {
+  const parts: BufferGeometry[] = [];
+  const stem = new CylinderGeometry(0.014, 0.022, 0.44, 5);
+  stem.translate(0, 0.22, 0);
+  parts.push(tinted(stem, 0x3f7d63));
+  for (const side of [-1, 1]) {
+    const leaf = new BoxGeometry(0.19, 0.012, 0.05);
+    leaf.translate(side * 0.09, 0, 0);
+    leaf.rotateZ(side * 0.5);
+    leaf.translate(0, 0.09, side * 0.02);
+    parts.push(tinted(leaf, 0x35704f));
+  }
+  for (let i = 0; i < 5; i++) {
+    const angle = (i / 5) * Math.PI * 2;
+    const petal = new BoxGeometry(0.13, 0.014, 0.055);
+    petal.translate(0.075, 0, 0);
+    petal.rotateZ(-0.34);
+    petal.rotateY(angle);
+    petal.translate(0, 0.47, 0);
+    parts.push(tinted(petal, i % 2 === 0 ? 0xcdd8f2 : 0xb9c6ea));
+  }
+  const pearl = new SphereGeometry(0.038, 7, 5);
+  pearl.translate(0, 0.485, 0);
+  parts.push(tinted(pearl, 0xfdfbff));
+  return mergeGeometries(parts, false) ?? parts[0]!;
+}
+
+/**
+ * A Moonlight Gu on its tray: the clan's signature Gu, and the first upkeep the player
+ * ever pays. The Gu room's own comment says the orchid trays are "what the Moonlight Gu
+ * are fed out of", and there was no Gu anywhere in the room — or in the game. It is a
+ * pale moth, small, and it glows just enough to be found among the flowers.
+ */
+function mothGeometry(): BufferGeometry {
+  const parts: BufferGeometry[] = [];
+  // Sized to be findable. At the first pass it was two centimetres across and simply
+  // could not be seen on a tray from standing height, which defeats the point of
+  // putting the clan's signature Gu on screen at all.
+  const body = new CapsuleGeometry(0.036, 0.08, 3, 6);
+  body.rotateX(Math.PI / 2);
+  parts.push(tinted(body, 0xe7e2f2));
+  for (const side of [-1, 1]) {
+    const wing = new BoxGeometry(0.16, 0.008, 0.11);
+    wing.translate(side * 0.088, 0, 0);
+    wing.rotateZ(side * -0.3);
+    wing.rotateY(side * 0.25);
+    parts.push(tinted(wing, 0xf2eeff));
+  }
+  return mergeGeometries(parts, false) ?? parts[0]!;
+}
+
 /** A glazed wine jar: swollen body, short neck, a lid. */
 function jarGeometry(): BufferGeometry {
   const parts: BufferGeometry[] = [];
@@ -703,6 +769,13 @@ function tinted(geometry: BufferGeometry, hex: number): BufferGeometry {
  */
 function bambooGeometry(detail: Detail): BufferGeometry {
   const parts: BufferGeometry[] = [tinted(new CylinderGeometry(0.11, 0.16, 9, 6), PALETTE.bamboo)];
+  // The spear-sharp tip. The source describes Qing Mao's bamboo as straight and sharp
+  // at the top, and the comment above this function has claimed as much since it was
+  // written, but the culm was a flat-topped cylinder — the one detail the text actually
+  // specifies about the plant the mountain is named for was the one thing missing.
+  const tip = new ConeGeometry(0.11, 0.85, 6);
+  tip.translate(0, 4.92, 0);
+  parts.push(tinted(tip, 0x4a8a58));
   // Nodes: the rings a bamboo is segmented by, and the cue that reads as bamboo
   // rather than as a pole, even in silhouette.
   const nodes = detail === 'low' ? 3 : 5;
@@ -847,7 +920,8 @@ function heightOffset(kind: PropKind): number {
     case 'lantern': return 3.1;
     case 'pillar': return 11;
     case 'crate': return 0.5;
-    case 'orchid': return 0.3;
+    case 'orchid': return 0;
+    case 'moth': return 0;
     case 'bed': return 0.42;
     case 'table': return 0.78;
     case 'stool': return 0.22;
