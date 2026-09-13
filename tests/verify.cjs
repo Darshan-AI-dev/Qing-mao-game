@@ -276,6 +276,36 @@ check('Reader\'s Lens notes exist on every scene', scripts.every((s) => !!s.lens
 check('veteran notes are only on scenes that opted in',
   scripts.every((s) => s.veteran === undefined || Array.isArray(s.veteran)));
 
+// ---------------------------------------------------- narrative set writing
+// The rules above only see the live content files. A narrative set is prose the
+// game can be switched to, so it has to clear the same bar — otherwise a set
+// could ship a three-line wall of text or a one-sentence ledger entry and no
+// check would notice until it was on screen.
+group('narrative sets');
+const setRegistry = existsSync(join(root, 'content/qingmao/narrative/index.json'))
+  ? read('content/qingmao/narrative/index.json').sets
+  : [];
+const narrativeSets = setRegistry.map((entry) => ({
+  id: entry.id,
+  data: read(`content/qingmao/narrative/sets/${entry.id}.json`)
+}));
+check('at least one archived set exists, so a rewrite is reversible', narrativeSets.length >= 1);
+const sentences = (text) =>
+  text.split(/[.!?]["']?(\s|$)/).filter((part) => part && part.trim().length > 2).length;
+for (const { id, data } of narrativeSets) {
+  const lines = Object.entries(data.lines ?? {});
+  const chapters = Object.entries(data.ledger ?? {});
+  const tooLong = lines.filter(([, text]) => text.length > 240);
+  const blank = [...lines, ...chapters].filter(([, text]) => !String(text).trim());
+  const thin = chapters.filter(([, text]) => sentences(text) < 2);
+  check(`set "${id}" keeps every line inside the 240-character cap`, tooLong.length === 0,
+    tooLong.length ? `e.g. ${tooLong[0][0]} at ${tooLong[0][1].length}` : '');
+  check(`set "${id}" has no blank line or chapter`, blank.length === 0,
+    blank.length ? `e.g. ${blank[0][0]}` : '');
+  check(`set "${id}" keeps every ledger entry at two sentences or more`, thin.length === 0,
+    thin.length ? `e.g. chapter ${thin[0][0]}` : '');
+}
+
 // ------------------------------------------------------------------- report
 group('');
 if (failures.length) {
